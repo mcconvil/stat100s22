@@ -159,6 +159,9 @@ penguins %>%
 
 * It includes any necessary information on the used packages, R version, system, etc.
     + Should not be a concern for our class Slack since we are all on the same RStudio Server.
+    + Can use `packageVersion("tidyverse")` or `sessionInfo()` to find this information.
+    
+
 
 ---
 
@@ -222,34 +225,6 @@ Don't copy from the console.
 
 
 ![](img/screenshot.png)
-
-
-
----
-
-## What Else to Include?
-
-(Don't need to do this for our class Slack)
-
-* R Version
-
-* Platform
-
-```{r}
-sessionInfo()
-```
-
----
-
-## What Else to Include?
-
-(Don't need to do this for our class Slack)
-
-* If it is a problem with a specific package, include the version.
-
-```{r}
-packageVersion("tidyverse")
-```
 
 
 ---
