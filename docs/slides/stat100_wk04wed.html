@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Modeling</title>
+    <meta charset="utf-8" />
+    <script src="libsSlides/header-attrs-2.11/header-attrs.js"></script>
+    <link href="libsSlides/remark-css-0.0.1/hygge.css" rel="stylesheet" />
+    <script src="libsSlides/fabric-4.3.1/fabric.min.js"></script>
+    <link href="libsSlides/xaringanExtra-scribble-0.0.1/scribble.css" rel="stylesheet" />
+    <script src="libsSlides/xaringanExtra-scribble-0.0.1/scribble.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', function() { window.xeScribble = new Scribble({"pen_color":["#FF0000"],"pen_size":3,"eraser_size":30,"palette":[]}) })</script>
+    <link rel="stylesheet" href="more.css" type="text/css" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+
+background-image: url("img/DAW.png")
+background-position: left
+background-size: 50%
+class: middle, center, inverse
+
+
+.pull-right[
+
+
+
+## .whitish[Simple Linear Regression]
+
+&lt;br&gt;
+
+&lt;br&gt;
+
+### .whitish[Kelly McConville]
+
+#### .yellow[ Stat 100 | Week 4 | Spring 2022] 
+
+]
+
+
+
+---
+
+## Announcements
+
+
+
+
+
+
+****************************
+
+--
+
+## Goals for Today
+
+.pull-left[
+
+ 
+* Introduce statistical modeling
+
+* Simple linear regression model
+    + Estimating the slope and intercept terms
+    + Prediction
+
+* Measuring correlation
+ 
+] 
+
+--
+
+.pull-right[
+
+XXX
+
+]
+
+
+---
+
+###  When to Get Help
+
+&gt; "I have no idea how to do this problem."
+
+--
+
+&amp;rarr; Ask us to point you to an similar example from the lecture or handouts.
+
+--
+
+&amp;rarr; Talk it through with one of us so we can verbalize the process of going from Q to A.
+
+--
+
+&gt; "I am getting a weird error but really think my code is correct/on the right track/matches the examples from class."
+
+--
+
+
+&amp;rarr; It is time for a second pair of eyes.  Don't stare that the error for over 10 minutes.
+
+--
+
+&gt; And lots of other times too!
+
+--
+
+**************************************************
+
+
+
+Remember:
+
+&amp;rarr; Struggling is part of learning.
+
+--
+
+&amp;rarr; But let us help you ensure it is a **productive** struggle.
+
+--
+
+&amp;rarr; Struggling does NOT mean you are bad at stats!
+
+
+---
+
+## Statistical Models
+
+### Two Main Motivations
+
+--
+
+You can often tell the modeling motivation from the research question.  We will look at studies that ask the following questions:
+
+
+
+--
+
+&gt; "Can I use remotely sensed data to predict forest types in Alaska?"
+
+--
+
+&amp;rarr; Motivation: Predict new observations
+
+
+--
+
+&gt; "Do left-handed people live shorter lives than right-handed people?"
+
+--
+
+&amp;rarr; Motivation: Describe relationships
+
+
+--
+
+We will focus mainly on descriptive modeling in this course.  If you want to learn more about predictive modeling, take Math 243: Statistical Learning!
+
+---
+
+## Form of the Model
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt;
+
+--
+
+$$
+y = f(x) + \epsilon
+$$
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt; 
+
+--
+
+**Goal:**
+
+&amp;rarr; Determine a reasonable form for `\(f()\)`. (Ex: Line, curve, ...)
+
+--
+
+&amp;rarr; Estimate `\(f()\)` with `\(\hat{f}()\)` using the data.
+
+--
+
+&amp;rarr; Generate predicted values: `\(\hat{y} = \hat{f}(x)\)`.
+
+---
+
+### Simple Linear Regression Model
+
+Consider this model when:
+
+--
+
+* Response variable `\((y)\)`: quantitative
+
+--
+
+* Explanatory variable `\((x)\)`: quantitative
+    + Have only ONE explanatory variable.
+
+--
+    
+* AND, `\(f()\)` can be approximated by a line.
+
+---
+
+### Example: Is there a linear relationship between tree diameter and tree height for the trees at the Woodstock Community Center?
+
+
+&lt;img src="img/woodstock_cc.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Example: Trees at the Woodstock CC
+
+
+
+
+```r
+library(pdxTrees)
+woodstock_cc &lt;- get_pdxTrees_parks(park = 
+                                     "Woodstock Community Center")
+
+ggplot(data = woodstock_cc, mapping = aes(x = DBH, 
+                                          y = Tree_Height)) +
+  geom_point()
+```
+
+&lt;img src="stat100_wk04wed_files/figure-html/unnamed-chunk-2-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+--
+
+Linear trend? Direction of trend?
+
+
+---
+
+### Example: Trees at the Woodstock CC
+
+
+
+
+```r
+library(pdxTrees)
+woodstock_cc &lt;- get_pdxTrees_parks(park = 
+                                     "Woodstock Community Center")
+
+ggplot(data = woodstock_cc, mapping = aes(x = DBH, 
+                                          y = Tree_Height)) +
+  geom_point() +
+  stat_smooth(method = "lm", se = FALSE)
+```
+
+&lt;img src="stat100_wk04wed_files/figure-html/unnamed-chunk-3-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+
+
+Linear trend? Direction of trend?
+
+
+
+---
+
+### Example: Trees at the Woodstock CC
+
+
+
+
+```r
+library(pdxTrees)
+woodstock_cc &lt;- get_pdxTrees_parks(park = 
+                                     "Woodstock Community Center")
+
+ggplot(data = woodstock_cc, mapping = aes(x = DBH, 
+                                          y = Tree_Height)) +
+  geom_point() +
+  stat_smooth(method = "lm", se = FALSE)
+```
+
+&lt;img src="stat100_wk04wed_files/figure-html/unnamed-chunk-4-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+
+**A simple linear regression model would be suitable for these data.**
+
+* But first, let's describe more plots!
+
+---
+
+class: center, middle, inverse
+
+# But before that: It's time for Trend Stretches!
+
+---
+
+&lt;img src="stat100_wk04wed_files/figure-html/unnamed-chunk-5-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+--
+
+**Need a summary statistics that quantifies the strength and relationship of the linear trend!**
+
+
+
+
+---
+
+## (Sample) Correlation Coefficient
+
+* Measures the strength and direction of linear relationship between two quantitative variables
+
+--
+
+* Symbol: `\(r\)`
+
+--
+
+* Always between -1 and 1
+
+--
+
+* Sign indicates the direction of the relationship 
+
+--
+
+* Magnitude indicates the strength of the linear relationship
+
+--
+
+
+```r
+woodstock_cc %&gt;%
+  summarize(cor_ht_dbh = cor(Tree_Height, DBH))
+```
+
+```
+## # A tibble: 1 × 1
+##   cor_ht_dbh
+##        &lt;dbl&gt;
+## 1      0.828
+```
+
+
+---
+
+&lt;img src="stat100_wk04wed_files/figure-html/unnamed-chunk-7-1.png" width="540" style="display: block; margin: auto;" /&gt;
+
+Any guesses on the correlations for A, B, C, or D?
+
+
+--
+
+
+```r
+dat %&gt;%
+  summarize(A = cor(x, y1), B = cor(x, y2),
+            C = cor(x, y3), D = cor(x, y4))
+```
+
+```
+## # A tibble: 1 × 4
+##       A      B      C      D
+##   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+## 1 0.695 -0.217 -0.815 -0.113
+```
+
+---
+
+## New Example
+
+
+
+
+
+```r
+# Correlation coefficients
+dat2 %&gt;%
+  group_by(dataset) %&gt;%
+  summarize(cor = cor(x, y))
+```
+
+```
+## # A tibble: 13 × 2
+##    dataset        cor
+##    &lt;chr&gt;        &lt;dbl&gt;
+##  1 away       -0.0641
+##  2 bullseye   -0.0686
+##  3 circle     -0.0683
+##  4 dino       -0.0645
+##  5 dots       -0.0603
+##  6 h_lines    -0.0617
+##  7 high_lines -0.0685
+##  8 slant_down -0.0690
+##  9 slant_up   -0.0686
+## 10 star       -0.0630
+## 11 v_lines    -0.0694
+## 12 wide_lines -0.0666
+## 13 x_shape    -0.0656
+```
+
+--
+
+* Conclude that `\(x\)` and `\(y\)` have the same relationship across these different datasets because the correlation is the same?
+
+---
+
+###  Always graph the data when exploring relationships!
+
+&lt;img src="stat100_wk04wed_files/figure-html/unnamed-chunk-11-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Simple Linear Regression
+
+
+Let's return to the Example: Trees at the Woodstock CC
+
+
+
+&lt;img src="stat100_wk04wed_files/figure-html/unnamed-chunk-12-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+* A line is a reasonable model form.
+
+--
+
+* Where should the line be?
+    + Slope? Intercept?
+
+
+---
+
+### Simple Linear Regression
+
+
+Let's return to the Example: Trees at the Woodstock CC
+
+
+
+&lt;img src="stat100_wk04wed_files/figure-html/unnamed-chunk-13-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+* A line is a reasonable model form.
+
+
+* Where should the line be?
+    + Slope? Intercept?
+
+
+---
+
+### Simple Linear Regression
+
+
+Let's return to the Example: Trees at the Woodstock CC
+
+
+
+&lt;img src="stat100_wk04wed_files/figure-html/unnamed-chunk-14-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+* A line is a reasonable model form.
+
+
+* Where should the line be?
+    + Slope? Intercept?
+
+    
+---
+
+### Simple Linear Regression
+
+
+Let's return to the Example: Trees at the Woodstock CC
+
+
+
+&lt;img src="stat100_wk04wed_files/figure-html/unnamed-chunk-15-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+* A line is a reasonable model form.
+
+
+* Where should the line be?
+    + Slope? Intercept?
+
+---
+
+###  Form of the SLR Model
+
+$$ 
+`\begin{align}
+y &amp;= f(x) + \epsilon \\
+y &amp;= \beta_o + \beta_1 x + \epsilon
+\end{align}`
+$$
+
+**Need to determine the best estimates of `\(\beta_o\)` and `\(\beta_1\)`.**
+
+--
+
+*****************************
+
+#### Distinguishing between the population and the sample
+
+--
+
+* Parameters: 
+    + Based on the population
+    + Unknown then if don't have data on the whole population
+    + EX: `\(\beta_o\)` and `\(\beta_1\)`
+
+--
+
+* Statistics: 
+    + Based on the sample data
+    + Known
+    + Usually estimate a population parameter
+    + EX: `\(\hat{\beta}_o\)` and `\(\hat{\beta}_1\)` 
+
+---
+
+
+### Method of Least Squares
+
+Need two key definitions:
+
+--
+
+* Fitted value: The *estimated* value of the `\(i\)`-th case
+
+$$
+\hat{y}_i = \hat{\beta}_o + \hat{\beta}_1 x_i
+$$
+--
+
+* Residuals: The *observed* error term for the `\(i\)`-th case
+
+$$
+e_i = y_i - \hat{y}_i
+$$
+
+
+**Goal**: Pick values for `\(\hat{\beta}_o\)` and `\(\hat{\beta}_1\)`  so that the residuals are small!
+
+---
+
+### Method of Least Squares
+
+* Let's focus on the orange line.  
+
+&lt;img src="stat100_wk04wed_files/figure-html/unnamed-chunk-16-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+* Want residuals to be small.
+
+* Minimize some function of the residuals.  
+
+---
+
+### Method of Least Squares
+
+Minimize:
+
+$$
+\sum_{i = 1}^n e^2_i
+$$
+
+--
+
+Get the following equations:
+
+$$ 
+`\begin{align}
+\hat{\beta}_1 &amp;= \frac{ \sum_{i = 1}^n (x_i - \bar{x}) (y_i - \bar{y})}{ \sum_{i = 1}^n (x_i - \bar{x})^2} \\
+\hat{\beta}_o &amp;= \bar{y} - \hat{\beta}_1 \bar{x}
+\end{align}`
+$$
+where 
+
+$$
+`\begin{align}
+\bar{y} = \frac{1}{n} \sum_{i = 1}^n y_i \quad \mbox{and} \quad \bar{x} = \frac{1}{n} \sum_{i = 1}^n x_i
+\end{align}`
+$$
+
+
+---
+
+## Method of Least Squares
+
+Once we have the estimated intercept `\((\hat{\beta}_o)\)` and the estimated slope `\((\hat{\beta}_1)\)`, we can estimate the whole function:
+
+--
+
+$$
+\hat{y} = \hat{\beta}_o + \hat{\beta}_1 x
+$$
+
+
+Called the **least squares line** or the **line of best fit**.
+
+---
+
+### Method of Least Squares
+
+
+`ggplot2` will compute the line and add it to your plot using `geom_smooth(method = "lm")`
+
+
+```r
+ggplot(data = woodstock_cc, mapping = aes(x = DBH, 
+                                          y = Tree_Height)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) 
+```
+
+&lt;img src="stat100_wk04wed_files/figure-html/unnamed-chunk-17-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+--
+
+But what are the **exact** values of `\(\hat{\beta}_o\)` and `\(\hat{\beta}_1\)`?
+
+---
+
+### Constructing the Simple Linear Regression Model in R
+
+
+```r
+mod &lt;- lm(Tree_Height ~ DBH, data = woodstock_cc)
+
+library(moderndive)
+get_regression_table(mod)
+```
+
+```
+## # A tibble: 2 × 7
+##   term      estimate std_error statistic p_value lower_ci upper_ci
+##   &lt;chr&gt;        &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1 intercept    11.0     12.7       0.865   0.42   -20.1      42.1 
+## 2 DBH           2.46     0.681     3.62    0.011    0.797     4.13
+```
+
+
+---
+
+### Interpretation
+
+Slope:
+
+
+&lt;br&gt;&lt;br&gt;&lt;br&gt; &lt;br&gt; &lt;br&gt; &lt;br&gt;
+
+Intercept:
+
+
+---
+
+### Prediction
+
+
+```r
+new_cases &lt;- data.frame(DBH = c(10, 25, 40))
+predict(mod, newdata = new_cases)
+```
+
+```
+##         1         2         3 
+##  35.64604  72.62000 109.59395
+```
+
+We didn't have any trees in our sample with a diameter of 10 inches.  Can we still make this prediction?
+
+--
+
+&amp;rarr;  Called *interpolation*
+
+We didn't have any trees in our sample with a diameter above 30 inches, can we make a prediction at 40 inches?
+
+--
+
+&amp;rarr;  Called *extrapolation*
+
+
+
+---
+
+
+### Cautions
+
+1. Careful to only predict values within the range of `\(x\)` values in the sample.
+
+--
+
+2. Make sure to investigate **influential points**.
+
+--
+
+What is an **outlier**?
+
+--
+
+&lt;img src="stat100_wk04wed_files/figure-html/unnamed-chunk-20-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+### Linear Regression
+
+Linear regression is a flexible class of models that allow for:
+
+* Both quantitative and categorical explanatory variables.
+
+--
+
+* Multiple explanatory variables.
+
+--
+
+* Curved relationships between the response variable and the explanatory variable.
+
+--
+
+* BUT the response variable is quantitative.
+
+********************
+
+### Explore today: Categorical Explanatory Variable
+
+--
+
+* Response variable `\((y)\)`: quantitative
+
+--
+
+* Have 1 categorical explanatory variable `\((x)\)` with two categories.
+
+
+---
+
+### Example: The Smile-Leniency Effect
+
+**Can a simple smile have an effect on punishment assigned following an infraction?** In a 1995 study, Hecht and LeFrance examined the effect of a smile on the leniency of disciplinary action for wrongdoers. Participants in the experiment took on the role of members of a college disciplinary panel judging students accused of cheating. For each suspect, along with a description of the offense, a picture was provided with either a smile or neutral facial expression. A leniency score was calculated based on the disciplinary decisions made by the participants.
+
+* Response variable:
+
+* Explanatory variable: 
+
+
+---
+
+###  Model Form
+
+
+$$ 
+`\begin{align}
+y &amp;= \beta_o + \beta_1 x + \epsilon
+\end{align}`
+$$
+
+--
+
+First, need to convert the categories of `\(x\)` to numbers.
+
+--
+
+Before building the model, let's explore and visualize the data!
+
+
+```r
+library(tidyverse)
+library(Lock5Data)
+# Load data
+data(Smiles)
+smiles &lt;- Smiles
+glimpse(smiles)
+```
+
+```
+## Rows: 68
+## Columns: 2
+## $ Leniency &lt;dbl&gt; 7.0, 3.0, 6.0, 4.5, 3.5, 4.0, 3.0, 3.0, 3.5, 4.5, 7.0, 5.0, 5…
+## $ Group    &lt;fct&gt; smile, smile, smile, smile, smile, smile, smile, smile, smile…
+```
+
+--
+
+* What `dplyr` functions should I use to find the mean and sd of `Leniency` by the categories of `Group`?
+
+--
+
+* What graph should we use to visualize the `Leniency` scores by `Group`?
+
+---
+
+
+```r
+# Summarize
+smiles %&gt;%
+  group_by(Group) %&gt;%
+  summarize(count = n(), mean_len = mean(Leniency), 
+            sd_len = sd(Leniency))
+```
+
+```
+## # A tibble: 2 × 4
+##   Group   count mean_len sd_len
+##   &lt;fct&gt;   &lt;int&gt;    &lt;dbl&gt;  &lt;dbl&gt;
+## 1 neutral    34     4.12   1.52
+## 2 smile      34     4.91   1.68
+```
+
+
+
+```r
+# Visualize
+ggplot(smiles, aes(x = Group, y = Leniency)) +
+  geom_boxplot() +
+    stat_summary(fun = mean, geom = "point", color = "purple")
+```
+
+&lt;img src="stat100_wk04wed_files/figure-html/unnamed-chunk-23-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+## Side-bar: Double Encoding
+
+
+```r
+# Visualize
+ggplot(smiles, aes(x = Group, y = Leniency, fill = Group)) +
+  geom_boxplot() +
+    stat_summary(fun = mean, geom = "point", color = "purple") +
+  guides(fill = FALSE)
+```
+
+&lt;img src="stat100_wk04wed_files/figure-html/unnamed-chunk-24-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+### Fit the Linear Regression Model
+
+
+Model Form:
+
+$$ 
+`\begin{align}
+y &amp;= \beta_o + \beta_1 x + \epsilon
+\end{align}`
+$$
+
+--
+
+When `\(x = 0\)`:
+
+--
+&lt;br&gt;
+
+When `\(x = 1\)`:
+
+--
+
+
+
+```r
+mod &lt;- lm(Leniency ~ Group, data = smiles)
+library(moderndive)
+get_regression_table(mod)
+```
+
+```
+## # A tibble: 2 × 7
+##   term         estimate std_error statistic p_value lower_ci upper_ci
+##   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1 intercept       4.12      0.275     15.0    0        3.57      4.67
+## 2 Group: smile    0.794     0.389      2.04   0.045    0.017     1.57
+```
+
+---
+
+### Notes 
+
+1. When the explanatory variable is categorical, `\(\beta_o\)` and `\(\beta_1\)` no longer represent the interceopt and slope.
+
+--
+
+2. Now `\(\beta_o\)` represents the (population) mean of the response variable when `\(x = 0\)`.
+
+--
+
+3. And, `\(\beta_1\)` represents the change in the (population) mean response going from `\(x = 0\)` to `\(x = 1\)`.
+
+--
+
+4. Can also do prediction:
+
+
+```r
+new &lt;- data.frame(Group = c("smile", "neutral"))
+predict(mod, newdata = new)
+```
+
+```
+##        1        2 
+## 4.911765 4.117647
+```
+
+
+
+---
+
+
+### Reminders
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"ratio": "16:9",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

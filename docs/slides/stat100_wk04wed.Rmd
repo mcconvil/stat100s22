@@ -1,0 +1,929 @@
+---
+title: Modeling
+output:
+  xaringan::moon_reader:
+    css: ["more.css", "xaringan-themer.css", "hygge"]
+    lib_dir: libsSlides
+    self_contained: false
+    nature:
+      highlightStyle: github
+      ratio: '16:9'      
+      highlightLines: true
+      countIncrementalSlides: false
+      navigation:
+        scroll: false
+    seal: false
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, 
+                      fig.retina = 3, fig.align = 'center',
+                      fig.asp = 0.75, fig.width = 8,
+                      cache = TRUE)
+library(knitr)
+library(tidyverse)
+theme_update(text = element_text(size = 20))
+```
+
+```{r xaringan-scribble, echo=FALSE}
+xaringanExtra::use_scribble()
+```
+
+
+background-image: url("img/DAW.png")
+background-position: left
+background-size: 50%
+class: middle, center, inverse
+
+
+.pull-right[
+
+
+
+## .whitish[Simple Linear Regression]
+
+<br>
+
+<br>
+
+### .whitish[Kelly McConville]
+
+#### .yellow[ Stat 100 | Week 4 | Spring 2022] 
+
+]
+
+
+
+---
+
+## Announcements
+
+
+
+
+
+
+****************************
+
+--
+
+## Goals for Today
+
+.pull-left[
+
+ 
+* Introduce statistical modeling
+
+* Simple linear regression model
+    + Estimating the slope and intercept terms
+    + Prediction
+
+* Measuring correlation
+ 
+] 
+
+--
+
+.pull-right[
+
+XXX
+
+]
+
+
+---
+
+###  When to Get Help
+
+> "I have no idea how to do this problem."
+
+--
+
+&rarr; Ask us to point you to an similar example from the lecture or handouts.
+
+--
+
+&rarr; Talk it through with one of us so we can verbalize the process of going from Q to A.
+
+--
+
+> "I am getting a weird error but really think my code is correct/on the right track/matches the examples from class."
+
+--
+
+
+&rarr; It is time for a second pair of eyes.  Don't stare that the error for over 10 minutes.
+
+--
+
+> And lots of other times too!
+
+--
+
+**************************************************
+
+
+
+Remember:
+
+&rarr; Struggling is part of learning.
+
+--
+
+&rarr; But let us help you ensure it is a **productive** struggle.
+
+--
+
+&rarr; Struggling does NOT mean you are bad at stats!
+
+
+---
+
+## Statistical Models
+
+### Two Main Motivations
+
+--
+
+You can often tell the modeling motivation from the research question.  We will look at studies that ask the following questions:
+
+
+
+--
+
+> "Can I use remotely sensed data to predict forest types in Alaska?"
+
+--
+
+&rarr; Motivation: Predict new observations
+
+
+--
+
+> "Do left-handed people live shorter lives than right-handed people?"
+
+--
+
+&rarr; Motivation: Describe relationships
+
+
+--
+
+We will focus mainly on descriptive modeling in this course.  If you want to learn more about predictive modeling, take Math 243: Statistical Learning!
+
+---
+
+## Form of the Model
+
+<br><br><br>
+
+--
+
+$$
+y = f(x) + \epsilon
+$$
+
+<br><br><br> 
+
+--
+
+**Goal:**
+
+&rarr; Determine a reasonable form for $f()$. (Ex: Line, curve, ...)
+
+--
+
+&rarr; Estimate $f()$ with $\hat{f}()$ using the data.
+
+--
+
+&rarr; Generate predicted values: $\hat{y} = \hat{f}(x)$.
+
+---
+
+### Simple Linear Regression Model
+
+Consider this model when:
+
+--
+
+* Response variable $(y)$: quantitative
+
+--
+
+* Explanatory variable $(x)$: quantitative
+    + Have only ONE explanatory variable.
+
+--
+    
+* AND, $f()$ can be approximated by a line.
+
+---
+
+### Example: Is there a linear relationship between tree diameter and tree height for the trees at the Woodstock Community Center?
+
+
+```{r  out.width = "70%", echo=FALSE, fig.align='center'}
+include_graphics("img/woodstock_cc.png") 
+```
+
+---
+
+### Example: Trees at the Woodstock CC
+
+
+
+```{r}
+library(pdxTrees)
+woodstock_cc <- get_pdxTrees_parks(park = 
+                                     "Woodstock Community Center")
+
+ggplot(data = woodstock_cc, mapping = aes(x = DBH, 
+                                          y = Tree_Height)) +
+  geom_point()
+
+```
+
+--
+
+Linear trend? Direction of trend?
+
+
+---
+
+### Example: Trees at the Woodstock CC
+
+
+
+```{r}
+library(pdxTrees)
+woodstock_cc <- get_pdxTrees_parks(park = 
+                                     "Woodstock Community Center")
+
+ggplot(data = woodstock_cc, mapping = aes(x = DBH, 
+                                          y = Tree_Height)) +
+  geom_point() +
+  stat_smooth(method = "lm", se = FALSE)
+
+```
+
+
+
+Linear trend? Direction of trend?
+
+
+
+---
+
+### Example: Trees at the Woodstock CC
+
+
+
+```{r}
+library(pdxTrees)
+woodstock_cc <- get_pdxTrees_parks(park = 
+                                     "Woodstock Community Center")
+
+ggplot(data = woodstock_cc, mapping = aes(x = DBH, 
+                                          y = Tree_Height)) +
+  geom_point() +
+  stat_smooth(method = "lm", se = FALSE)
+
+```
+
+
+**A simple linear regression model would be suitable for these data.**
+
+* But first, let's describe more plots!
+
+---
+
+class: center, middle, inverse
+
+# But before that: It's time for Trend Stretches!
+
+---
+
+```{r, echo = FALSE, fig.height=6, fig.width=8, fig.align='center'}
+set.seed(4119)
+x <- runif(50, 0, 10)
+y1 <- 3 + 1*x + rnorm(50, 0 , 3)
+y2 <- runif(50, 0, 10)
+y3 <- 1 - .5*x + rnorm(50, 0, 1)
+y4 <- 3 + -40*x +  4*x^2 + rnorm(50, 0, 20)
+dat <- data_frame(x, y1, y2, y3, y4)  
+
+library(cowplot)
+# Create scatterplots and place in a grid
+p1 <- ggplot(dat, aes(x, y1)) + geom_point()
+p2 <- ggplot(dat, aes(x, y2)) + geom_point()
+p3 <- ggplot(dat, aes(x, y3)) + geom_point()
+p4 <- ggplot(dat, aes(x, y4)) + geom_point()
+plot_grid(p1, p2, p3, p4, ncol=2, labels = c("A", "B", "C", "D"))
+
+```
+
+--
+
+**Need a summary statistics that quantifies the strength and relationship of the linear trend!**
+
+
+
+
+---
+
+## (Sample) Correlation Coefficient
+
+* Measures the strength and direction of linear relationship between two quantitative variables
+
+--
+
+* Symbol: $r$
+
+--
+
+* Always between -1 and 1
+
+--
+
+* Sign indicates the direction of the relationship 
+
+--
+
+* Magnitude indicates the strength of the linear relationship
+
+--
+
+```{r}
+woodstock_cc %>%
+  summarize(cor_ht_dbh = cor(Tree_Height, DBH))
+```
+
+
+---
+
+```{r, echo = FALSE, fig.height=5, fig.width=7.5, fig.align='center'}
+
+plot_grid(p1, p2, p3, p4, ncol=2, labels = c("A", "B", "C", "D"))
+
+```
+
+Any guesses on the correlations for A, B, C, or D?
+
+
+--
+
+```{r}
+dat %>%
+  summarize(A = cor(x, y1), B = cor(x, y2),
+            C = cor(x, y3), D = cor(x, y4))
+```
+
+---
+
+## New Example
+
+```{r, echo = FALSE}
+# Load new dataset
+dat2 <- datasaurus <- read_csv("~/shared_data/stat100/data/datasaurus.csv")
+```
+
+
+```{r}
+# Correlation coefficients
+dat2 %>%
+  group_by(dataset) %>%
+  summarize(cor = cor(x, y))
+```
+
+--
+
+* Conclude that $x$ and $y$ have the same relationship across these different datasets because the correlation is the same?
+
+---
+
+###  Always graph the data when exploring relationships!
+
+```{r, echo = FALSE, fig.height=6, fig.width=8, fig.align='center'}
+# Scatterplots
+ggplot(data = dat2, mapping = aes(x = x, y = y)) +
+  geom_point() +
+  facet_wrap(~ dataset, ncol = 3)
+```
+
+---
+
+### Simple Linear Regression
+
+
+Let's return to the Example: Trees at the Woodstock CC
+
+
+
+```{r, echo = FALSE}
+library(pdxTrees)
+woodstock_cc <- get_pdxTrees_parks(park = 
+                                     "Woodstock Community Center")
+
+ggplot(data = woodstock_cc, mapping = aes(x = DBH, 
+                                          y = Tree_Height)) +
+  geom_point() 
+
+```
+
+* A line is a reasonable model form.
+
+--
+
+* Where should the line be?
+    + Slope? Intercept?
+
+
+---
+
+### Simple Linear Regression
+
+
+Let's return to the Example: Trees at the Woodstock CC
+
+
+
+```{r, echo = FALSE}
+library(pdxTrees)
+woodstock_cc <- get_pdxTrees_parks(park = 
+                                     "Woodstock Community Center")
+
+ggplot(data = woodstock_cc, mapping = aes(x = DBH, 
+                                          y = Tree_Height)) +
+  geom_point() +
+  geom_abline(intercept = 15, slope = 2.1, size = 1,
+              color = "darkgreen") 
+
+```
+
+* A line is a reasonable model form.
+
+
+* Where should the line be?
+    + Slope? Intercept?
+
+
+---
+
+### Simple Linear Regression
+
+
+Let's return to the Example: Trees at the Woodstock CC
+
+
+
+```{r, echo = FALSE}
+library(pdxTrees)
+woodstock_cc <- get_pdxTrees_parks(park = 
+                                     "Woodstock Community Center")
+
+ggplot(data = woodstock_cc, mapping = aes(x = DBH, 
+                                          y = Tree_Height)) +
+  geom_point() +
+  geom_abline(intercept = 15, slope = 2.1, size = 1,
+              color = "darkgreen") +
+  geom_smooth(method = "lm", se = FALSE)
+  
+
+```
+
+* A line is a reasonable model form.
+
+
+* Where should the line be?
+    + Slope? Intercept?
+
+    
+---
+
+### Simple Linear Regression
+
+
+Let's return to the Example: Trees at the Woodstock CC
+
+
+
+```{r, echo = FALSE}
+library(pdxTrees)
+woodstock_cc <- get_pdxTrees_parks(park = 
+                                     "Woodstock Community Center")
+
+ggplot(data = woodstock_cc, mapping = aes(x = DBH, 
+                                          y = Tree_Height)) +
+  geom_point() +
+  geom_abline(intercept = 15, slope = 2.1, size = 1,
+              color = "darkgreen") +
+  geom_smooth(method = "lm", se = FALSE) +
+  geom_abline(intercept = 10, slope = 2.8, size = 1,
+              color = "orange")
+  
+
+```
+
+* A line is a reasonable model form.
+
+
+* Where should the line be?
+    + Slope? Intercept?
+
+---
+
+###  Form of the SLR Model
+
+$$ 
+\begin{align}
+y &= f(x) + \epsilon \\
+y &= \beta_o + \beta_1 x + \epsilon
+\end{align}
+$$
+
+**Need to determine the best estimates of $\beta_o$ and $\beta_1$.**
+
+--
+
+*****************************
+
+#### Distinguishing between the population and the sample
+
+--
+
+* Parameters: 
+    + Based on the population
+    + Unknown then if don't have data on the whole population
+    + EX: $\beta_o$ and $\beta_1$
+
+--
+
+* Statistics: 
+    + Based on the sample data
+    + Known
+    + Usually estimate a population parameter
+    + EX: $\hat{\beta}_o$ and $\hat{\beta}_1$ 
+
+---
+
+
+### Method of Least Squares
+
+Need two key definitions:
+
+--
+
+* Fitted value: The *estimated* value of the $i$-th case
+
+$$
+\hat{y}_i = \hat{\beta}_o + \hat{\beta}_1 x_i
+$$
+--
+
+* Residuals: The *observed* error term for the $i$-th case
+
+$$
+e_i = y_i - \hat{y}_i
+$$
+
+
+**Goal**: Pick values for $\hat{\beta}_o$ and $\hat{\beta}_1$  so that the residuals are small!
+
+---
+
+### Method of Least Squares
+
+* Let's focus on the orange line.  
+
+```{r, echo=FALSE}
+ggplot(data = woodstock_cc, mapping = aes(x = DBH, 
+                                          y = Tree_Height)) +
+  geom_point() +
+  geom_abline(intercept = 10, slope = 2.8, size = 1,
+              color = "orange") +
+  annotate("segment", x = woodstock_cc$DBH, xend = woodstock_cc$DBH, 
+           y = woodstock_cc$Tree_Height, yend = 10 + 2.8*woodstock_cc$DBH, 
+           color = "darkblue", arrow = arrow(length = unit(0.03, "npc"))) + 
+  geom_point()
+  
+```
+
+* Want residuals to be small.
+
+* Minimize some function of the residuals.  
+
+---
+
+### Method of Least Squares
+
+Minimize:
+
+$$
+\sum_{i = 1}^n e^2_i
+$$
+
+--
+
+Get the following equations:
+
+$$ 
+\begin{align}
+\hat{\beta}_1 &= \frac{ \sum_{i = 1}^n (x_i - \bar{x}) (y_i - \bar{y})}{ \sum_{i = 1}^n (x_i - \bar{x})^2} \\
+\hat{\beta}_o &= \bar{y} - \hat{\beta}_1 \bar{x}
+\end{align}
+$$
+where 
+
+$$
+\begin{align}
+\bar{y} = \frac{1}{n} \sum_{i = 1}^n y_i \quad \mbox{and} \quad \bar{x} = \frac{1}{n} \sum_{i = 1}^n x_i
+\end{align}
+$$
+
+
+---
+
+## Method of Least Squares
+
+Once we have the estimated intercept $(\hat{\beta}_o)$ and the estimated slope $(\hat{\beta}_1)$, we can estimate the whole function:
+
+--
+
+$$
+\hat{y} = \hat{\beta}_o + \hat{\beta}_1 x
+$$
+
+
+Called the **least squares line** or the **line of best fit**.
+
+---
+
+### Method of Least Squares
+
+
+`ggplot2` will compute the line and add it to your plot using `geom_smooth(method = "lm")`
+
+```{r, echo = TRUE}
+ggplot(data = woodstock_cc, mapping = aes(x = DBH, 
+                                          y = Tree_Height)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) 
+```
+
+--
+
+But what are the **exact** values of $\hat{\beta}_o$ and $\hat{\beta}_1$?
+
+---
+
+### Constructing the Simple Linear Regression Model in R
+
+```{r}
+mod <- lm(Tree_Height ~ DBH, data = woodstock_cc)
+
+library(moderndive)
+get_regression_table(mod)
+```
+
+
+---
+
+### Interpretation
+
+Slope:
+
+
+<br><br><br> <br> <br> <br>
+
+Intercept:
+
+
+---
+
+### Prediction
+
+```{r}
+new_cases <- data.frame(DBH = c(10, 25, 40))
+predict(mod, newdata = new_cases)
+```
+
+We didn't have any trees in our sample with a diameter of 10 inches.  Can we still make this prediction?
+
+--
+
+&rarr;  Called *interpolation*
+
+We didn't have any trees in our sample with a diameter above 30 inches, can we make a prediction at 40 inches?
+
+--
+
+&rarr;  Called *extrapolation*
+
+
+
+---
+
+
+### Cautions
+
+1. Careful to only predict values within the range of $x$ values in the sample.
+
+--
+
+2. Make sure to investigate **influential points**.
+
+--
+
+What is an **outlier**?
+
+--
+
+```{r, echo = FALSE}
+set.seed(13681)
+x <- c(runif(50, 0, 10), 20)
+y1 <- c(3 + 1*x + rnorm(51, 0 , 3))
+dat0 <- data_frame(x, y1)
+x <- c(x, 20)
+y1 <- c(y1, 10)
+dat <- data_frame(x, y1) 
+ggplot(dat, aes(x, y1)) + geom_point() + 
+  stat_smooth(method = "lm", se = FALSE) +
+  stat_smooth(method = "lm", se = FALSE, data = dat[-51,], color = "purple") +
+  stat_smooth(method = "lm", se = FALSE, data = dat[-52,], color = "orange")  
+```
+
+### Linear Regression
+
+Linear regression is a flexible class of models that allow for:
+
+* Both quantitative and categorical explanatory variables.
+
+--
+
+* Multiple explanatory variables.
+
+--
+
+* Curved relationships between the response variable and the explanatory variable.
+
+--
+
+* BUT the response variable is quantitative.
+
+********************
+
+### Explore today: Categorical Explanatory Variable
+
+--
+
+* Response variable $(y)$: quantitative
+
+--
+
+* Have 1 categorical explanatory variable $(x)$ with two categories.
+
+
+---
+
+### Example: The Smile-Leniency Effect
+
+**Can a simple smile have an effect on punishment assigned following an infraction?** In a 1995 study, Hecht and LeFrance examined the effect of a smile on the leniency of disciplinary action for wrongdoers. Participants in the experiment took on the role of members of a college disciplinary panel judging students accused of cheating. For each suspect, along with a description of the offense, a picture was provided with either a smile or neutral facial expression. A leniency score was calculated based on the disciplinary decisions made by the participants.
+
+* Response variable:
+
+* Explanatory variable: 
+
+
+---
+
+###  Model Form
+
+
+$$ 
+\begin{align}
+y &= \beta_o + \beta_1 x + \epsilon
+\end{align}
+$$
+
+--
+
+First, need to convert the categories of $x$ to numbers.
+
+--
+
+Before building the model, let's explore and visualize the data!
+
+```{r}
+library(tidyverse)
+library(Lock5Data)
+# Load data
+data(Smiles)
+smiles <- Smiles
+glimpse(smiles)
+```
+
+--
+
+* What `dplyr` functions should I use to find the mean and sd of `Leniency` by the categories of `Group`?
+
+--
+
+* What graph should we use to visualize the `Leniency` scores by `Group`?
+
+---
+
+```{r}
+# Summarize
+smiles %>%
+  group_by(Group) %>%
+  summarize(count = n(), mean_len = mean(Leniency), 
+            sd_len = sd(Leniency))
+```
+
+
+```{r}
+# Visualize
+ggplot(smiles, aes(x = Group, y = Leniency)) +
+  geom_boxplot() +
+    stat_summary(fun = mean, geom = "point", color = "purple")
+```
+
+
+---
+
+## Side-bar: Double Encoding
+
+```{r}
+# Visualize
+ggplot(smiles, aes(x = Group, y = Leniency, fill = Group)) +
+  geom_boxplot() +
+    stat_summary(fun = mean, geom = "point", color = "purple") +
+  guides(fill = FALSE)
+```
+
+
+---
+
+### Fit the Linear Regression Model
+
+
+Model Form:
+
+$$ 
+\begin{align}
+y &= \beta_o + \beta_1 x + \epsilon
+\end{align}
+$$
+
+--
+
+When $x = 0$:
+
+--
+<br>
+
+When $x = 1$:
+
+--
+
+
+```{r}
+mod <- lm(Leniency ~ Group, data = smiles)
+library(moderndive)
+get_regression_table(mod)
+```
+
+---
+
+### Notes 
+
+1. When the explanatory variable is categorical, $\beta_o$ and $\beta_1$ no longer represent the interceopt and slope.
+
+--
+
+2. Now $\beta_o$ represents the (population) mean of the response variable when $x = 0$.
+
+--
+
+3. And, $\beta_1$ represents the change in the (population) mean response going from $x = 0$ to $x = 1$.
+
+--
+
+4. Can also do prediction:
+
+```{r}
+new <- data.frame(Group = c("smile", "neutral"))
+predict(mod, newdata = new)
+```
+
+
+
+---
+
+
+### Reminders
+
+
+

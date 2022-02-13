@@ -1,0 +1,841 @@
+---
+title: Data Summarization
+output:
+  xaringan::moon_reader:
+    css: ["more.css", "xaringan-themer.css", "hygge"]
+    lib_dir: libsSlides
+    self_contained: false
+    nature:
+      highlightStyle: github
+      ratio: '16:9'      
+      highlightLines: true
+      countIncrementalSlides: false
+      navigation:
+        scroll: false
+    seal: false
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, 
+                      fig.retina = 3, fig.align = 'center',
+                      fig.asp = 0.75, fig.width = 8)
+library(knitr)
+library(tidyverse)
+theme_update(text = element_text(size = 20))
+```
+
+```{r xaringan-scribble, echo=FALSE}
+xaringanExtra::use_scribble()
+```
+
+
+background-image: url("img/DAW.png")
+background-position: left
+background-size: 50%
+class: middle, center, inverse
+
+
+.pull-right[
+
+
+
+## .whitish[Data Summarization]
+
+<br>
+
+<br>
+
+### .whitish[Kelly McConville]
+
+#### .yellow[ Stat 100 | Week 3 | Spring 2022] 
+
+]
+
+
+
+---
+
+
+
+## Announcements
+
+* Don't forget that P-Set 2 is due on Wednesday at 9am on Gradescope.  
+    + No late work accepted.
+* Fill out the [Project Assignment Group Preferences Survey](https://forms.gle/S4jDMoPMUHg7Zcfv5) if:
+    + You have particular people you'd like to work with.
+    + Or you are a graduate student/auditor and want to work alone.
+
+
+****************************
+
+--
+
+## Goals for Today
+
+.pull-left[
+
+* Measures for **summarizing** quantitative data
+    + Center
+    + Spread/variability
+
+* Measures for **summarizing** categorical data
+
+
+] 
+
+--
+
+.pull-right[
+
+
+* Start discussing **data wrangling**
+
+]
+
+
+---
+
+```{r, echo = FALSE, out.width= "15%", out.extra='style="float:left; padding:10px"'}
+knitr::include_graphics("img/dplyr.png")
+```
+
+## Load Necessary Packages
+
+`dplyr` is part of this collection of data science packages.
+
+```{r, message=TRUE}
+# Load necessary packages
+library(tidyverse)
+```
+
+
+---
+
+## Import the [Data](https://data.cambridgema.gov/Transportation-Planning/Eco-Totem-Broadway-Bicycle-Count/q8v9-mcfg)
+
+```{r, cache = TRUE, message = FALSE, warning = FALSE}
+bike_counter <- read_csv("https://data.cambridgema.gov/api/views/q8v9-mcfg/rows.csv")
+
+# Inspect the data
+glimpse(bike_counter)
+```
+
+```{r, echo = FALSE}
+bike_counter <- select(bike_counter, -DateTime,
+                       -Westbound, -Eastbound, -Day)
+```
+
+---
+
+## Summarizing Data
+
+```{r, echo = FALSE}
+library(kableExtra)
+knitr::kable(bike_counter[1000:1006,]) %>%
+  kable_styling(bootstrap_options = c("responsive", "bordered", "striped")) 
+```
+
+--
+
+* Hard to do by eyeballing a spreadsheet with many rows!
+
+---
+
+##  Summarizing Data Visually
+
+.pull-left[
+
+```{r, echo = FALSE}
+# Create histogram
+ggplot(data = bike_counter, mapping = aes(x = Total)) + 
+  geom_histogram(fill = "slateblue4", color = "ghostwhite") 
+
+```
+
+]
+
+--
+
+.pull-right[
+
+For a quantitative variable, want to answer:
+
+
+
+* What is an **average** value?
+
+
+
+* What is the **trend/shape** of the variable?
+
+
+
+* How much **variation** is there from case to case?
+
+]
+
+---
+
+## Summarizing Quantitative Variables
+
+For a quantitative variable, want to answer:
+
+
+
+* What is an average value?
+
+
+
+* What is the trend/shape of the variable?
+
+
+* How much variation is there from case to case?
+
+--
+
+Need to learn some **summary statistics**: Numerical values computed based on the observed cases.
+
+---
+
+## Measures of Center
+
+.pull-left[
+**Mean: average of all the observations**
+
+
+* $n$ = Number of cases (sample size)
+* $x_i$ = value of the i-th observation
+* Denote by $\bar{x}$
+
+$$
+\bar{x}  = \frac{1}{n} \sum_{i = 1}^n x_i
+$$
+
+]
+
+.pull-right[
+
+{{content}}
+
+]
+
+--
+
+```{r, echo = FALSE}
+knitr::kable(bike_counter[1000:1006,]) %>%
+  kable_styling(bootstrap_options = c("responsive", "bordered", "striped")) 
+```
+{{content}}
+
+--
+
+```{r}
+# Mean
+(5 + 10 + 6 + 13 +
+   9 + 12 + 7)/7
+```
+{{content}}
+
+
+---
+
+## Measures of Center
+
+.pull-left[
+#### Median: Middle value, 50% 
+
+* Denote by $m$
+* If $n$ is even, then it is the average of the middle two values
+
+]
+
+.pull-right[
+
+{{content}}
+
+]
+
+--
+
+```{r, echo = FALSE}
+bike_counter[1000:1006,] %>%
+  arrange(Total) %>%
+knitr::kable(digits = 2) %>%
+  kable_styling(bootstrap_options = c("responsive", "bordered", "striped")) 
+```
+{{content}}
+
+--
+
+```{r}
+# Median
+9
+```
+{{content}}
+
+
+
+---
+
+## Measures of Center
+
+.pull-left[
+
+```{r, echo = FALSE}
+bike_counter[1000:1006,] %>%
+  arrange(Total) %>%
+knitr::kable(digits = 2) %>%
+  kable_styling(bootstrap_options = c("responsive", "bordered", "striped")) 
+```
+]
+
+.pull-right[
+
+```{r}
+# Mean
+(5 + 10 + 6 + 13 +
+   9 + 12 + 7)/7
+
+# Median
+9
+```
+
+
+]
+
+* Suppose the 13 bikes was actually 130 bikes.  How would these summary statistics change?
+
+
+---
+
+## Measures of Variability
+
+* Want a statistic that captures how much observations will likely deviate from the mean
+
+--
+
+.pull-left[
+
+Here is my proposal:
+
+* Find how much each observation deviates from the mean.
+* Compute the average of the deviations.
+
+$$
+\frac{1}{n} \sum_{i = 1}^n (x_i - \bar{x})
+$$
+
+
+
+
+]
+
+.pull-right[
+
+.pull-left[
+
+```{r, echo = FALSE}
+bike_counter[1000:1006,] %>%
+  arrange(Total) %>%
+knitr::kable(digits = 2) %>%
+  kable_styling(bootstrap_options = c("responsive", "bordered", "striped"))
+```
+]
+
+
+.pull-right[
+
+
+```{r, echo = FALSE}
+bike_counter[1000:1006,] %>%
+  arrange(Total) %>%
+  mutate(Deviations = Total - mean(Total)) %>%
+  select(Deviations) %>%
+knitr::kable(digits = 2) %>%
+  kable_styling(bootstrap_options = c("responsive", "bordered", "striped"))
+```
+
+
+
+]
+
+
+
+]
+
+
+
+---
+
+## Measures of Variability
+
+* Want a statistic that captures how much observations will likely deviate from the mean
+
+
+.pull-left[
+
+Here is my proposal:
+
+* Find how much each observation deviates from the mean.
+* Compute the average of the deviations.
+
+$$
+\frac{1}{n} \sum_{i = 1}^n (x_i - \bar{x})
+$$
+
+**Problem?**
+
+
+]
+
+.pull-right[
+
+.pull-left[
+
+```{r, echo = FALSE}
+bike_counter[1000:1006,] %>%
+  arrange(Total) %>%
+knitr::kable(digits = 2) %>%
+  kable_styling(bootstrap_options = c("responsive", "bordered", "striped"))
+```
+]
+
+
+.pull-right[
+
+
+```{r, echo = FALSE}
+bike_counter[1000:1006,] %>%
+  arrange(Total) %>%
+  mutate(Deviations = Total - mean(Total)) %>%
+  select(Deviations) %>%
+knitr::kable(digits = 2) %>%
+  kable_styling(bootstrap_options = c("responsive", "bordered", "striped"))
+```
+
+
+
+]
+
+
+
+]
+
+
+---
+
+## Measures of Variability
+
+* Want a statistic that captures how much observations will likely deviate from the mean
+
+
+.pull-left[
+
+Here is my **NEW** proposal:
+
+* Find how much each observation deviates from the mean.
+* Compute the average of the **squared** deviations.
+
+$$
+\frac{1}{n} \sum_{i = 1}^n (x_i - \bar{x})^2
+$$
+
+
+
+]
+
+.pull-right[
+
+.pull-left[
+
+```{r, echo = FALSE}
+bike_counter[1000:1006,] %>%
+  arrange(Total) %>%
+knitr::kable(digits = 2) %>%
+  kable_styling(bootstrap_options = c("responsive", "bordered", "striped"))
+```
+]
+
+
+.pull-right[
+
+
+```{r, echo = FALSE}
+bike_counter[1000:1006,] %>%
+  arrange(Total) %>%
+  mutate(Deviations = Total - mean(Total),
+         Dev_sqd = Deviations^2) %>%
+  select(Deviations, Dev_sqd) %>%
+knitr::kable(digits = 2) %>%
+  kable_styling(bootstrap_options = c("responsive", "bordered", "striped"))
+
+```
+
+
+
+]
+
+
+]
+
+
+---
+
+## Measures of Variability
+
+* Want a statistic that captures how much observations will likely deviate from the mean
+
+
+.pull-left[
+
+Here is my **NEW** proposal:
+
+* Find how much each observation deviates from the mean.
+* Compute the average of the **squared** deviations.
+
+$$
+\frac{1}{n} \sum_{i = 1}^n (x_i - \bar{x})^2
+$$
+
+
+
+]
+
+.pull-right[
+
+.pull-left[
+
+```{r, echo = FALSE}
+bike_counter[1000:1006,] %>%
+  arrange(Total) %>%
+knitr::kable(digits = 2) %>%
+  kable_styling(bootstrap_options = c("responsive", "bordered", "striped"))
+```
+]
+
+
+.pull-right[
+
+
+```{r, echo = FALSE}
+bike_counter[1000:1006,] %>%
+  arrange(Total) %>%
+  mutate(Deviations = Total - mean(Total),
+         Dev_sqd = Deviations^2) %>%
+  select(Deviations, Dev_sqd) %>%
+knitr::kable(digits = 2) %>%
+  kable_styling(bootstrap_options = c("responsive", "bordered", "striped"))
+```
+
+
+
+]
+
+
+]
+
+```{r}
+# Calculate the measure of variability
+(14.88 + 8.16 + 3.45 + 0.020 + 1.31 + 9.88 + 17.16)/7
+```
+
+
+---
+
+## Measures of Variability
+
+* Want a statistic that captures how much observations will likely deviate from the mean
+
+
+.pull-left[
+
+Here is the **ACTUAL**:
+
+* Find how much each observation deviates from the mean.
+* Compute the (nearly) average of the **squared** deviations.
+* Called **sample variance** $s^2$.
+
+$$
+s^2 = \frac{1}{n - 1} \sum_{i = 1}^n (x_i - \bar{x})^2
+$$
+
+
+
+]
+
+.pull-right[
+
+.pull-left[
+
+```{r, echo = FALSE}
+bike_counter[1000:1006,] %>%
+  arrange(Total) %>%
+knitr::kable(digits = 2) %>%
+  kable_styling(bootstrap_options = c("responsive", "bordered", "striped"))
+```
+]
+
+
+.pull-right[
+
+
+```{r, echo = FALSE}
+bike_counter[1000:1006,] %>%
+  arrange(Total) %>%
+  mutate(Deviations = Total - mean(Total),
+         Dev_sqd = Deviations^2) %>%
+  select(Deviations, Dev_sqd) %>%
+knitr::kable(digits = 2) %>%
+  kable_styling(bootstrap_options = c("responsive", "bordered", "striped"))
+```
+
+
+
+]
+
+
+]
+
+```{r}
+# Calculate the measure of variability
+(14.88 + 8.16 + 3.45 + 0.020 + 1.31 + 9.88 + 17.16)/6
+```
+
+
+---
+
+## Measures of Variability
+
+* Want a statistic that captures how much observations will likely deviate from the mean
+
+
+.pull-left[
+
+
+* Find how much each observation deviates from the mean.
+* Compute the (nearly) average of the **squared** deviations.
+* Called the sample variance, $s^2$.
+* The square root of the sample variance is called the **sample standard deviation** $s$.
+
+
+$$
+s = \sqrt{\frac{1}{n - 1} \sum_{i = 1}^n (x_i - \bar{x})^2}
+$$
+
+
+
+]
+
+.pull-right[
+
+.pull-left[
+
+```{r, echo = FALSE}
+bike_counter[1000:1006,] %>%
+  arrange(Total) %>%
+knitr::kable(digits = 2) %>%
+  kable_styling(bootstrap_options = c("responsive", "bordered", "striped"))
+```
+]
+
+
+.pull-right[
+
+
+```{r, echo = FALSE}
+bike_counter[1000:1006,] %>%
+  arrange(Total) %>%
+  mutate(Deviations = Total - mean(Total),
+         Dev_sqd = Deviations^2) %>%
+  select(Deviations, Dev_sqd) %>%
+knitr::kable(digits = 2) %>%
+  kable_styling(bootstrap_options = c("responsive", "bordered", "striped"))
+```
+
+
+
+]
+
+
+]
+
+```{r}
+# Calculate the measure of variability
+sqrt((14.88 + 8.16 + 3.45 + 0.020 + 1.31 +9.88 + 17.16)/6)
+```
+
+
+---
+
+## Measures of Variability
+
+* In addition to the sample standard deviation and the sample variance, there is the Interquartile Range (IQR): 
+
+$$
+\mbox{IQR} = \mbox{Q}_3 - \mbox{Q}_1
+$$
+
+* Which is more robust to outliers, the IQR or $s$?
+
+* Which is more commonly used, the IQR or $s$?
+
+---
+
+class: center, middle, inverse
+
+
+## Two Minute Stretch
+
+--
+
+## Now let's go through the Data Summarization handout!
+
+
+---
+
+class: middle, center
+
+<img src="img/dplyr_wrangling.png" width="750px"/>
+
+
+---
+
+### Data Wrangling: Transformations done on the data
+
+--
+
+**Why wrangle the data?**
+
+--
+
+.pull-left[
+
+To **summarize** the data.
+
+]
+
+
+.pull-right[
+
+&#8594; To compute the mean and standard deviation of the bike counts.
+
+]
+
+--
+
+.pull-left[
+
+To **drop** missing values.  (Need to be careful here!)
+
+]
+
+.pull-right[
+
+&#8594; In your P-Set 2, you are dropping rows with NAs for particular variables before creating some of your graphs.
+
+]
+
+
+--
+
+.pull-left[
+
+To **filter** to a particular subset of the data.
+
+]
+
+.pull-right[
+
+&#8594; To subset the bike counts data to 2 days in July of 2019.
+
+]
+
+--
+
+.pull-left[
+
+To **collapse** the categories of a categorical variable.
+
+
+
+]
+
+.pull-right[
+
+&#8594; To go from 86 dog breeds to just mixed or single breed.
+
+]
+
+
+--
+
+.pull-left[
+
+To **arrange** the data to make it easier to display.
+
+]
+
+.pull-right[
+
+&#8594; To sort from most common dog name to least common.
+
+]
+
+--
+
+.pull-left[
+
+To fix how `R` **stores** a variable.
+
+]
+
+.pull-right[
+
+&#8594; I converted `Day` from a character variable/vector to a date variable/vector.
+
+]
+
+
+---
+
+class: middle, center
+
+<img src="img/DAW.png" width="750px"/>
+
+
+
+---
+
+class: center, middle
+
+.pull-left[
+
+## Data Viz
+
+
+<iframe src="https://giphy.com/embed/d31vTpVi1LAcDvdm" width="480" height="362" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/netflix-d31vTpVi1LAcDvdm">via GIPHY</a></p>
+
+]
+
+--
+
+.pull-right[
+
+## Data Wrangling
+
+<iframe src="https://giphy.com/embed/DbaUtl1DcLyrdwhzGJ" width="480" height="362" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/Amalgia-DbaUtl1DcLyrdwhzGJ">via GIPHY</a></p>
+
+]
+
+---
+
+## Reminders
+
+* Don't forget that P-Set 2 is due on Wednesday at 9am on Gradescope.  
+    + No late work accepted.
+* Fill out the [Project Assignment Group Preferences Survey](https://forms.gle/S4jDMoPMUHg7Zcfv5) if:
+    + You have particular people you'd like to work with.
+    + Or you are a graduate student/auditor and want to work alone.
+
+

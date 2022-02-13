@@ -1,0 +1,5 @@
+---
+title: "Lecture Slides"
+---
+
+Here I will post the lecture slides for Harvard's Stat 100, Spring 2022.

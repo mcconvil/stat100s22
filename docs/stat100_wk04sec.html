@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Asking Coding Questions</title>
+    <meta charset="utf-8" />
+    <script src="libsSlides/header-attrs-2.11/header-attrs.js"></script>
+    <link href="libsSlides/remark-css-0.0.1/hygge.css" rel="stylesheet" />
+    <script src="libsSlides/fabric-4.3.1/fabric.min.js"></script>
+    <link href="libsSlides/xaringanExtra-scribble-0.0.1/scribble.css" rel="stylesheet" />
+    <script src="libsSlides/xaringanExtra-scribble-0.0.1/scribble.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', function() { window.xeScribble = new Scribble({"pen_color":["#FF0000"],"pen_size":3,"eraser_size":30,"palette":[]}) })</script>
+    <link rel="stylesheet" href="more.css" type="text/css" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+
+background-image: url("img/DAW.png")
+background-position: left
+background-size: 50%
+class: middle, center, inverse
+
+
+.pull-right[
+
+
+
+## .whitish[Asking Coding Questions]
+
+&lt;br&gt;
+
+&lt;br&gt;
+
+
+#### .yellow[ Stat 100 | Week 4 | Spring 2022] 
+
+]
+
+
+
+---
+
+&lt;img src="img/ggplot2.png" width="15%" style="float:left; padding:10px" style="display: block; margin: auto;" /&gt;
+
+## Creating `repr`oducible `ex`amples with `reprex`
+
+
+&lt;br&gt;
+
+&lt;br&gt;
+
+&lt;br&gt;
+
+#### Why do I need to learn to create reproducible technical examples?
+
+--
+
+So that you can ask and answer questions in our class Slack Workspace or Stack Overflow or other `R` help sites!
+
+
+
+---
+
+## What is wrong with this coding question?
+
+
+I am trying to create a plot and I can't get the bars to do what I want them to.  Help?!
+
+
+---
+
+## What is wrong with this coding question?
+
+I want to do the following but it isn't working:
+
+thing &lt;- read.csv("long/file/path/thing.csv")
+
+ggplot(thing, aes(x = factor(that))) + geom_bar()
+
+
+Help?!
+
+
+---
+
+## What is wrong with this coding question?
+
+I want to reorder the bars of my plot but can't get it working.  Help!
+
+
+```r
+library(tidyverse)
+library(palmerpenguins)
+
+penguins &lt;- penguins %&gt;%
+  group_by(species) %&gt;%
+  mutate(mean_flipper = mean(flipper_length_mm)) %&gt;%
+  ungroup() %&gt;%
+  mutate(long = case_when(flipper_length_mm &lt; mean(flipper_length_mm) ~ "no",
+                           flipper_length_mm &gt;= mean(flipper_length_mm) ~ "yes"))  
+
+penguins %&gt;%
+  ggplot(mapping = aes(x = factor(species))) +
+  geom_bar()
+
+penguins %&gt;%
+  count(species)
+```
+
+```
+## # A tibble: 3 × 2
+##   species       n
+##   &lt;fct&gt;     &lt;int&gt;
+## 1 Adelie      152
+## 2 Chinstrap    68
+## 3 Gentoo      124
+```
+
+&lt;img src="stat100_wk04sec_files/figure-html/unnamed-chunk-2-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+---
+
+## What is wrong with this coding question?
+
+I want to reorder the bars of my plot but can't get it working.  Help!
+
+
+```r
+rm(list = ls())
+
+library(tidyverse)
+library(palmerpenguins)
+
+penguins %&gt;%
+  ggplot(mapping = aes(x = factor(species))) +
+  geom_bar()
+```
+
+
+---
+
+## [What makes a good coding question?](https://stackoverflow.com/questions/5963269/how-to-make-a-great-r-reproducible-example)
+
+
+--
+
+* It uses a **minimal** dataset to reproduce the issue.
+
+* It includes the **shortest** amount of  **runnable** code necessary to reproduce the issue.
+
+* It doesn't wreak havoc on other people's computers.
+
+* It includes code **and output** so that others don't have to run it!
+
+* It includes any necessary information on the used packages, R version, system, etc.
+    + Should not be a concern for our class Slack since we are all on the same RStudio Server.
+
+---
+
+## Minimal Dataset
+
+
+Create a toy data frame.
+
+
+```r
+dat &lt;- data.frame(animal = c("cat", "dog", "mouse"), 
+                  weight = c(5, 10, 0.5))
+dat
+```
+
+```
+##   animal weight
+## 1    cat    5.0
+## 2    dog   10.0
+## 3  mouse    0.5
+```
+
+    
+Use a built-in dataset or a dataset from a particular package.
+
+
+```r
+library(palmerpenguins)
+penguins
+```
+
+```
+## # A tibble: 344 × 10
+##    species island    bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+##    &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+##  1 Adelie  Torgersen           39.1          18.7               181        3750
+##  2 Adelie  Torgersen           39.5          17.4               186        3800
+##  3 Adelie  Torgersen           40.3          18                 195        3250
+##  4 Adelie  Torgersen           NA            NA                  NA          NA
+##  5 Adelie  Torgersen           36.7          19.3               193        3450
+##  6 Adelie  Torgersen           39.3          20.6               190        3650
+##  7 Adelie  Torgersen           38.9          17.8               181        3625
+##  8 Adelie  Torgersen           39.2          19.6               195        4675
+##  9 Adelie  Torgersen           34.1          18.1               193        3475
+## 10 Adelie  Torgersen           42            20.2               190        4250
+## # … with 334 more rows, and 4 more variables: sex &lt;fct&gt;, year &lt;int&gt;,
+## #   mean_flipper &lt;dbl&gt;, long &lt;chr&gt;
+```
+
+
+---
+
+## Minimal Code
+
+Include the **necessary** libraries.
+
+Test run the code in a restarted R session to make sure it is runnable!
+
+
+```r
+library(tidyverse)
+library(palmerpenguins)
+
+penguins %&gt;%
+  ggplot(mapping = aes(x = factor(species))) +
+  geom_bar()
+```
+
+&lt;img src="stat100_wk04sec_files/figure-html/unnamed-chunk-6-1.png" width="360" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+## Make sure your code is copy-and-paste-able!
+
+Don't copy from the console.
+
+
+```r
+&gt; library(tidyverse)
+&gt; library(palmerpenguins)
+&gt; 
+&gt; penguins %&gt;%
++     ggplot(mapping = aes(x = factor(species))) +
++     geom_bar()
+```
+
+
+---
+
+## Make sure your code is copy-and-paste-able!
+
+
+![](img/screenshot.png)
+
+
+
+---
+
+## What Else to Include?
+
+(Don't need to do this for our class Slack)
+
+* R Version
+
+* Platform
+
+
+```r
+sessionInfo()
+```
+
+```
+## R version 4.1.1 (2021-08-10)
+## Platform: x86_64-pc-linux-gnu (64-bit)
+## Running under: Ubuntu 20.04.3 LTS
+## 
+## Matrix products: default
+## BLAS/LAPACK: /usr/lib/x86_64-linux-gnu/openblas-pthread/libopenblasp-r0.3.8.so
+## 
+## locale:
+##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=C             
+##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] palmerpenguins_0.1.0 forcats_0.5.1        stringr_1.4.0       
+##  [4] dplyr_1.0.7          purrr_0.3.4          readr_2.0.2         
+##  [7] tidyr_1.1.4          tibble_3.1.5         ggplot2_3.3.5       
+## [10] tidyverse_1.3.1      knitr_1.36          
+## 
+## loaded via a namespace (and not attached):
+##  [1] tidyselect_1.1.1    xfun_0.27           bslib_0.3.1        
+##  [4] haven_2.4.3         colorspace_2.0-2    vctrs_0.3.8        
+##  [7] generics_0.1.1      htmltools_0.5.2     yaml_2.2.1         
+## [10] utf8_1.2.2          rlang_0.4.12        jquerylib_0.1.4    
+## [13] pillar_1.6.4        withr_2.4.2         glue_1.4.2         
+## [16] DBI_1.1.1           dbplyr_2.1.1        modelr_0.1.8       
+## [19] readxl_1.3.1        lifecycle_1.0.1     munsell_0.5.0      
+## [22] gtable_0.3.0        cellranger_1.1.0    rvest_1.0.2        
+## [25] evaluate_0.14       labeling_0.4.2      tzdb_0.2.0         
+## [28] fastmap_1.1.0       fansi_0.5.0         highr_0.9          
+## [31] broom_0.7.9         Rcpp_1.0.7          xaringanExtra_0.5.5
+## [34] backports_1.3.0     scales_1.1.1        jsonlite_1.7.2     
+## [37] farver_2.1.0        fs_1.5.0            hms_1.1.1          
+## [40] digest_0.6.28       stringi_1.7.5       xaringan_0.22      
+## [43] grid_4.1.1          cli_3.1.0           tools_4.1.1        
+## [46] magrittr_2.0.1      sass_0.4.0          crayon_1.4.1       
+## [49] pkgconfig_2.0.3     ellipsis_0.3.2      xml2_1.3.2         
+## [52] reprex_2.0.1        lubridate_1.8.0     rstudioapi_0.13    
+## [55] assertthat_0.2.1    rmarkdown_2.11      httr_1.4.2         
+## [58] R6_2.5.1            compiler_4.1.1
+```
+
+---
+
+## What Else to Include?
+
+(Don't need to do this for our class Slack)
+
+* If it is a problem with a specific package, include the version.
+
+
+```r
+packageVersion("tidyverse")
+```
+
+```
+## [1] '1.3.1'
+```
+
+
+---
+
+Now we have our reproducible example:
+
+How can I reorder the bars in the ggplot to go from the most frequent to the least frequent category?
+
+
+```r
+library(tidyverse)
+library(palmerpenguins)
+
+penguins %&gt;%
+  ggplot(mapping = aes(x = factor(species))) +
+  geom_bar()
+```
+
+&lt;img src="stat100_wk04sec_files/figure-html/unnamed-chunk-10-1.png" width="288" style="display: block; margin: auto;" /&gt;
+
+--
+
+**How can we easily share it?**
+
+--
+
+* Using the `reprex()` function in the `reprex` package.
+
+---
+
+## `reprex` Practice Time!
+
+
+But first: **Q**: What is an R script file?
+
+--
+
+* A text file for entering R commands.
+
+--
+
+**Q**: How is an R script file different from an R Markdown document?
+
+--
+
+* You only put code in an `R` script.  
+* If you add any text you must comment it out with `#`.
+* Think of it as a single `R` chunk that you won't knit into an output document.
+* Useful when writing a lot of code and want to compartmentalize.
+
+---
+
+#### `reprex` Practice Time!
+
+
+(1) In **Session**, select "Clear Workspace" and then "Restart R".
+
+(2) Open a script file and include in the top line:
+
+
+```r
+library(reprex)
+```
+
+
+(3) Put the code you want to use in the script file and make sure it runs.
+
+
+```r
+library(tidyverse)
+library(palmerpenguins)
+
+penguins %&gt;%
+  ggplot(mapping = aes(x = factor(species))) +
+  geom_bar()
+```
+
+
+
+(4) Surround the code with `reprex({ ... }, venue = "slack")` and run it.
+
+(5) An md file will pop up. Copy all the contents of that file.  
+
+(6) Head over to your Section channel and paste in the contents.  A text box will pop-up and select "Apply". 
+
+(7) Above your code, type your question.  Then hit "Send".
+
+
+---
+
+#### `reprex` Practice Time!
+
+Let's now practice sharing our graphs from Problem 7 on P-Set 3 using `reprex`.
+
+Notes:
+
+1. Post the code and graph to our Section channel.
+1. Don't forget to share the code to generate the data frame.
+1. In your post, include an interesting observation about your selected actor's movies.
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"ratio": "16:9",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

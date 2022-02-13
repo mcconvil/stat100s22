@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Statistical Thinking</title>
+    <meta charset="utf-8" />
+    <script src="libsSlides/header-attrs-2.11/header-attrs.js"></script>
+    <script src="libsSlides/kePrint-0.0.1/kePrint.js"></script>
+    <link href="libsSlides/lightable-0.0.1/lightable.css" rel="stylesheet" />
+    <link rel="stylesheet" href="more.css" type="text/css" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+background-image: url("img/DAW.png")
+background-position: left
+background-size: 50%
+class: middle, center, inverse
+
+
+.pull-right[
+
+
+
+## .whitish[Statistical Thinking]
+
+&lt;br&gt;
+
+&lt;br&gt;
+
+### .whitish[Kelly McConville]
+
+#### .yellow[ Stat 100 | Week 1 | Spring 2022] 
+
+]
+
+---
+
+class: inverse
+
+
+## Getting Started in Stat 100
+
+.pull-left[
+
+&lt;img src="img/modules.png" width="85%" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right[
+
+* Complete the [Background Survey](https://forms.gle/FdYRHxULGxcAZy2N6).
+    + Due at same time at P-Set 1.
+* Watch the overview video.
+* Read over the syllabus.
+* Check out the [Office Hours Schedule](https://canvas.harvard.edu/courses/102162/pages/check-out-the-office-hours-schedule).
+    
+]    
+    
+---
+
+
+
+## Announcements
+
+* Lectures are online this week.      
+* Lecture slide decks will always be posted and linked to a Canvas Module the day before lecture.
+* No sections this week.
+* Only I will be running office hours this week (all virtual).
+    + I will have extra office hours on Thursday from 10am - noon.
+
+****************************
+
+--
+
+## Week 1 Goals
+
+.pull-left[
+
+**Monday Lecture**
+
+* Statistical thinking
+* Introduction to data
+* Hand-drawn data visualizations
+
+]
+
+--
+
+.pull-right[
+
+**Wednesday Lecture**
+
+* Stat 100 assessments
+* Getting up and running in `RStudio`
+* Working with `RMarkdown` documents
+
+]
+
+---
+
+background-image: url("img/structures.001.jpeg")
+background-position: contain
+background-size: 65%
+
+## Stat 100 Tech &amp; Materials
+
+---
+
+class: inverse
+
+## The Rest of the Teaching Team
+
+
+
+&lt;img src="img/dreamteam.001.jpeg" width="95%" style="display: block; margin: auto;" /&gt;
+
+
+
+
+---
+
+class: inverse, middle, center
+
+
+## Stat 100 is about developing our .mustard[statistical thinking] skills.
+
+--
+
+### What is .mustard[statistical thinking]?
+
+--
+
+### Let's collect some data.  
+
+--
+
+### Practice round: Give keywords or phrases for Harvard.
+
+
+---
+
+class: inverse, middle, center
+
+
+## Stat 100 is about developing our .mustard[statistical thinking] skills.
+
+
+
+### What is .mustard[statistical thinking]?
+
+
+--
+
+
+### It is not the same as mathematical thinking.
+
+
+--
+
+### Let's discover what .mustard[statistical thinking] is by practicing .mustard[statistical thinking].
+
+
+
+---
+
+class: inverse, middle, center
+
+
+## Start the Statistical Thinking worksheet in small groups.
+
+### We will come back together to discuss.
+
+
+---
+
+## Problem 1 Discussion
+
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Minority &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; White &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Acquitted &lt;/td&gt;
+   &lt;td style="text-align:right;width: 2cm; "&gt; 60 &lt;/td&gt;
+   &lt;td style="text-align:right;width: 2cm; "&gt; 86 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Convicted &lt;/td&gt;
+   &lt;td style="text-align:right;width: 2cm; "&gt; 29 &lt;/td&gt;
+   &lt;td style="text-align:right;width: 2cm; "&gt; 45 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Total &lt;/td&gt;
+   &lt;td style="text-align:right;width: 2cm; "&gt; 89 &lt;/td&gt;
+   &lt;td style="text-align:right;width: 2cm; "&gt; 131 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+* Overall, which group was convicted at a higher rate?
+
+&lt;br&gt;
+
+* When the victim was white, which group was convicted at a higher rate?
+
+&lt;br&gt;
+
+* When the victim was a minority, which group was convicted at a higher rate?
+
+--
+
+.mauve[HOW IS THIS POSSIBLE?]
+
+
+
+---
+
+## Simpson's Paradox
+
+.mauve[HOW IS THIS POSSIBLE?]
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Minority Defendant Convicted &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Minority Defendant Acquitted &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; White Defendant Convicted &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; White Defendant Acquitted &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Minority Victim &lt;/td&gt;
+   &lt;td style="text-align:right;width: 2cm; "&gt; 19 &lt;/td&gt;
+   &lt;td style="text-align:right;width: 2cm; "&gt; 45 &lt;/td&gt;
+   &lt;td style="text-align:right;width: 2cm; "&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;width: 2cm; "&gt; 19 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; White Victim &lt;/td&gt;
+   &lt;td style="text-align:right;width: 2cm; "&gt; 10 &lt;/td&gt;
+   &lt;td style="text-align:right;width: 2cm; "&gt; 15 &lt;/td&gt;
+   &lt;td style="text-align:right;width: 2cm; "&gt; 40 &lt;/td&gt;
+   &lt;td style="text-align:right;width: 2cm; "&gt; 67 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Total &lt;/td&gt;
+   &lt;td style="text-align:right;width: 2cm; "&gt; 29 &lt;/td&gt;
+   &lt;td style="text-align:right;width: 2cm; "&gt; 60 &lt;/td&gt;
+   &lt;td style="text-align:right;width: 2cm; "&gt; 45 &lt;/td&gt;
+   &lt;td style="text-align:right;width: 2cm; "&gt; 86 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+**Key factors:**
+
+--
+
+For what race of the victim, is the conviction rate higher?
+
+--
+
+&amp;rarr; The conviction rate is 37.9% for white victims and 27.2% for minority victims.
+
+--
+
+When the defendant is white, what tends to be the race of the victim?
+
+--
+
+&amp;rarr; White defendants tend to have white victims.  Minority defendants tend to have minority victims.
+
+
+---
+
+#### Problem 2 Discussion
+
+&lt;img src="img/GAcovid.jpg" width="90%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+#### Problem 2 Discussion
+
+&lt;img src="img/GAcovid.jpg" width="40%" style="display: block; margin: auto;" /&gt;
+
+
+
+&lt;img width="45%" src="img/GAcovid2.jpg"/&gt;
+&lt;img width="49%" src="img/GAcovid_cairo.png"/&gt;
+
+
+---
+
+class: middle, inverse, center
+
+## What is "Statistical Thinking?"
+
+---
+
+
+
+
+## Statistical Thinking
+
+
+.pull-left[
+
+* Importance of the appropriate **measures/metrics**.
+
+]
+
+--
+
+.pull-right[
+
+&amp;#8594; Considering **proportions** instead of the **raw counts**.
+
+
+]
+
+--
+
+
+.pull-left[
+
+
+* Utilizing **multivariate** thinking.
+
+
+]
+
+
+--
+
+
+.pull-right[
+
+&amp;#8594; When we added a **third** variable (race of the victim) into the picture, the story completely changed!
+
+
+]
+
+
+
+--
+
+.pull-left[
+
+* Understanding the importance of **context**.
+
+]
+
+--
+
+.pull-right[
+
+&amp;#8594; Context explained the Monday jumps in the COVID counts.
+
+]
+
+--
+
+.pull-left[
+
+* How we **encode** information in graphs matters.
+
+]
+
+--
+
+.pull-right[
+
+&amp;#8594; **Design choices** impact the conclusions the viewer draws.
+
+
+]
+
+
+--
+
+* And so much more!
+
+
+
+
+---
+
+class: middle, inverse, center
+
+## What are data?
+
+---
+
+* The dictionary definition:
+
+&gt; "data: factual information (such as measurements or statistics) used as a basis for reasoning, discussion, or calculation" -- Merriam-Webster
+
+--
+
+* Wikipedia:
+
+&gt; "Data are characteristics or information, usually numerical, that are collected through observation. In a more technical sense, data are a set of values of qualitative or quantitative variables about one or more persons or objects, while a datum (singular of data) is a single value of a single variable."
+
+---
+
+* Our textbook definition:
+
+&gt; "Data comes to us in a variety of formats, from pictures to text to numbers." -- ModernDive
+
+--
+
+* Data Feminism:
+
+&gt; "... by the time that information becomes data, it's already been classified in some way. Data after all, is information made *tractable*." -- D'Ignazio and Klein
+
+---
+
+## Data Frames
+
+
+&lt;table class="table table-responsive table-bordered table-striped" style="font-size: 12px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; UserID &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Tree_Height &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Common_Name &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Park &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; DBH &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Species_Factoid &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 105 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Douglas-Fir &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gammans Park &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 37.4 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Bracts on cones look like a mouse's feet and tail. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 94 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Douglas-Fir &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gammans Park &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 32.5 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Bracts on cones look like a mouse's feet and tail. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 23 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Lavalle Hawthorn &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gammans Park &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9.7 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Like most hawthorns, the tree has stout thorns up to 2" long. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 28 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Northern Red Oak &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gammans Park &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10.3 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Acorns take two years to mature and are an important food source for wildlife. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 102 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Douglas-Fir &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gammans Park &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 33.2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Bracts on cones look like a mouse's feet and tail. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 95 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Douglas-Fir &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gammans Park &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 32.1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Bracts on cones look like a mouse's feet and tail. &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+Data in spreadsheet-like format where:
+
+--
+
+* Rows = Observations/cases
+
+--
+
+
+* Columns = Variables
+
+---
+
+## Data Frames
+
+
+&lt;table class="table table-responsive table-bordered table-striped" style="font-size: 12px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; UserID &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Tree_Height &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Common_Name &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Park &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; DBH &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Species_Factoid &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 105 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Douglas-Fir &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gammans Park &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 37.4 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Bracts on cones look like a mouse's feet and tail. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 94 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Douglas-Fir &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gammans Park &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 32.5 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Bracts on cones look like a mouse's feet and tail. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 23 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Lavalle Hawthorn &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gammans Park &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9.7 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Like most hawthorns, the tree has stout thorns up to 2" long. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 28 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Northern Red Oak &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gammans Park &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10.3 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Acorns take two years to mature and are an important food source for wildlife. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 102 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Douglas-Fir &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gammans Park &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 33.2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Bracts on cones look like a mouse's feet and tail. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 95 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Douglas-Fir &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gammans Park &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 32.1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Bracts on cones look like a mouse's feet and tail. &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+Rows = Observations/cases
+
+**What are the cases?  What does each row represent?** 
+
+
+---
+
+## Data Frames
+
+
+&lt;table class="table table-responsive table-bordered table-striped" style="font-size: 12px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; UserID &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Tree_Height &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Common_Name &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Park &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; DBH &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Species_Factoid &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 105 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Douglas-Fir &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gammans Park &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 37.4 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Bracts on cones look like a mouse's feet and tail. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 94 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Douglas-Fir &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gammans Park &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 32.5 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Bracts on cones look like a mouse's feet and tail. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 23 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Lavalle Hawthorn &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gammans Park &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9.7 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Like most hawthorns, the tree has stout thorns up to 2" long. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 28 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Northern Red Oak &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gammans Park &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10.3 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Acorns take two years to mature and are an important food source for wildlife. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 102 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Douglas-Fir &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gammans Park &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 33.2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Bracts on cones look like a mouse's feet and tail. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 95 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Douglas-Fir &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gammans Park &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 32.1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Bracts on cones look like a mouse's feet and tail. &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+Columns = Variables
+
+**Variables**: Describe characteristics of the observations
+
+--
+
+* **Quantitative**: Numerical in nature
+
+--
+
+* **Categorical**: Values are categories
+
+--
+
+* **Identification**: Uniquely identify each case
+
+
+---
+
+## Data Frames
+
+&lt;table class="table table-responsive table-bordered table-striped" style="font-size: 12px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; UserID &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Tree_Height &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Common_Name &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Park &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; DBH &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Species_Factoid &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 105 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Douglas-Fir &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gammans Park &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 37.4 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Bracts on cones look like a mouse's feet and tail. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 94 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Douglas-Fir &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gammans Park &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 32.5 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Bracts on cones look like a mouse's feet and tail. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 23 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Lavalle Hawthorn &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gammans Park &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9.7 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Like most hawthorns, the tree has stout thorns up to 2" long. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 28 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Northern Red Oak &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gammans Park &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10.3 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Acorns take two years to mature and are an important food source for wildlife. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 102 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Douglas-Fir &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gammans Park &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 33.2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Bracts on cones look like a mouse's feet and tail. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 95 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Douglas-Fir &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Gammans Park &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 32.1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Bracts on cones look like a mouse's feet and tail. &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+**Important to understand what each variable represents and the units of measurement.**
+
+--
+
+Example questions:
+
+* For categorical variables, what are the categories? Do those categories adequately represent the data represented by that variable?
+
+--
+
+* For quantitative variables, what values are possible? Were the data rounded or binned?  Are those values actually encoding categories?
+
+---
+
+   
+## Hand-Drawn Data Viz
+
+* Two key aspects of data visualization:
+    + Determining how you want to display the data.
+    + Figuring out how to tell the computer to do that mapping.
+
+--
+
+* Hand-drawn data visualizations allow us to focus on the first part and with full control over the creative process!
+
+---
+
+## Hand-Drawn Data Viz Examples
+
+* [Dear Data](http://www.dear-data.com/theproject)
+
+&gt; "Each week, and for a year, we collected and measured a particular type of data about our lives, used this data to make a drawing on a postcard-sized sheet of paper, and then dropped the postcard in an English “postbox” (Stefanie) or an American “mailbox” (Giorgia)!"
+
+---
+
+### Dear Data Examples
+
+&lt;img src="img/dearDataTime.png" width="73%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+### Dear Data Examples
+
+&lt;img src="img/dearDataComplaints.png" width="73%" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+
+## Mapping Manhattan
+
+* Becky Cooper handed out hand-drawn maps of Manhattan to strangers and asked them to ["map their Manhattan."](https://www.goodreads.com/book/show/15842664-mapping-manhattan?from_search=true)
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="img/mapmanhattan.png" alt="Map drawn by New Yorker staff writer Patricia Marx" width="100%" /&gt;
+&lt;p class="caption"&gt;Map drawn by New Yorker staff writer Patricia Marx&lt;/p&gt;
+&lt;/div&gt;
+
+
+---
+
+### The Start of Problem Set 1: Create your own Dear Data postcard! 
+
+
+.pull-left[
+
+**Step 1**  
+
+* This week collect data on some aspect of your life.
+    
+**Step 2**    
+    
+* Find a story in your data and determine your postcard recipient.
+
+
+
+* Figure out how you want to visualize the story.
+
+
+**Step 3+** 
+
+* Next week you will get your blank postcard so you can actually create your visualization.
+
+]
+
+.pull-right[
+
+&lt;img src="img/supplies.jpg" width="60%" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+
+
+---
+
+### More Dear Data Examples
+
+&lt;img src="img/postcards.001.jpeg" width="73%" style="display: block; margin: auto;" /&gt;
+
+---
+
+### More Dear Data Examples
+
+&lt;img src="img/postcards.002.jpeg" width="73%" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+
+## Reminders
+
+* Will get the rest of P-Set 1 on Wednesday.  
+* Make sure to go through the syllabus and Overview video (which can both be found in the Getting Started Module on Canvas).
+    + Will discuss assessments (p-sets, project, exams, engagement) a bit on Wednesday.
+    + But will assume you looked over the Getting Started materials.
+* No sections this week.
+* Only I will be running [office hours this week (all virtual)](https://canvas.harvard.edu/courses/102162/pages/check-out-the-office-hours-schedule).
+    + I will have extra office hours on Thursday from 10am - noon.
+  
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"ratio": "16:9",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

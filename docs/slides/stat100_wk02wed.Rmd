@@ -1,0 +1,1405 @@
+---
+title: Data Viz, Day 2
+output:
+  xaringan::moon_reader:
+    css: ["more.css", "xaringan-themer.css", "hygge"]
+    lib_dir: libsSlides
+    self_contained: false
+    nature:
+      highlightStyle: github
+      ratio: '16:9'      
+      highlightLines: true
+      countIncrementalSlides: false
+      navigation:
+        scroll: false
+    seal: false
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, 
+                      fig.retina = 3, fig.align = 'center',
+                      fig.asp = 0.75, fig.width = 8)
+library(knitr)
+library(tidyverse)
+theme_update(text = element_text(size = 20))
+```
+
+```{r xaringan-scribble, echo=FALSE}
+xaringanExtra::use_scribble()
+```
+
+
+background-image: url("img/DAW.png")
+background-position: left
+background-size: 50%
+class: middle, center, inverse
+
+
+.pull-right[
+
+
+
+## .whitish[More Data Visualization]
+
+<br>
+
+<br>
+
+### .whitish[Kelly McConville]
+
+#### .yellow[ Stat 100 | Week 2 | Spring 2022] 
+
+]
+
+
+---
+
+## Sections 101
+
+
+* Make sure you know the [time](http://my.harvard.edu) and [location](https://docs.google.com/spreadsheets/d/1EkTlAzvSxevvoIsleIWF4XH1gmnN-aTCSuxFyJdmlw0/edit?usp=sharing) of your Section.
+
+* D003 and D004 will be online this week.
+
+--
+
+.pull-left[
+
+* What to expect?
+    + Do practice exercises.
+    + Start the next p-set.
+    + Clear up confusions.
+
+]
+
+--
+
+.pull-right[
+
+* This week's section:
+    + Use p-set 1 to practice uploading to Gradescope.
+    + Practice decomposing graphs with a "many graphs, one dataset" activity.
+    + Start on p-set 2.
+    + Get help with lingering `R` and `RMarkdown` questions.
+    
+]
+
+---
+
+
+
+## Announcements
+
+* Don't forget that p-set 1 due on Friday by 5pm on Gradescope.
+
+****************************
+
+--
+
+## Goals for Today
+
+.pull-left[
+
+* Learn the general structure of `ggplot2`.
+* Learn a few standard graphs for numerical/quantitative data:
+    + **Histogram**: one numerical variable
+    + **Side-by-side boxplot**: one numerical variable and one categorical variable
+    + **Side-by-side violin plot**: one numerical variable and one categorical variable
+    + **Scatterplot**: two numerical variables
+    + **Linegraph**: two numerical variables
+
+
+
+] 
+
+--
+
+.pull-right[
+
+
+* And, learn the standard graphic for categorical data 
+    + **Barplot**: one categorical variable
+    + **Segmented barplot**: two categorical variables
+
+
+* Also cover:
+    + Incorporating more variables into our plots!
+    + Adding context to our plots.
+
+
+]
+
+---
+
+class: inverse, middle, center
+
+## But First....
+
+### How do I upload my postcard images to the RStudio Server??
+
+---
+
+```{r, echo = FALSE, out.width= "15%", out.extra='style="float:left; padding:10px"'}
+knitr::include_graphics("img/ggplot2.png")
+```
+
+## Load Necessary Packages
+
+`ggplot2` is part of this collection of data science packages.
+
+```{r, message=TRUE}
+# Load necessary packages
+library(tidyverse)
+```
+
+---
+
+# `ggplot2` example code
+
+**Guiding Principle**: We will map variables from the **data** to the **aes**thetic attributes (e.g. location, size, shape, color) of **geom**etric objects (e.g. points, lines, bars).
+
+```{r, eval = FALSE, tidy = FALSE}
+ggplot(data = ---, mapping = aes(---)) +
+  geom_---(---) 
+```
+
+---
+
+
+## Data Setting: [Eco-Totem Broadway Bicycle Count](https://data.cambridgema.gov/Transportation-Planning/Eco-Totem-Broadway-Bicycle-Count/q8v9-mcfg)
+
+
+.pull-left[
+
+```{r  out.width = "90%", echo=FALSE, fig.align='center'}
+include_graphics("img/counter.jpg") 
+```
+
+]
+
+.pull-right[
+
+```{r  out.width = "90%", echo=FALSE, fig.align='center'}
+include_graphics("img/bike_counter_map.png") 
+```
+
+
+]
+
+
+
+---
+
+## Import the [Data](https://data.cambridgema.gov/Transportation-Planning/Eco-Totem-Broadway-Bicycle-Count/q8v9-mcfg)
+
+```{r, cache = TRUE, message = FALSE, warning = FALSE}
+bike_counter <- read_csv("https://data.cambridgema.gov/api/views/q8v9-mcfg/rows.csv")
+
+# Inspect the data
+glimpse(bike_counter)
+```
+
+
+---
+
+## Data Wrangling
+
+**We haven't learned this topic yet.**
+
+**I only included this code for completeness/transparency.**
+
+```{r}
+# Fix Date column to be stored with the date class
+library(lubridate)
+bike_counter <- mutate(bike_counter, Date = mdy(Date))
+
+# Filter to only include two days in July 2019
+july_2019 <- filter(bike_counter,
+                    Date %in% c(mdy("07/04/2019"),
+                                mdy("07/11/2019")))
+# Add an Occasion column
+july_2019 <- mutate(july_2019,
+                    Occasion = if_else(Date == mdy("07/04/2019"),
+                                                    "Fourth of July",
+                                                    "Normal Thursday"))
+
+```
+
+
+
+---
+
+# Histograms
+
+.left-column[
+
+* Binned counts of data.
+
+* Great for assessing shape.
+]
+
+.right-column[
+```{r, echo = FALSE}
+# Create histogram
+ggplot(data = july_2019, mapping = aes(x = Total)) +
+  geom_histogram()
+
+```
+
+]
+
+---
+
+# Data Shapes
+
+```{r, echo=FALSE, fig.width = 12, fig.asp = .4}
+dat <- data_frame(x1 = rf(200,12,8), x2 = rnorm(200), x3 = (-1)*rf(200, 12, 8)+20)
+p1 <- ggplot(dat, aes(x = x1)) +
+  geom_histogram(bins = 20) +
+  labs(title = "Right Skewed Shape")
+p2 <- ggplot(dat, aes(x = x2)) +
+  geom_histogram(bins = 15) +
+  labs(title = "Bell Shaped \nand Symmetric")
+p3 <- ggplot(dat, aes(x = x3)) +
+  geom_histogram(bins = 15) + 
+  labs(title = "Left Skewed Shape")
+library(cowplot)
+plot_grid(p1, p2, p3, ncol = 3)
+```
+
+---
+
+# Histograms
+
+.pull-left[
+
+```{r hist, fig.show = 'hide'}
+# Create histogram
+ggplot(data = july_2019, 
+       mapping = aes(x = Total)) +
+  geom_histogram()
+```
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("hist", "png"))
+```
+
+]
+---
+
+# Histograms
+
+.pull-left[
+
+```{r hist2, fig.show = 'hide'}
+# Create histogram
+ggplot(data = july_2019, 
+       mapping = aes(x = Total)) +
+  geom_histogram(color = "white",
+                 fill = "violetred1",
+                 bins = 50)
+```
+
+#### For aesthetics:
+
+* **mapping** to a variable goes in `aes()`
+* **setting** to a specific value goes in the `geom_---()`
+
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("hist2", "png"))
+```
+
+]
+
+
+
+
+---
+
+# Boxplots
+
+.pull-left[
+
+```{r box, fig.show = 'hide', echo = FALSE}
+ggplot(data = july_2019, 
+       mapping = aes(x = Occasion, 
+                     y = Total)) +
+  geom_boxplot()
+```
+
+* **Five number summary**: 
+    + Minimum
+    + First quartile (Q1)
+    + Median
+    + Third quartile (Q3)
+    + Maximum
+* Interquartile range (IQR) $=$ Q3 $-$ Q1
+* Outliers: **unusual** points 
+    + Boxplot defines unusual as being beyond $1.5*IQR$ from $Q1$ or $Q3$.
+* Whiskers: reach out to the furthest point that is NOT an outlier
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("box", "png"))
+```
+
+]
+
+
+---
+
+# Boxplots
+
+.pull-left[
+
+```{r not, eval = FALSE, echo = TRUE}
+ggplot(data = july_2019, 
+       mapping = aes(x = Occasion, 
+                     y = Total)) +
+  geom_boxplot()
+```
+
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("box", "png"))
+```
+
+]
+
+---
+
+# Boxplots
+
+.pull-left[
+
+```{r box2, fig.show = 'hide'}
+ggplot(data = july_2019, 
+       mapping = aes(x = Occasion, 
+                     y = Total)) +
+  geom_boxplot(fill = "springgreen1")
+```
+
+
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("box2", "png"))
+```
+
+]
+
+
+
+---
+
+# Boxplots
+
+.pull-left[
+
+```{r box3, fig.show = 'hide'}
+ggplot(data = july_2019, 
+       mapping = aes(x = Occasion, 
+                     y = Total,
+                     fill = Occasion)) +
+  geom_boxplot()
+```
+
+
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("box3", "png"))
+```
+
+]
+
+
+
+
+---
+
+# Boxplots
+
+
+.pull-left[
+
+```{r box4, fig.show = 'hide'}
+ggplot(data = july_2019, 
+       mapping = aes(x = Occasion, 
+                     y = Total,
+                     fill = Occasion)) +
+  geom_boxplot() +
+  guides(fill = "none")
+```
+
+
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("box4", "png"))
+```
+
+]
+
+
+---
+
+# Violin Plots
+
+
+.pull-left[
+
+```{r vio, fig.show = 'hide'}
+ggplot(data = july_2019, 
+       mapping = aes(x = Occasion, 
+                     y = Total,
+                     fill = Occasion)) +
+  geom_violin() +
+  guides(fill = "none")
+```
+
+
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("vio", "png"))
+```
+
+]
+
+
+---
+
+# Boxplot Versus Violin Plots
+
+
+.pull-left[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("box4", "png"))
+```
+
+]
+
+
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("vio", "png"))
+```
+
+]
+
+
+
+---
+
+## Scatterplots
+
+.pull-left[
+
+```{r scat, fig.show = 'hide', echo = FALSE}
+ggplot(data = july_2019,
+       mapping = aes(x = Time,
+                     y = Total)) +
+  geom_point(size = 2)
+```
+
+* Explore relationships between numerical variables.
+    + We will be especially interested in **linear** relationships.
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("scat", "png"))
+```
+
+]
+
+
+---
+
+## Scatterplots
+
+.pull-left[
+
+```{r scatnot, eval = FALSE}
+ggplot(data = july_2019,
+       mapping = aes(x = Time,
+                     y = Total)) +
+  geom_point(size = 2)
+```
+
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("scat", "png"))
+```
+
+]
+
+
+---
+
+## Scatterplots
+
+.pull-left[
+
+```{r scat2, fig.show = 'hide'}
+ggplot(data = july_2019,
+       mapping = aes(x = Time,
+                     y = Total)) +
+  geom_point(size = 2, alpha = 0.6)
+```
+
+* Fix over-plotting
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("scat2", "png"))
+```
+
+]
+
+--
+
+**Why the weird pattern?**
+
+
+---
+
+## Scatterplots
+
+.pull-left[
+
+```{r scat3, fig.show = 'hide'}
+ggplot(data = july_2019,
+       mapping = aes(x = Time,
+                     y = Total,
+                     color = Occasion)) +
+  geom_point(size = 2, alpha = 0.6)
+```
+
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("scat3", "png"))
+```
+
+]
+
+---
+
+## Linegraphs
+
+.pull-left[
+
+```{r line, fig.show = 'hide'}
+ggplot(data = july_2019,
+       mapping = aes(x = Time,
+                     y = Total,
+                     color = Occasion)) +
+  geom_line(size = 2)
+```
+
+* Also called **time series plot** when time is represented on the x axis.
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("line", "png"))
+```
+
+]
+
+---
+
+## Linegraphs
+
+.pull-left[
+
+```{r line2, fig.show = 'hide'}
+ggplot(data = july_2019,
+       mapping = aes(x = Time,
+                     y = Total,
+                     color = Occasion)) +
+  geom_line(size = 2) +
+  theme(legend.pos = "bottom")
+```
+
+* Also called **time series plot** when time is represented on the x axis.
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("line2", "png"))
+```
+
+]
+
+---
+
+## Data Setting: [Dog Names in Cambridge, MA](https://data.cambridgema.gov/General-Government/Dogs-of-Cambridge/sckh-3xyx)
+
+Based on dog license data collected by Cambridge's Animal Commission
+
+```{r}
+# Import and inspect data
+dogs <- read_csv("https://data.cambridgema.gov/api/views/sckh-3xyx/rows.csv")
+glimpse(dogs)
+```
+
+---
+
+## Data Wrangling
+
+**We haven't learned this topic yet.**
+
+**I only included this code for completeness/transparency.**
+
+```{r}
+# Create a column for Breed
+dogs <- mutate(dogs, Breed = if_else(
+                       Dog_Breed == "Mixed Breed",
+                       "Mixed", "Single"))
+
+
+# Find the 10 top most common names
+top10names <- count(dogs, Dog_Name) %>%
+  slice_max(n = 10, order_by = n) %>%
+  select(Dog_Name) %>%
+  pull()
+  
+# Filter dataset to only the 10 top most common names
+dogs_top10 <- filter(dogs,
+                     Dog_Name %in% top10names)
+
+
+```
+
+---
+
+class: inverse, middle, center
+
+## Before we graph the data...
+
+### Any guesses on popular dog names?
+
+
+```{r, eval = FALSE, echo = FALSE}
+count(dogs_top10, Dog_Name, Dog_Breed) %>%
+  arrange(desc(n))
+
+count(dogs_top10, Dog_Breed) %>%
+  arrange(desc(n))
+
+count(dogs, Dog_Name, Neighborhood) %>%
+  arrange(desc(n))
+count(dogs, Neighborhood) %>%
+  arrange(desc(n))
+
+
+```
+
+---
+
+## Bar plots
+
+.pull-left[
+
+* Displays the frequency for each category.
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+# Create barplot
+ggplot(data = dogs_top10, 
+    mapping = aes(x = Dog_Name)) +
+  geom_bar()
+
+```
+
+]
+
+
+
+---
+
+## Bar plots
+
+.pull-left[
+
+```{r bar, fig.show='hide'}
+# Create barplot
+ggplot(data = dogs_top10, 
+       mapping = aes(x = Dog_Name)) +
+  geom_bar()
+
+```
+
+* How could be make this graph better?
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("bar", "png"))
+```
+
+
+]
+
+
+---
+
+## Bar plots
+
+.pull-left[
+
+```{r bar2, fig.show='hide'}
+# Create barplot
+ggplot(data = dogs_top10, 
+  mapping = aes(x = fct_infreq(Dog_Name))) +
+  geom_bar()
+
+```
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("bar2", "png"))
+```
+
+
+]
+
+
+---
+
+## Segmented Barplots
+
+
+.pull-left[
+
+```{r seg, fig.show='hide'}
+# Create segmented barplot
+ggplot(data = dogs_top10, 
+       mapping = aes(x = fct_infreq(Dog_Name),
+                     fill = Breed)) +
+  geom_bar() +
+  theme(legend.pos = "bottom")
+
+```
+
+* Each bar is divided into the frequencies of the `fill` variable.
+
+* Hard to make comparisons across categories.
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("seg", "png"))
+```
+
+]
+
+
+---
+
+## Segmented Barplots
+
+
+.pull-left[
+
+```{r seg2, fig.show='hide'}
+# Create segmented barplot
+ggplot(data = dogs_top10, 
+       mapping = aes(x = fct_infreq(Dog_Name),
+                     fill = Breed)) +
+  geom_bar(position = "dodge") +
+  theme(legend.pos = "bottom")
+
+```
+
+
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("seg2", "png")) 
+```
+
+]
+
+---
+
+## Segmented Barplots
+
+
+.pull-left[
+
+```{r seg3, fig.show='hide'}
+# Create segmented barplot
+ggplot(data = dogs_top10, 
+       mapping = aes(x = fct_infreq(Dog_Name),
+                     fill = Breed)) +
+  geom_bar(position = "fill") +
+  theme(legend.pos = "bottom")
+
+```
+
+* Each bar is divided into **proportions** based on the `fill` variable.
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("seg3", "png"))
+```
+
+]
+
+---
+
+
+
+## Adding More Variables
+
+* Two main approaches:
+    + Utilize other `aes`thetics of the `geom`
+    + Facet: Create multiple plots across the categories of a categorical variable.
+
+
+
+---
+
+## Utilize other `aes`thetics
+
+
+.pull-left[
+
+```{r, fig.show = 'hide', eval = FALSE}
+ggplot(data = july_2019,
+       mapping = aes(x = Time,
+                     y = Total,
+                     color = Occasion)) +
+  geom_line(size = 2) +
+  theme(legend.pos = "bottom")
+```
+
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("line2", "png"))
+```
+
+]
+
+
+---
+
+## Utilize other `aes`thetics
+
+.pull-left[
+
+```{r all, fig.show='hide'}
+# A bit more wrangling
+# Just these three names
+some_dogs <- 
+  filter(dogs, Dog_Name %in% 
+           c("Charlie","Lucy", "Pepper"))
+
+ggplot(data = some_dogs,
+       mapping = aes(x = Longitude_masked,
+                     y = Latitude_masked,
+                     color = Dog_Name)) +
+  geom_point(size = 2)
+```
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("all", "png"))
+```
+
+]
+
+
+
+```{r, eval = FALSE, echo = FALSE}
+ggplot(data = dogs_top10,
+       mapping = aes(x = Longitude_masked,
+                     y = Latitude_masked)) +
+  geom_point(size = 2) +
+  facet_wrap(~Dog_Name)
+
+ggplot(data = lc,
+       mapping = aes(x = Longitude_masked,
+                     y = Latitude_masked)) +
+  geom_point(size = 2) +
+  facet_grid(Breed~Dog_Name)
+```
+
+
+
+---
+
+# Facet
+
+.pull-left[
+
+```{r fac, fig.show = 'hide'}
+ggplot(data = some_dogs,
+       mapping = aes(x = Longitude_masked,
+                     y = Latitude_masked)) +
+  geom_point(size = 2) +
+  facet_wrap(~Dog_Name, ncol = 2)
+```
+
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("fac", "png"))
+```
+
+]
+
+---
+
+# Facet
+
+.pull-left[
+
+```{r fac2, fig.show = 'hide'}
+ggplot(data = some_dogs,
+       mapping = aes(x = Longitude_masked,
+                     y = Latitude_masked)) +
+  geom_point(size = 2) +
+  facet_grid(Breed~Dog_Name)
+```
+
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("fac2", "png"))
+```
+
+]
+
+
+---
+
+## Consider Doing Both!
+
+.pull-left[
+
+```{r both, fig.show = 'hide'}
+ggplot(data = some_dogs,
+       mapping = aes(x = Longitude_masked,
+                     y = Latitude_masked,
+                     color = Breed)) +
+  geom_point(size = 2) +
+  facet_wrap(~Dog_Name, ncol = 2)
+```
+
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("both", "png"))
+```
+
+]
+
+
+---
+
+
+
+## Context
+
+.pull-left[
+
+```{r line3, fig.show = 'hide'}
+ggplot(data = july_2019,
+       mapping = aes(x = Time,
+                     y = Total,
+                     color = Occasion)) +
+  geom_line(size = 2) +
+  theme(legend.pos = "bottom") +
+  labs(x = "Time of Day",
+       y = "Number of Passes",
+       color = "What Type of Day?",
+       caption = "Data Collected by Eco-Totem",
+       title = "Cycling Patterns at Broadway Bike Counter")
+```
+
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("line3", "png"))
+```
+
+]
+
+
+---
+
+# Customizing your `ggplot2` Plots
+
+* There are so **many** ways you can customize the look of your `ggplot2` plots.  
+
+* Let's look at some common changes:
+    + Fussing with labels
+    + Zooming in
+    + Using multiple `geoms`
+    + Color!
+    + Themes
+
+
+
+---
+
+# Fussing with Labels: Rotate
+
+
+.pull-left[
+
+```{r bar4, fig.show='hide'}
+# Create barplot
+ggplot(data = dogs_top10, 
+  mapping = aes(x = fct_infreq(Dog_Name))) +
+  geom_bar() + 
+  theme(axis.text.x =
+          element_text(angle = 45,
+                       vjust = 1,
+                       hjust=1))
+
+```
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("bar4", "png"))
+```
+
+
+]
+
+---
+
+## Zooming In
+
+
+
+
+.pull-left[
+
+```{r box5, fig.show = 'hide'}
+ggplot(data = july_2019, 
+       mapping = aes(x = Occasion, 
+                     y = Total,
+                     fill = Occasion)) +
+  geom_boxplot() +
+  guides(fill = "none")
+```
+
+
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("box5", "png"))
+```
+
+]
+
+
+---
+
+## Zooming In
+
+
+
+
+.pull-left[
+
+```{r box6, fig.show = 'hide'}
+ggplot(data = july_2019, 
+       mapping = aes(x = Occasion, 
+                     y = Total,
+                     fill = Occasion)) +
+  geom_boxplot() +
+  guides(fill = "none") +
+  coord_cartesian(ylim = c(0, 40))
+```
+
+
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("box6", "png"))
+```
+
+]
+
+---
+
+## Multiple `geom`s
+
+.pull-left[
+
+```{r box7, fig.show = 'hide'}
+ggplot(data = july_2019, 
+       mapping = aes(x = Occasion, 
+                     y = Total,
+                     fill = Occasion)) +
+  geom_boxplot() +
+  guides(fill = "none") +
+  coord_cartesian(ylim = c(0, 40)) +
+  geom_jitter(width = .1,
+              height = 0, 
+              alpha = 0.6)
+```
+
+
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("box7", "png"))
+```
+
+]
+
+
+---
+
+## Multiple `geom`s
+
+.pull-left[
+
+```{r line4, fig.show = 'hide'}
+ggplot(data = july_2019,
+       mapping = aes(x = Time,
+                     y = Total,
+                     color = Occasion)) +
+  geom_line(size = 2) +
+  theme(legend.pos = "bottom") +
+  geom_point(size = 3)
+```
+
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("line4", "png"))
+```
+
+]
+
+
+
+---
+
+
+## Change the Color
+
+```{r}
+colors()
+```
+
+
+---
+
+## Change the Color
+
+
+
+.pull-left[
+
+```{r line5, fig.show = 'hide'}
+ggplot(data = july_2019,
+       mapping = aes(x = Time,
+                     y = Total,
+                     color = Occasion)) +
+  geom_line(size = 2) +
+  theme(legend.pos = "bottom") +
+  scale_color_manual(values = c("violetred2",
+                                "steelblue3"))
+```
+
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("line5", "png"))
+```
+
+]
+
+---
+
+## Change the Color
+
+
+
+.pull-left[
+
+```{r line6, fig.show = 'hide'}
+ggplot(data = july_2019,
+       mapping = aes(x = Time,
+                     y = Total,
+                     color = Occasion)) +
+  geom_line(size = 2) +
+  theme(legend.pos = "bottom") +
+  scale_color_manual(values = c("#0D6759",
+                                "#E4844A"))
+```
+
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("line6", "png"))
+```
+
+]
+
+
+---
+
+## Use a [Different Theme](https://ggplot2.tidyverse.org/reference/ggtheme.html)
+
+
+
+
+.pull-left[
+
+```{r line7, fig.show = 'hide'}
+ggplot(data = july_2019,
+       mapping = aes(x = Time,
+                     y = Total,
+                     color = Occasion)) +
+  geom_line(size = 2) +
+  scale_color_manual(values = c("#0D6759",
+                                "#E4844A")) +
+  theme_bw() +
+  theme(legend.pos = "bottom")
+```
+
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("line7", "png"))
+```
+
+]
+
+
+---
+
+## Reminders/Notes!
+
+* Grab a **postcard** and/or a **stamp** if you still don't have one!
+* Make sure you know the [time](http://my.harvard.edu) and [location](https://docs.google.com/spreadsheets/d/1EkTlAzvSxevvoIsleIWF4XH1gmnN-aTCSuxFyJdmlw0/edit?usp=sharing) of your Section.
+* Don't forget that p-set 1 due on Friday by 5pm on Gradescope.
+* Come by office hours with any questions.
+
+
+************************************
+
+* During Monday's Lecture, will go through the "summarizingData.Rmd" handout.  A PDF of the handout will be posted to the Data Wrangling Module in Canvas (by Sunday evening at the latest).
+
+* You have three options when we discuss this handout:
+    + Print out PDF before class and then write notes on it.
+    + Annotate the PDF with a tablet or laptop.    
+    + Run the code with me (grab handout from `shared_data/stat100/handouts`).
+

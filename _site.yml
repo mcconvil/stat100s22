@@ -1,0 +1,44 @@
+name: stat100s22
+navbar:
+  title: "Materials for Stat 100"
+  type: default
+  left:
+    - text: "Homepage"
+      icon: fa-home
+      href: index.html
+    - text: "Slides"
+      icon: fa-chart-area
+      menu: 
+        - text: "Week 0 Overview"
+          icon: fa-file
+          href: stat100_wk00.html
+        - text: "Week 0 Instructor Intro"
+          icon: fa-file
+          href: stat100_intro.html
+        - text: "Week 1 Mon"
+          icon: fa-file
+          href: stat100_wk01mon.html
+        - text: "Week 1 Wed"
+          icon: fa-file
+          href: stat100_wk01wed.html
+        - text: "Week 2 Mon"
+          icon: fa-file
+          href: stat100_wk02mon.html
+        - text: "Week 2 Wed"
+          icon: fa-file
+          href: stat100_wk02wed.html
+        - text: "Week 3 Mon"
+          icon: fa-file
+          href: stat100_wk03mon.html
+        - text: "Week 3 Wed"
+          icon: fa-file
+          href: stat100_wk03wed.html
+        - text: "Week 4 Section"
+          icon: fa-file
+          href: stat100_wk04sec.html          
+output:
+  html_document:
+#    css: styles.css
+    theme: yeti
+#    highlight: tango
+output_dir: docs

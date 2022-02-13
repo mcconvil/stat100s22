@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Stat 100 Overview</title>
+    <meta charset="utf-8" />
+    <script src="libsSlides/header-attrs-2.11/header-attrs.js"></script>
+    <link rel="stylesheet" href="more.css" type="text/css" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+background-image: url("img/DAW.png")
+background-position: left
+background-size: 50%
+class: middle, center, inverse
+
+
+.pull-right[
+
+
+
+## .whitish[Stat 100:]
+### .whitish[Introduction to Statistics and Data Science]
+
+&lt;br&gt;
+
+&lt;br&gt;
+
+### .whitish[Kelly McConville]
+
+#### .yellow[ Stat 100 | Week 0 | Spring 2022] 
+
+]
+
+---
+
+class: center, inverse, middle
+
+
+## Overarching Goal:
+
+--
+
+### Learn how to .yellow[extract knowledge] from data.
+
+
+---
+
+
+background-image: url("img/DAW.png")
+background-position: left
+background-size: 50%
+class: middle
+
+
+.pull-right[
+
+###  Course Learning Objectives
+
+]
+
+
+--
+
+.pull-right[
+
+ * Learn how to **analyze** data. 
+
+]
+
+--
+
+.pull-right[
+
+* Acquire good data **habits**.
+
+]
+
+--
+
+.pull-right[
+
+* Develop **statistical thinking** and **problem-solving** skills.
+
+]
+
+---
+
+background-image: url("img/packages.001.jpeg")
+background-position: contain
+background-size: 70%
+
+## Computation
+
+
+---
+
+background-image: url("img/packages.002.jpeg")
+background-position: contain
+background-size: 70%
+
+## Computation
+
+---
+
+background-image: url("img/packages.003.jpeg")
+background-position: contain
+background-size: 70%
+
+## Computation
+
+
+---
+name: viz
+background-image: url("img/exploration_visualization.jpeg")
+background-position: left
+background-size: 15%
+
+
+
+
+.pull-rightish[
+
+## Data Visualization
+
+
+
+
+]
+
+
+---
+
+template: viz
+
+.pull-rightish[
+
+
+
+.pull-left[
+
+
+* Learn key **design principles** of effective data visualizations.
+
+* Practice drawing **sound conclusions** from graphs.
+
+&lt;img src="img/eating_alone.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+
+]
+]
+
+
+---
+
+template: viz
+
+.pull-rightish[
+
+
+
+.pull-left[
+
+* Learn key **design principles** of effective data visualizations.
+
+* Practice drawing **sound conclusions** from graphs.
+
+&lt;img src="img/eating_alone.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+.pull-right[
+
+* Master **creating** graphs with `ggplot2`.
+
+
+&lt;img src="img/ggplot2.png" width="55%" style="display: block; margin: auto;" /&gt;
+
+
+
+]
+
+
+]
+
+
+
+---
+name: wrangle
+background-image: url("img/data_wrangling.jpeg")
+background-position: left
+background-size: 15%
+
+
+
+
+.pull-rightish[
+
+## Data Wrangling/Cleaning/Transforming
+
+.pull-left[
+
+* Apply basis data wrangling operations with `dplyr`.
+
+
+&lt;img src="img/dplyr.png" width="55%" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+
+]
+
+
+---
+name: wrangle
+background-image: url("img/data_wrangling.jpeg")
+background-position: left
+background-size: 15%
+
+
+
+
+.pull-rightish[
+
+## Data Wrangling/Cleaning/Transforming
+
+.pull-left[
+
+* Apply basis data wrangling operations with `dplyr`.
+
+
+&lt;img src="img/dplyr.png" width="55%" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right[
+
+* Explore datasets to determine what wrangling and summarization may be required.
+
+&lt;img src="img/wrangle.001.jpeg" width="85%" style="display: block; margin: auto;" /&gt;
+
+]
+
+]
+
+---
+name: formulating
+background-image: url("img/question_formulation.jpeg")
+background-position: left
+background-size: 15%
+
+
+
+
+.pull-rightish[
+
+### Question Formulation
+
+* Translate a research problem into a set of relevant questions that can be answered with data. 
+
+* Formulate data questions as **measurable statements** about parameters in a model.
+
+
+
+
+]
+
+
+---
+name: formulating
+background-image: url("img/question_formulation.jpeg")
+background-position: left
+background-size: 15%
+
+
+
+
+.pull-rightish[
+
+### Question Formulation
+
+* Translate a research problem into a set of relevant questions that can be answered with data. 
+
+* Formulate data questions as **measurable statements** about parameters in a model.
+
+
+.pull-left[
+
+
+
+&gt; "Mistaking the type of question being considered is the most common error in data analysis." -- Jeff Leek and Roger Peng
+
+
+
+
+]
+
+.pull-right[
+
+
+&lt;img src="img/question.002.jpeg" width="85%" style="display: block; margin: auto;" /&gt;
+
+
+
+
+]
+
+
+]
+
+---
+background-image: url("img/question_formulation.jpeg")
+background-position: left
+background-size: 15%
+
+
+
+
+.pull-rightish[
+
+### Question Formulation
+
+* Translate a research problem into a set of relevant questions that can be answered with data. 
+
+* Formulate data questions as **measurable statements** about parameters in a model.
+
+.pull-left[
+
+
+&gt; "Consider context. The bottom line for numbers is that they cannot speak for themselves."
+
+&gt; "Lacking this context for orientation, strangers in the data set run the risk of getting things entirely wrong or actually doing harm by filling in the missing information with their own biases and assumptions." -- Catherine D’Ignazio and Lauren F. Klein
+
+
+
+]
+
+.pull-right[
+
+
+&lt;img src="img/question.001.jpeg" width="85%" style="display: block; margin: auto;" /&gt;
+
+
+
+
+]
+
+
+]
+
+
+
+
+
+
+---
+name: acquisition
+background-image: url("img/data_acquisition.jpeg")
+background-position: left
+background-size: 15%
+
+
+
+
+.pull-rightish[
+
+## Data Acquisition
+
+
+
+
+]
+
+---
+name: acquisition
+background-image: url("img/data_acquisition.jpeg")
+background-position: left
+background-size: 15%
+
+
+
+
+.pull-rightish[
+
+## Data Acquisition
+
+
+* Determine the necessary data to conduct analyses.
+* Reflect on how **design structures** impact potential conclusions.
+* Identify potential ethical concerns surrounding data collection and data privacy.
+
+
+]
+
+---
+name: acquisition
+background-image: url("img/data_acquisition.jpeg")
+background-position: left
+background-size: 15%
+
+
+
+
+.pull-rightish[
+
+## Data Acquisition
+
+
+* Determine the necessary data to conduct analyses.
+* Reflect on how **design structures** impact potential conclusions.
+* Identify potential ethical concerns surrounding data collection and data privacy.
+
+&lt;img src="img/acquisition.001.jpeg" width="85%" style="display: block; margin: auto;" /&gt;
+
+
+]
+
+
+---
+name: inference
+background-image: url("img/modeling_inference.jpeg")
+background-position: left
+background-size: 15%
+
+
+
+
+.pull-rightish[
+
+## Modeling and Inference
+
+.pull-left[
+
+
+
+&lt;img src="img/inference1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+]
+
+]
+
+---
+background-image: url("img/modeling_inference.jpeg")
+background-position: left
+background-size: 15%
+class: middle
+
+
+
+.pull-rightish[
+
+## Modeling and Inference
+
+&lt;br&gt;
+
+
+
+.pull-left[
+
+
+
+&lt;img src="img/inference2.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+&lt;br&gt;
+
+
+]
+
+.pull-right[
+
+* Understand and be able to explain key **probabilistic** and **inferential** concepts.
+* Determine the **correct model** for a given problem and set of data.
+* Appropriately apply and draw inferences from a statistical model, including **quantifying and interpreting the uncertainty** in model estimates.
+* Consider the **ethical implications** of various modeling practices. 
+
+]
+
+]
+
+
+---
+
+background-image: url("img/communicating_findings.jpeg")
+background-position: left
+background-size: 15%
+
+
+
+
+.pull-rightish[
+
+## Communicating Findings
+
+
+]
+
+
+---
+
+background-image: url("img/communicating_findings.jpeg")
+background-position: left
+background-size: 15%
+
+
+
+
+.pull-rightish[
+
+## Communicating Findings
+
+.pull-left[
+
+* Develop a **reproducible** workflow using `R` Markdown documents.
+
+]
+
+.pull-right[
+
+
+&lt;img src="img/rmarkdown.png" width="45%" style="display: block; margin: auto;" /&gt;
+
+]
+
+]
+
+
+---
+
+background-image: url("img/communicating_findings.jpeg")
+background-position: left
+background-size: 15%
+
+
+
+
+.pull-rightish[
+
+## Communicating Findings
+
+.pull-left[
+
+* Develop a **reproducible** workflow using `R` Markdown documents.
+* **Interpret** and **communicate** results of statistical analyses effectively for both a statistical and a non-statistical audience.
+
+]
+
+.pull-right[
+
+
+&lt;img src="img/rmarkdown.png" width="45%" style="display: block; margin: auto;" /&gt;
+
+]
+
+]
+
+
+
+---
+
+background-image: url("img/communicating_findings.jpeg")
+background-position: left
+background-size: 15%
+
+
+
+
+.pull-rightish[
+
+## Communicating Findings
+
+.pull-left[
+
+* Develop a **reproducible** workflow using `R` Markdown documents.
+* **Interpret** and **communicate** results of statistical analyses effectively for both a statistical and a non-statistical audience.
+* Be able to reflect on the data involved in an analysis and show a **curiosity** for other ways of examining and thinking about the data.  
+
+]
+
+.pull-right[
+
+
+&lt;img src="img/rmarkdown.png" width="45%" style="display: block; margin: auto;" /&gt;
+
+]
+
+]
+
+---
+
+
+background-image: url("img/workflows.004.jpeg")
+background-position: contain
+background-size: 65%
+
+## Data Analysis Workflow
+
+
+---
+
+
+background-image: url("img/workflows.003.jpeg")
+background-position: contain
+background-size: 65%
+
+
+## Data Analysis Workflow
+
+---
+
+
+background-image: url("img/workflows.002.jpeg")
+background-position: contain
+background-size: 65%
+
+## Data Analysis Workflow
+
+
+---
+
+
+background-image: url("img/workflows.001.jpeg")
+background-position: contain
+background-size: 65%
+
+
+
+## Data Analysis Workflow
+
+
+---
+
+
+background-image: url("img/DAW.png")
+background-position: left
+background-size: 50%
+class: middle
+
+
+.pull-right[
+
+###  Data Analysis Workflow
+
+]
+
+
+.pull-right[
+
+* Not a strict set of guidelines.
+
+* General structure for **extracting knowledge from data**.
+
+
+]
+
+--
+
+.pull-right[
+
+* Consider **iteration** throughout.
+
+]
+
+--
+
+.pull-right[
+
+* Consider **reproducibility** throughout.
+
+]
+
+--
+
+.pull-right[
+
+* Consider **ethics** throughout.
+
+]
+
+
+
+---
+
+## Course Structure
+
+
+.pull-left[
+
+&lt;img src="img/week.001.jpeg" width="95%" style="display: block; margin: auto;" /&gt;
+
+
+]
+
+
+--
+
+.pull-right[
+
+* You are **expected** to attend lectures and sections.
+    + But I recognize that with COVID and other excused reasons, there will be absences.  Just make sure to **communicate** with your TF and me.
+
+
+
+* We will use [Gradescope](https://www.gradescope.com/courses/343471) for submitting work.
+    + More on that in your first section meeting.
+
+
+
+* I will introduce you to our Rstudio Server during a Week 1 lecture.
+
+
+
+* The primary textbook, [Modern Dive](https://moderndive.com/), and the supplemental textbook, [Introduction to Modern Statistics](https://www.openintro.org/book/ims/), are both free online.
+
+]
+
+---
+
+## Forms of Assessment
+
+* **Weekly problem sets:**
+    + Practice concepts
+    + Time during section will be devoted to starting the next week's assignment.
+    + Can drop one problem set grade.
+
+--
+
+* **Exams:** 
+    + Format: Takehome Exam followed by Oral Exam
+    + Mid-term and Final
+
+
+--
+
+* **Group project:**
+    + Practice apply data analysis process to a research question
+
+--
+
+* **Participation/Engagement:**
+    + In class and section
+    + Office hours: Must attend **at least one** office hours during the first five weeks of the semester
+    + On Slack: **At least two** posts before Spring Break
+
+---
+
+
+background-image: url("img/slack.001.jpeg")
+background-position: left
+background-size: 18%
+class: middle, left, inverse
+
+
+
+.pull-rightish[
+    
+### What Slack posts count?
+
+]
+
+--
+
+.pull-rightish[
+
++ Asking a question about course content
+
+]
+
+--
+
+.pull-rightish[
+
++ Answering someone else's question
+
+]
+
+--
+
+.pull-rightish[
+
++ Posting a useful resource and why you found it helpful
+
+]
+
+--
+
+.pull-rightish[
+
++ Creating an example that illustrates a recent concept
+
+]
+
+--
+
+.pull-rightish[
+
+If you have never used Slack before, don't worry.  We will practice together at the start of the semester.
+
+
+    
+]    
+    
+
+---
+
+class: center, middle
+background-image: url(img/jessica-knowlden--AvRbJOVUKA-unsplash.jpg)
+background-size: cover
+
+
+
+---
+
+## Engagement
+
+.pull-left[ 
+
+&lt;img src="img/jessica-knowlden--AvRbJOVUKA-unsplash.jpg" width="400px"/&gt;
+
+]
+
+.pull-right[
+
+* Being **actively present** is key.
+{{content}}
+
+]
+
+--
+
+* During class and lab, remove distractions.
+    + Close email, social media, news, etc.
+    + Hide your phone.
+{{content}}
+
+--
+
+* What you get out of Stat 100 will depend on what you put into it.
+{{content}}
+
+--
+
+* I have high expectations but know that all of you (regardless of your stats or computing background) have the ability to meet them.
+{{content}}
+
+
+
+
+
+---
+
+## Identity and the Classroom
+
+* Acknowledge that my perspectives and experiences have shaped how I teach this course
+
+--
+
+* Some of my identities place me in dominant groups while others in marginalized groups
+
+
+--
+
+
+* Strive to bring examples and scholarly contributions that value knowledge from folks with a wide variety of identities
+
+
+--
+
+* Strive to be a open listener and recognize your thoughts as a generous offer and a vote of confidence in my ability to hear and be transformed by you
+
+--
+
+* Ask that you reflect on your own identities, privileges, and power and how they impact your engagement with Stat 100
+
+---
+
+## Code of Conduct
+
+I expect all members of STAT 100 to make participation a harassment-free experience for everyone, regardless of age, body size, visible or invisible disability, ethnicity, sex characteristics, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, religion, or sexual identity and orientation.  
+
+I expect everyone to act and interact in ways that contribute to an open, welcoming diverse, inclusive, and healthy community of learners.  You can contribute to a positive learning environment by demonstrating empathy and kindness, being respectful of differing viewpoints and experiences, and giving and gracefully accepting constructive feedback.
+
+
+This Code of Conduct is adapted from the [Contributor Covenant](https://www.contributor-covenant.org/version/2/0/code_of_conduct.html), version 2.0.
+
+
+
+---
+
+## Ways to Get Support
+
+
+* **Attend, attend, attend** when you don't feel ill
+
+--
+
+* **Participate** in the Stat 100 Slack Workspace
+
+--
+
+* **Come** to Office Hours
+
+--
+
+* **Create** study groups with your classmates
+    + Natural groups: project group members, folks in your same section
+
+
+&lt;!-- --- --&gt;
+
+&lt;!-- ## [Canvas Site](https://canvas.harvard.edu/courses/102162) --&gt;
+
+
+&lt;!-- * Syllabus --&gt;
+
+&lt;!-- -- --&gt;
+
+
+&lt;!-- * Schedule with Readings --&gt;
+&lt;!--     + Which will be always two weeks ahead of where we are in class --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- * Reminders of important due dates --&gt;
+
+&lt;!-- -- --&gt;
+
+&lt;!-- * Office hours --&gt;
+
+
+
+---
+
+
+
+## Data in Stat 100
+
+
+Will use a wide-range of **real** and **relevant** data examples
+
+.pull-left[
+
+&lt;img src="img/nytimes_access.png" width="110%" style="display: block; margin: auto;" /&gt;
+
+]
+
+--
+
+.pull-right[
+
+&lt;img src="img/nytimes_labor_force.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+
+
+## Data in Stat 100
+
+.pull-left[
+
+&lt;img src="img/covid_govt.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+
+]
+
+--
+
+.pull-right[
+
+
+&lt;img src="img/traffic_stops.jpg" width="100%" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+--
+
+* I understand that some of these topics have likely had profound impacts on your lives.
+
+--
+
+* We will focus class time on the key course objectives but will use these current topics to empower ourselves and to see how we can productively participate with data. 
+
+
+---
+
+class: inverse, middle, center
+
+
+## Looking Forward to Teaching You!
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"ratio": "16:9",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

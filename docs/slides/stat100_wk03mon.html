@@ -1,0 +1,1564 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Data Summarization</title>
+    <meta charset="utf-8" />
+    <script src="libsSlides/header-attrs-2.11/header-attrs.js"></script>
+    <link href="libsSlides/remark-css-0.0.1/hygge.css" rel="stylesheet" />
+    <script src="libsSlides/fabric-4.3.1/fabric.min.js"></script>
+    <link href="libsSlides/xaringanExtra-scribble-0.0.1/scribble.css" rel="stylesheet" />
+    <script src="libsSlides/xaringanExtra-scribble-0.0.1/scribble.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', function() { window.xeScribble = new Scribble({"pen_color":["#FF0000"],"pen_size":3,"eraser_size":30,"palette":[]}) })</script>
+    <script src="libsSlides/kePrint-0.0.1/kePrint.js"></script>
+    <link href="libsSlides/lightable-0.0.1/lightable.css" rel="stylesheet" />
+    <link rel="stylesheet" href="more.css" type="text/css" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+
+background-image: url("img/DAW.png")
+background-position: left
+background-size: 50%
+class: middle, center, inverse
+
+
+.pull-right[
+
+
+
+## .whitish[Data Summarization]
+
+&lt;br&gt;
+
+&lt;br&gt;
+
+### .whitish[Kelly McConville]
+
+#### .yellow[ Stat 100 | Week 3 | Spring 2022] 
+
+]
+
+
+
+---
+
+
+
+## Announcements
+
+* Don't forget that P-Set 2 is due on Wednesday at 9am on Gradescope.  
+    + No late work accepted.
+* Fill out the [Project Assignment Group Preferences Survey](https://forms.gle/S4jDMoPMUHg7Zcfv5) if:
+    + You have particular people you'd like to work with.
+    + Or you are a graduate student/auditor and want to work alone.
+
+
+****************************
+
+--
+
+## Goals for Today
+
+.pull-left[
+
+* Measures for **summarizing** quantitative data
+    + Center
+    + Spread/variability
+
+* Measures for **summarizing** categorical data
+
+
+] 
+
+--
+
+.pull-right[
+
+
+* Start discussing **data wrangling**
+
+]
+
+
+---
+
+&lt;img src="img/dplyr.png" width="15%" style="float:left; padding:10px" style="display: block; margin: auto;" /&gt;
+
+## Load Necessary Packages
+
+`dplyr` is part of this collection of data science packages.
+
+
+```r
+# Load necessary packages
+library(tidyverse)
+```
+
+
+---
+
+## Import the [Data](https://data.cambridgema.gov/Transportation-Planning/Eco-Totem-Broadway-Bicycle-Count/q8v9-mcfg)
+
+
+```r
+bike_counter &lt;- read_csv("https://data.cambridgema.gov/api/views/q8v9-mcfg/rows.csv")
+
+# Inspect the data
+glimpse(bike_counter)
+```
+
+```
+## Rows: 225,003
+## Columns: 7
+## $ DateTime  &lt;chr&gt; "06/24/2015 12:00:00 AM", "06/24/2015 12:15:00 AM", "06/24/2…
+## $ Day       &lt;chr&gt; "Wednesday", "Wednesday", "Wednesday", "Wednesday", "Wednesd…
+## $ Date      &lt;chr&gt; "06/24/2015", "06/24/2015", "06/24/2015", "06/24/2015", "06/…
+## $ Time      &lt;time&gt; 00:00:00, 00:15:00, 00:30:00, 00:45:00, 01:00:00, 01:15:00,…
+## $ Total     &lt;dbl&gt; 4, 3, 4, 2, 2, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, …
+## $ Westbound &lt;dbl&gt; 1, 3, 3, 2, 2, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, …
+## $ Eastbound &lt;dbl&gt; 3, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+```
+
+
+
+---
+
+## Summarizing Data
+
+&lt;table class="table table-responsive table-bordered table-striped" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Date &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Time &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Total &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 09:45:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:00:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:15:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:30:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 13 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:45:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 11:00:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 11:15:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+--
+
+* Hard to do by eyeballing a spreadsheet with many rows!
+
+---
+
+##  Summarizing Data Visually
+
+.pull-left[
+
+&lt;img src="stat100_wk03mon_files/figure-html/unnamed-chunk-6-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+]
+
+--
+
+.pull-right[
+
+For a quantitative variable, want to answer:
+
+
+
+* What is an **average** value?
+
+
+
+* What is the **trend/shape** of the variable?
+
+
+
+* How much **variation** is there from case to case?
+
+]
+
+---
+
+## Summarizing Quantitative Variables
+
+For a quantitative variable, want to answer:
+
+
+
+* What is an average value?
+
+
+
+* What is the trend/shape of the variable?
+
+
+* How much variation is there from case to case?
+
+--
+
+Need to learn some **summary statistics**: Numerical values computed based on the observed cases.
+
+---
+
+## Measures of Center
+
+.pull-left[
+**Mean: average of all the observations**
+
+
+* `\(n\)` = Number of cases (sample size)
+* `\(x_i\)` = value of the i-th observation
+* Denote by `\(\bar{x}\)`
+
+$$
+\bar{x}  = \frac{1}{n} \sum_{i = 1}^n x_i
+$$
+
+]
+
+.pull-right[
+
+{{content}}
+
+]
+
+--
+
+&lt;table class="table table-responsive table-bordered table-striped" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Date &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Time &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Total &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 09:45:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:00:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:15:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:30:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 13 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:45:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 11:00:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 11:15:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+{{content}}
+
+--
+
+
+```r
+# Mean
+(5 + 10 + 6 + 13 +
+   9 + 12 + 7)/7
+```
+
+```
+## [1] 8.857143
+```
+{{content}}
+
+
+---
+
+## Measures of Center
+
+.pull-left[
+#### Median: Middle value, 50% 
+
+* Denote by `\(m\)`
+* If `\(n\)` is even, then it is the average of the middle two values
+
+]
+
+.pull-right[
+
+{{content}}
+
+]
+
+--
+
+&lt;table class="table table-responsive table-bordered table-striped" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Date &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Time &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Total &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 09:45:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:15:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 11:15:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:45:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:00:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 11:00:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:30:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 13 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+{{content}}
+
+--
+
+
+```r
+# Median
+9
+```
+
+```
+## [1] 9
+```
+{{content}}
+
+
+
+---
+
+## Measures of Center
+
+.pull-left[
+
+&lt;table class="table table-responsive table-bordered table-striped" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Date &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Time &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Total &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 09:45:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:15:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 11:15:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:45:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:00:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 11:00:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:30:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 13 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+]
+
+.pull-right[
+
+
+```r
+# Mean
+(5 + 10 + 6 + 13 +
+   9 + 12 + 7)/7
+```
+
+```
+## [1] 8.857143
+```
+
+```r
+# Median
+9
+```
+
+```
+## [1] 9
+```
+
+
+]
+
+* Suppose the 13 bikes was actually 130 bikes.  How would these summary statistics change?
+
+
+---
+
+## Measures of Variability
+
+* Want a statistic that captures how much observations will likely deviate from the mean
+
+--
+
+.pull-left[
+
+Here is my proposal:
+
+* Find how much each observation deviates from the mean.
+* Compute the average of the deviations.
+
+$$
+\frac{1}{n} \sum_{i = 1}^n (x_i - \bar{x})
+$$
+
+
+
+
+]
+
+.pull-right[
+
+.pull-left[
+
+&lt;table class="table table-responsive table-bordered table-striped" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Date &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Time &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Total &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 09:45:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:15:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 11:15:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:45:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:00:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 11:00:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:30:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 13 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+]
+
+
+.pull-right[
+
+
+&lt;table class="table table-responsive table-bordered table-striped" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; Deviations &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; -3.86 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; -2.86 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; -1.86 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0.14 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1.14 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 3.14 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 4.14 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+
+]
+
+
+
+]
+
+
+
+---
+
+## Measures of Variability
+
+* Want a statistic that captures how much observations will likely deviate from the mean
+
+
+.pull-left[
+
+Here is my proposal:
+
+* Find how much each observation deviates from the mean.
+* Compute the average of the deviations.
+
+$$
+\frac{1}{n} \sum_{i = 1}^n (x_i - \bar{x})
+$$
+
+**Problem?**
+
+
+]
+
+.pull-right[
+
+.pull-left[
+
+&lt;table class="table table-responsive table-bordered table-striped" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Date &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Time &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Total &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 09:45:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:15:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 11:15:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:45:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:00:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 11:00:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:30:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 13 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+]
+
+
+.pull-right[
+
+
+&lt;table class="table table-responsive table-bordered table-striped" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; Deviations &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; -3.86 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; -2.86 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; -1.86 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0.14 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1.14 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 3.14 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 4.14 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+
+]
+
+
+
+]
+
+
+---
+
+## Measures of Variability
+
+* Want a statistic that captures how much observations will likely deviate from the mean
+
+
+.pull-left[
+
+Here is my **NEW** proposal:
+
+* Find how much each observation deviates from the mean.
+* Compute the average of the **squared** deviations.
+
+$$
+\frac{1}{n} \sum_{i = 1}^n (x_i - \bar{x})^2
+$$
+
+
+
+]
+
+.pull-right[
+
+.pull-left[
+
+&lt;table class="table table-responsive table-bordered table-striped" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Date &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Time &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Total &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 09:45:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:15:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 11:15:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:45:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:00:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 11:00:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:30:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 13 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+]
+
+
+.pull-right[
+
+
+&lt;table class="table table-responsive table-bordered table-striped" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; Deviations &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Dev_sqd &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; -3.86 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 14.88 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; -2.86 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8.16 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; -1.86 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.45 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0.14 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.02 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1.14 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.31 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 3.14 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9.88 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 4.14 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 17.16 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+
+]
+
+
+]
+
+
+---
+
+## Measures of Variability
+
+* Want a statistic that captures how much observations will likely deviate from the mean
+
+
+.pull-left[
+
+Here is my **NEW** proposal:
+
+* Find how much each observation deviates from the mean.
+* Compute the average of the **squared** deviations.
+
+$$
+\frac{1}{n} \sum_{i = 1}^n (x_i - \bar{x})^2
+$$
+
+
+
+]
+
+.pull-right[
+
+.pull-left[
+
+&lt;table class="table table-responsive table-bordered table-striped" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Date &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Time &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Total &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 09:45:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:15:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 11:15:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:45:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:00:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 11:00:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:30:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 13 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+]
+
+
+.pull-right[
+
+
+&lt;table class="table table-responsive table-bordered table-striped" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; Deviations &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Dev_sqd &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; -3.86 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 14.88 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; -2.86 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8.16 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; -1.86 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.45 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0.14 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.02 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1.14 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.31 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 3.14 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9.88 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 4.14 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 17.16 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+
+]
+
+
+]
+
+
+```r
+# Calculate the measure of variability
+(14.88 + 8.16 + 3.45 + 0.020 + 1.31 + 9.88 + 17.16)/7
+```
+
+```
+## [1] 7.837143
+```
+
+
+---
+
+## Measures of Variability
+
+* Want a statistic that captures how much observations will likely deviate from the mean
+
+
+.pull-left[
+
+Here is the **ACTUAL**:
+
+* Find how much each observation deviates from the mean.
+* Compute the (nearly) average of the **squared** deviations.
+* Called **sample variance** `\(s^2\)`.
+
+$$
+s^2 = \frac{1}{n - 1} \sum_{i = 1}^n (x_i - \bar{x})^2
+$$
+
+
+
+]
+
+.pull-right[
+
+.pull-left[
+
+&lt;table class="table table-responsive table-bordered table-striped" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Date &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Time &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Total &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 09:45:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:15:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 11:15:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:45:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:00:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 11:00:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:30:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 13 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+]
+
+
+.pull-right[
+
+
+&lt;table class="table table-responsive table-bordered table-striped" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; Deviations &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Dev_sqd &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; -3.86 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 14.88 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; -2.86 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8.16 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; -1.86 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.45 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0.14 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.02 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1.14 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.31 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 3.14 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9.88 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 4.14 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 17.16 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+
+]
+
+
+]
+
+
+```r
+# Calculate the measure of variability
+(14.88 + 8.16 + 3.45 + 0.020 + 1.31 + 9.88 + 17.16)/6
+```
+
+```
+## [1] 9.143333
+```
+
+
+---
+
+## Measures of Variability
+
+* Want a statistic that captures how much observations will likely deviate from the mean
+
+
+.pull-left[
+
+
+* Find how much each observation deviates from the mean.
+* Compute the (nearly) average of the **squared** deviations.
+* Called the sample variance, `\(s^2\)`.
+* The square root of the sample variance is called the **sample standard deviation** `\(s\)`.
+
+
+$$
+s = \sqrt{\frac{1}{n - 1} \sum_{i = 1}^n (x_i - \bar{x})^2}
+$$
+
+
+
+]
+
+.pull-right[
+
+.pull-left[
+
+&lt;table class="table table-responsive table-bordered table-striped" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Date &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Time &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Total &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 09:45:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:15:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 11:15:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:45:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:00:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 11:00:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 07/04/2015 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 10:30:00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 13 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+]
+
+
+.pull-right[
+
+
+&lt;table class="table table-responsive table-bordered table-striped" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; Deviations &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Dev_sqd &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; -3.86 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 14.88 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; -2.86 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8.16 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; -1.86 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.45 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0.14 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.02 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1.14 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.31 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 3.14 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9.88 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 4.14 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 17.16 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+
+]
+
+
+]
+
+
+```r
+# Calculate the measure of variability
+sqrt((14.88 + 8.16 + 3.45 + 0.020 + 1.31 +9.88 + 17.16)/6)
+```
+
+```
+## [1] 3.023795
+```
+
+
+---
+
+## Measures of Variability
+
+* In addition to the sample standard deviation and the sample variance, there is the Interquartile Range (IQR): 
+
+$$
+\mbox{IQR} = \mbox{Q}_3 - \mbox{Q}_1
+$$
+
+* Which is more robust to outliers, the IQR or `\(s\)`?
+
+* Which is more commonly used, the IQR or `\(s\)`?
+
+---
+
+class: center, middle, inverse
+
+
+## Two Minute Stretch
+
+--
+
+## Now let's go through the Data Summarization handout!
+
+
+---
+
+class: middle, center
+
+&lt;img src="img/dplyr_wrangling.png" width="750px"/&gt;
+
+
+---
+
+### Data Wrangling: Transformations done on the data
+
+--
+
+**Why wrangle the data?**
+
+--
+
+.pull-left[
+
+To **summarize** the data.
+
+]
+
+
+.pull-right[
+
+&amp;#8594; To compute the mean and standard deviation of the bike counts.
+
+]
+
+--
+
+.pull-left[
+
+To **drop** missing values.  (Need to be careful here!)
+
+]
+
+.pull-right[
+
+&amp;#8594; In your P-Set 2, you are dropping rows with NAs for particular variables before creating some of your graphs.
+
+]
+
+
+--
+
+.pull-left[
+
+To **filter** to a particular subset of the data.
+
+]
+
+.pull-right[
+
+&amp;#8594; To subset the bike counts data to 2 days in July of 2019.
+
+]
+
+--
+
+.pull-left[
+
+To **collapse** the categories of a categorical variable.
+
+
+
+]
+
+.pull-right[
+
+&amp;#8594; To go from 86 dog breeds to just mixed or single breed.
+
+]
+
+
+--
+
+.pull-left[
+
+To **arrange** the data to make it easier to display.
+
+]
+
+.pull-right[
+
+&amp;#8594; To sort from most common dog name to least common.
+
+]
+
+--
+
+.pull-left[
+
+To fix how `R` **stores** a variable.
+
+]
+
+.pull-right[
+
+&amp;#8594; I converted `Day` from a character variable/vector to a date variable/vector.
+
+]
+
+
+---
+
+class: middle, center
+
+&lt;img src="img/DAW.png" width="750px"/&gt;
+
+
+
+---
+
+class: center, middle
+
+.pull-left[
+
+## Data Viz
+
+
+&lt;iframe src="https://giphy.com/embed/d31vTpVi1LAcDvdm" width="480" height="362" frameBorder="0" class="giphy-embed" allowFullScreen&gt;&lt;/iframe&gt;&lt;p&gt;&lt;a href="https://giphy.com/gifs/netflix-d31vTpVi1LAcDvdm"&gt;via GIPHY&lt;/a&gt;&lt;/p&gt;
+
+]
+
+--
+
+.pull-right[
+
+## Data Wrangling
+
+&lt;iframe src="https://giphy.com/embed/DbaUtl1DcLyrdwhzGJ" width="480" height="362" frameBorder="0" class="giphy-embed" allowFullScreen&gt;&lt;/iframe&gt;&lt;p&gt;&lt;a href="https://giphy.com/gifs/Amalgia-DbaUtl1DcLyrdwhzGJ"&gt;via GIPHY&lt;/a&gt;&lt;/p&gt;
+
+]
+
+---
+
+## Reminders
+
+* Don't forget that P-Set 2 is due on Wednesday at 9am on Gradescope.  
+    + No late work accepted.
+* Fill out the [Project Assignment Group Preferences Survey](https://forms.gle/S4jDMoPMUHg7Zcfv5) if:
+    + You have particular people you'd like to work with.
+    + Or you are a graduate student/auditor and want to work alone.
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"ratio": "16:9",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
