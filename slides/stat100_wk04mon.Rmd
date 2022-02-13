@@ -60,7 +60,8 @@ class: middle, center, inverse
 ## Announcements
 
 
-
+* Make sure to start working on Project Assignment 1 with your group members.
+* P-Set 3 due now on Friday at 5pm because of server hiccup.
 
 
 
@@ -81,8 +82,7 @@ class: middle, center, inverse
 .pull-right[
 
 
-* Discuss data collection/acquisition
-    + Have out your data dictionaries that you created with your section mates. 
+* Discuss data collection/acquisition.
 
 ]
 
@@ -410,8 +410,8 @@ knitr::include_graphics("img/week4.003.jpeg")
 
 ##  Who are the data supposed to represent?
 
-```{r, echo = FALSE, out.width='80%'}
-knitr::include_graphics("img/week4.004.jpeg")
+```{r, echo = FALSE, out.width='90%'}
+knitr::include_graphics("img/sampling.002.jpeg")
 ```
 
 ---
@@ -422,6 +422,8 @@ knitr::include_graphics("img/week4.004.jpeg")
 knitr::include_graphics("img/week4.005.jpeg")
 ```
 
+--
+
 
 **Key questions:**
 
@@ -431,36 +433,140 @@ knitr::include_graphics("img/week4.005.jpeg")
 
 ---
 
-###  Who are the data supposed to represent?
+## Sampling Bias
 
 ```{r, echo = FALSE, out.width='80%'}
-knitr::include_graphics("img/week4.006.jpeg")
+knitr::include_graphics("img/sampling.001.jpeg")
+```
+
+**Sampling bias**: When the sampled units are **systematically different** from the non-sampled units on the variables of interest.
+
+---
+
+### Sampling Bias Example
+
+The **Literary Digest** was a political magazine that correctly predicted the presidential outcomes from 1916 to 1932.  In 1936, they conducted the most extensive (to that date) public opinion poll.  They mailed questionnaires to over **10 million people** (about 1/3 of US households) whose names and addresses they obtained from telephone books and vehicle registration lists.  More than 2.4 million responded with 57% indicating that they would vote for Republican Alf Landon in the upcoming presidential election instead of the current President Franklin Delano Roosevelt.
+
+--
+
+**Population of Interest**:
+
+<br>
+
+**Sample**:
+
+<br>
+
+**Key questions:**
+
++ What evidence is there that the data are **representative**?
++ Who is present?  Who is absent?
++ Who is overrepresented?  Who is underrepresented?
+
+
+**Sampling bias**:
+
+
+---
+
+## Random Sampling
+
+Use random sampling (a random mechanism for selecting cases from the population) to remove sampling bias.
+
+
+#### Types of random sampling
+
+* Simple random sampling
+
+* Stratified random sampling
+
+* Cluster sampling
+
+--
+
+Why aren't all samples generated using simple random sampling?
+
+---
+
+## National Health and Nutrition Examination Survey (NHANES)
+
+Why are these data collected?
+
+--
+
+&rarr; To assess the health of people in the US.
+
+--
+
+How are these data collected?
+
+--
+
+&rarr; **Stage 1**: US is stratified by geography and distribution of minority populations.  Counties are randomly selected within each stratum.
+
+--
+
+&rarr; **Stage 2**: From the sampled counties, city blocks are randomly selected. (City blocks are clusters.)
+
+--
+
+&rarr; **Stage 3**: From sampled city blocks, households are randomly selected. (Household are clusters.)
+
+--
+
+&rarr; **Stage 4**: From sampled households, people are randomly selected.  For the sampled households, a mobile health vehicle goes to the house and medical professionals take the necessary measurements.
+
+--
+
+**Why don't they use simple random sampling?**
+
+---
+
+### Careful Using Non-SRS Data
+
+.pull-left[
+
+```{r, echo = FALSE}
+library(NHANES)
+library(tidyverse)
+
+ggplot(data = NHANESraw, mapping = aes(x = fct_infreq(Race1),
+                                    fill = Race1)) +
+  geom_bar() + labs(x = "Race of Respondents", 
+                    y = "Count",
+                    title = "Original NHANES Data") +
+  guides(fill = 'none')
 ```
 
 
-**Key questions:**
+]
 
-+ What evidence is there that the data are **representative**?
-+ Who is present?  Who is absent?
-+ Who is overrepresented?  Who is underrepresented?
 
----
+--
 
-Pick of just samp and pop
+.pull-right[
 
-Sampling: Say several techniques
+```{r, echo = FALSE}
 
-list them
+ggplot(data = NHANES, mapping = aes(x = fct_infreq(Race1),
+                                    fill = Race1)) +
+  geom_bar() + labs(x = "Race of Respondents", 
+                    y = "Count",
+                    title = "NHANES Data Adjusted to Mimic SRS") +
+  guides(fill = 'none')
+```
 
-Why doesn't everyone just use SRS?
+]
 
-Perils of ignoring the fact that the data aren't SRS
+--
+
+* If you are dealing with data collected using a complex sampling design, I'd recommend taking an additional stats course, like Stat 160: Sample Surveys!
 
 ---
 
 class: middle, center, inverse
 
-## Data Ethics
+## Detour: Data Ethics
 
 ---
 
@@ -504,14 +610,14 @@ class: inverse, center, middle
 
 > "Protects the privacy and confidentiality of research subjects and data concerning them, whether obtained from the subjects directly, other persons, or existing records."
 
-### NHANES
 
-```{r, echo = FALSE}
+```{r, echo = FALSE, fig.asp = 0.65}
 library(tidyverse)
 library(NHANES)
 ggplot(data = NHANES, mapping = aes(x = Age, y = Height)) +
-  geom_point(alpha = 0.01) +
-  stat_smooth() 
+  geom_point(alpha = 0.1) +
+  stat_smooth() +
+  labs("NHANES: Age versus Height")
 ```
 
 
@@ -523,301 +629,268 @@ class: middle, center, inverse
 
 ---
 
-Representativeness Issues
+###  Who are the data supposed to represent?
 
-Sampling bias
-
-non-response bias
-
-bigger is better? -- XL's work -- Big Data Paradox
+```{r, echo = FALSE, out.width='90%'}
+knitr::include_graphics("img/sampling.002.jpeg")
+```
 
 
 ---
 
-Causation
+###  Who are the data supposed to represent?
+
+```{r, echo = FALSE, out.width='80%'}
+knitr::include_graphics("img/week4.006.jpeg")
+```
+
+
+**Key questions:**
+
++ What evidence is there that the data are **representative**?
++ Who is present?  Who is absent?
++ Who is overrepresented?  Who is underrepresented?
+
+---
+
+## Nonresponse bias
+
+
+```{r, echo = FALSE, out.width='80%'}
+knitr::include_graphics("img/sampling.003.jpeg")
+```
+
+**Nonresponse bias**: The respondents are **systematically** different from the non-respondents for the variables of interest.
 
 
 ---
 
-Add image from IMS end of Ch 2
+### Come Back to Literary Digest Example
 
+The **Literary Digest** was a political magazine that correctly predicted the presidential outcomes from 1916 to 1932.  In 1936, they conducted the most extensive (to that date) public opinion poll.  They mailed questionnaires to over **10 million people** (about 1/3 of US households) whose names and addresses they obtained from telephone books and vehicle registration lists.  More than 2.4 million responded with 57% indicating that they would vote for Republican Alf Landon in the upcoming presidential election instead of the current President Franklin Delano Roosevelt.
 
-<!-- --- -->
+<br>
 
-<!-- ## Who are the data supposed to represent? -->
-
-<!-- **Population**: Group we want to better understand -->
-
-<!-- -- -->
-
-<!-- **Sample**: Subset of the population that we have data on -->
-
-<!-- -- -->
-
-<!-- &rarr; Is the sample representative of the population? -->
-
-
-<!-- -- -->
-
-<!-- * EX: How many children (including yourself) are in your immediate family? -->
-
-
-<!-- -- -->
-
-<!-- * We are a sample of households in the US.  Is our average number of children a representative estimate for households in the US? -->
-
-<!-- --- -->
-
-<!-- ## Bias -->
-
-<!-- **Sampling bias**:  When the sampled cases are **systematically** different from the non-sampled cases. -->
-
-<!-- -- -->
-
-<!-- &rarr; Use random sampling (a random mechanism for selecting cases from the population) to minimize sampling bias. -->
-
-<!-- -- -->
-
-<!-- **Nonresponse bias**: The responses are **systematically** different from the non-responses. -->
-
-
-<!-- -- -->
-
-<!-- &rarr; Use multiple modes and multiple attempts for reaching sampled cases. -->
-
-<!-- -- -->
-
-<!-- &rarr; Explore key demographic variables to see how respondents and non-respondents vary. -->
-
-
-<!-- --- -->
-
-<!-- ## How were the data collected? -->
-
-<!-- The answer to the question greatly impacts the conclusions we can draw about the population. -->
-
-
-<!-- &rarr; EX: If we don't use random sampling, the sample might not be representative of the population and therefore we might only be able to draw conclusions about the sample itself. -->
-
-<!-- -- -->
-
-<!-- ### Types of random sampling -->
-
-<!-- * Simple random sampling -->
-
-<!-- * Stratified random sampling -->
-
-<!-- * Cluster sampling -->
-
-<!-- Why aren't all samples generated using simple random sampling? -->
-
-<!-- --- -->
-
-<!-- ## National Health and Nutrition Examination Survey (NHANES) -->
-
-<!-- Why are these data collected? -->
-
-<!-- -- -->
-
-<!-- &rarr; To assess the health of people in the US. -->
-
-<!-- -- -->
-
-<!-- How are these data collected? -->
-
-<!-- -- -->
-
-<!-- &rarr; Stage 1: US is stratified by geography and distribution of minority populations.  Counties are randomly selected within each stratum. -->
-
-<!-- -- -->
-
-<!-- &rarr; Stage 2: From the sampled counties, city blocks are randomly selected. (City blocks are clusters.) -->
-
-<!-- -- -->
-
-<!-- &rarr; Stage 3: From sampled city blocks, households are randomly selected. (Household are clusters.) -->
-
-<!-- -- -->
-
-<!-- &rarr; Stage 4: From sampled households, people are randomly selected.  For the sampled households, a mobile health vehicle goes to the house and medical professionals take the necessary measurements. -->
-
-<!-- -- -->
-
-<!-- **Why not use simple random sampling?** -->
-
-<!-- --- -->
-
-<!-- ## How were the data collected? -->
-
-<!-- The answer to the question greatly impacts the conclusions we can draw about the population. -->
-
-<!-- ### Other key random mechanism: -->
-
-<!-- **Random assignment**: Cases are randomly assigned to categories of the **explanatory variable** -->
-
-<!-- * **Response variable**: Variable I want to better understand -->
-
-<!-- * **Explanatory variables**: Variables I think might explain the response variable -->
-
-<!-- -- -->
-
-<!-- &rarr; If the data were collected using random assignment, then I can determine if the explanatory variable **causes** changes in the response variable. -->
-
-
-<!-- --- -->
-
-<!-- ## Causal Inference -->
-
-<!-- Often want to conclude that an explanatory variable causes changes in a response variable but you did not randomly assign the explanatory variable. -->
-
-<!-- -- -->
-
-<!-- **Confounding variable**: When the explanatory variable and response variable vary, so does the confounder. -->
-
-<!-- &rarr; Unclear if the explanatory variable or the confounder (or some other variable) is causing changes in the response. -->
-
-
-<!-- ```{r  out.width = "70%", echo=FALSE, fig.align='center'} -->
-<!-- include_graphics("img/confound.png")  -->
-<!-- ``` -->
-
-<!-- --- -->
-
-<!-- ## Causal Inference -->
-
-<!-- Often want to conclude that an explanatory variable causes changes in a response variable but you did not randomly assign the explanatory variable. -->
-
-
-
-<!-- **Confounding variable**: When the explanatory variable and response variable vary, so does the confounder. -->
-
-<!-- &rarr; Unclear if the explanatory variable or the confounder (or some other variable) is causing changes in the response. -->
-
-
-<!-- ```{r  out.width = "70%", echo=FALSE, fig.align='center'} -->
-<!-- include_graphics("img/confound2.png")  -->
-<!-- ``` -->
-
-<!-- --- -->
-
-<!-- ## Causal Inference -->
-
-<!-- * **Spurious relationship**: Two variables are associated but not causally related -->
-<!--     + In the age of big data, lots of good examples [out there](https://tylervigen.com/spurious-correlations). -->
-
-<!-- -- -->
-
-<!-- > "Correlation does not imply causation." -->
-
-<!-- -- -->
-
-<!-- >  "Correlation does not imply not causation." -->
-
-<!-- -- -->
-
-<!-- * **Causal inference**: Methods for finding causal relationships even when the data were collected without random sampling -->
-
-
-<!-- --- -->
-
-<!-- ## Types of Studies -->
-
-<!-- * **Observational Study:** Collect data in a way that doesn't interfere -->
-
-<!-- -- -->
-
-<!-- * **Experiment:** Interested in causal relationships so utilize random assignment.  Other key features include: -->
-<!--     + Blinding -->
-<!--     + Control group -->
-<!--     + Placebo -->
-
-
-
-<!-- --- -->
-
-<!-- ## Thoughts on Data Collection -->
-
-<!-- * Two key forms of **randomness** in data collection: -->
-<!--     + Random Sampling -->
-<!--     + Random Assignment -->
-
-<!-- -- -->
-
-<!-- * Most studies have one or neither of these forms of randomness.  -->
-<!--     + But still want to draw conclusions about the population.   -->
-
-<!-- --- -->
-
-<!-- ## Types of Studies -->
-
-<!-- * **Observational Study:** Collect data in a way that doesn't interfere -->
-
-<!-- -- -->
-
-<!-- * **Experiment:** Interested in causal relationships so utilize random assignment.  Other key features include: -->
-<!--     + Blinding -->
-<!--     + Control group -->
-<!--     + Placebo -->
-
-
-
-<!-- --- -->
-
-<!-- ## Thoughts on Data Collection -->
-
-<!-- #### Random Sampling -->
-
-
-<!-- *  Random sampling is important to ensure the sample is representative of the population. -->
-
-<!-- -- -->
-
-<!-- * Representativeness isn't about size. -->
-<!--     + Small random samples will tend to be more representative than large non-random samples.   -->
-
-<!-- -- -->
-
-<!-- * How do we draw conclusions about the population from non-random samples? -->
-
-<!-- -- -->
-
-<!-- &rarr; Investigate how your sampled cases (and respondents) are systematically different from the non-sampled cases (and non-respondents). -->
-
-<!-- --- -->
-
-<!-- ## Thoughts on Data Collection -->
-
-<!-- #### Random Assignment -->
-
-<!-- * Random assignment allows you to explore **causal** relationships between your explanatory variables and the predictor variables. -->
-
-<!-- -- -->
-
-<!-- * How do we draw causal conclusions from studies without random assignment? -->
-
-<!-- -- -->
-
-<!-- &rarr; With extreme care!  Try to control for all possible confounding variables. -->
-
-<!-- -- -->
-
-<!-- &rarr; Discuss the associations/correlations you found.  Use domain knowledge to address potentially causal links. -->
-
-<!-- -- -->
-
-<!-- &rarr; Take more stats to learn more about causal inference. -->
-
-
-<!-- -- -->
-
-<!-- **Bottom Line:** We often have to use imperfect data to make decisions.  -->
+**Non-response bias**:
 
 
 ---
 
-### Data Collection Practice
+## Tackling Nonresponse bias
 
-XXX
+
+```{r, echo = FALSE, out.width='80%'}
+knitr::include_graphics("img/sampling.003.jpeg")
+```
+
+--
+
+&rarr; Use multiple modes and multiple attempts for reaching sampled cases.
+
+--
+
+&rarr; Explore key demographic variables to see how respondents and non-respondents vary.
+
+---
+
+## Is Bigger Always Better?
+
+--
+
+```{r, echo = FALSE, out.width='80%'}
+knitr::include_graphics("img/sampling.004.jpeg")
+```
+
+--
+
+For our **Literary Digest Example**, Gallup predicted Roosevelt would win based on a survey of **50,000** people, (instead of 2.4 million).
+
+---
+
+### Big Data Paradox
+
+
+```{r, echo = FALSE, out.width= "10%", out.extra='style="float:left; padding:10px"'}
+knitr::include_graphics("img/meng.jpg")
+```
+
+> "Without taking data quality into account, population inferences with Big Data are subject to a Big Data Paradox: the more the data, the surer we fool ourselves." -- Xiao-Li Meng
+
+
+--
+
+**Example:** 
+
+* During Spring of 2021, Delphi-Facebook estimated  vaccine uptake at 70% and U.S. Census estimated it at 67%.
+
+--
+
+* The CDC reported it to be 53%.
+
+--
+
+And, once we learn about **quantifying uncertainty**, we will see that large sample sizes produce very small measures of uncertainty.
+
+--
+
+> "If you have the resources, invest in data quality far more than you invest in data quantity. Bad-quality data is essentially wiping out the power you think you have. That’s always been a problem, but it’s magnified now because we have big data. " -- Xiao-Li Meng
+
+---
+
+## Other Key Random Mechanism: Random Assignment
+
+--
+
+**Random assignment**: Cases are randomly assigned to categories of the **explanatory variable**
+
+* **Response variable**: Variable I want to better understand
+
+* **Explanatory variables**: Variables I think might explain the response variable
+
+--
+
+&rarr; If the data were collected using **random assignment**, then I can determine if the explanatory variable **causes** changes in the response variable.
+
+
+---
+
+## Causal Inference
+
+Often want to conclude that an explanatory variable causes changes in a response variable but you did not randomly assign the explanatory variable.
+
+--
+
+**Confounding variable**: When the explanatory variable and response variable vary, so does the confounder.
+
+&rarr; Unclear if the explanatory variable or the confounder (or some other variable) is causing changes in the response.
+
+
+```{r  out.width = "70%", echo=FALSE, fig.align='center'}
+include_graphics("img/confound.png")
+```
+
+---
+
+## Causal Inference
+
+Often want to conclude that an explanatory variable causes changes in a response variable but you did not randomly assign the explanatory variable.
+
+
+
+**Confounding variable**: When the explanatory variable and response variable vary, so does the confounder.
+
+&rarr; Unclear if the explanatory variable or the confounder (or some other variable) is causing changes in the response.
+
+
+```{r  out.width = "70%", echo=FALSE, fig.align='center'}
+include_graphics("img/confound2.png")
+```
+
+---
+
+## Causal Inference
+
+* **Spurious relationship**: Two variables are associated but not causally related
+    + In the age of big data, lots of good examples [out there](https://tylervigen.com/spurious-correlations).
+
+--
+
+> "Correlation does not imply causation."
+
+--
+
+>  "Correlation does not imply not causation."
+
+--
+
+* **Causal inference**: Methods for finding causal relationships even when the data were collected without random assignment.
+
+
+---
+
+## Types of Studies
+
+**Observational Study:** Collect data in a way that doesn't interfere
+
+--
+
+&rarr; **Example**: Studies of hand washing frequency
+
+--
+
+**Experiment:** Interested in causal relationships so utilize random assignment.  Other key features include:
+
++ Blinding
++ Control group
++ Placebo
+
+--
+
+&rarr; **Example**: COVID vaccine trials
+
+
+---
+
+## Thoughts on Data Collection
+
+**Random Sampling**
+
+
+Random sampling is important to ensure the sample is representative of the population.
+
+--
+
+Representativeness isn't about size.
+
++ Small random samples will tend to be more representative than large non-random samples.
+
+--
+
+How do we draw conclusions about the population from non-random samples?
+
+--
+
+&rarr; Investigate how your sampled cases (and respondents) are systematically different from the non-sampled cases (and non-respondents).
+
+---
+
+## Thoughts on Data Collection
+
+**Random Assignment**
+
+Random assignment allows you to explore **causal** relationships between your explanatory variables and the predictor variables.
+
+--
+
+How do we draw causal conclusions from studies without random assignment?
+
+--
+
+&rarr; With extreme care!  Try to control for all possible confounding variables.
+
+--
+
+&rarr; Discuss the associations/correlations you found.  Use domain knowledge to address potentially causal links.
+
+--
+
+&rarr; Take more stats to learn more about causal inference.
+
+
+--
+
+**Bottom Line:** We often have to use imperfect data to make decisions.
+
+
+---
+
+## Two Key Random Mechanisms
+
+
+```{r, echo = FALSE, out.width='80%'}
+knitr::include_graphics("img/ims_ch2.png")
+```
+
 
 
 ---

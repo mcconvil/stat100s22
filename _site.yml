@@ -33,6 +33,9 @@ navbar:
         - text: "Week 3 Wed"
           icon: fa-file
           href: stat100_wk03wed.html
+        - text: "Week 4 Mon"
+          icon: fa-file
+          href: stat100_wk04mon.html              
         - text: "Week 4 Section"
           icon: fa-file
           href: stat100_wk04sec.html          
