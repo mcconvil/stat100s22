@@ -679,7 +679,7 @@ class: middle, center
 
 ## Quick Survey Time
 
-### Once you have received the survey, provide your responses here:
+### Once you have received your number, provide your responses here:
 
 # [https://bit.ly/stat100-survey](https://bit.ly/stat100-survey)
 
@@ -901,6 +901,71 @@ class: inverse, center, middle
 
 
 &lt;img src="stat100_wk04mon_files/figure-html/unnamed-chunk-28-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Detour from Our Detour
+
+--
+
+.pull-left[
+
+
+```r
+library(tidyverse)
+library(NHANES)
+
+ggplot(data = NHANES, 
+       mapping = aes(x = Age,
+                     y = Height)) +
+  geom_point(alpha = 0.1) +
+  stat_smooth(color = "blue")
+```
+
+]
+
+.pull-right[
+
+&lt;img src="stat100_wk04mon_files/figure-html/points-1.png" width="768" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+
+
+---
+
+## Detour from Our Detour
+
+
+.pull-left[
+
+
+```r
+library(tidyverse)
+library(NHANES)
+library(emojifont)
+
+NHANES &lt;- mutate(NHANES, 
+          heart = fontawesome("fa-heart"))
+
+ggplot(data = NHANES, 
+       mapping = aes(x = Age,
+                     y = Height,
+                     label = heart)) +
+  geom_text(alpha = 0.1, color = "red",
+            family='fontawesome-webfont',
+            size = 8) +
+  stat_smooth(color = "lavender")
+```
+
+]
+
+.pull-right[
+
+&lt;img src="stat100_wk04mon_files/figure-html/hearts-1.png" width="768" style="display: block; margin: auto;" /&gt;
+
+]
 
 
 ---
