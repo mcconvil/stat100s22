@@ -56,7 +56,7 @@ class: middle, center, inverse
 ---
 
 ```{r, echo = FALSE, out.width= "15%", out.extra='style="float:left; padding:10px"'}
-knitr::include_graphics("img/ggplot2.png")
+knitr::include_graphics("img/reprex.png")
 ``` 
 
 ## Creating `repr`oducible `ex`amples with `reprex`
