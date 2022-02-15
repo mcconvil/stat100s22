@@ -60,8 +60,8 @@ class: middle, center, inverse
 ## Announcements
 
 
-
-
+* P-Set 3 due Friday this week.
+* Moving all project assignment due dates to Fridays at 5pm.
 
 
 ****************************
@@ -78,16 +78,17 @@ class: middle, center, inverse
 * Simple linear regression model
     + Estimating the slope and intercept terms
     + Prediction
+    + Consider one quantitative predictor
+    + Consider one categorical predictor
 
-* Measuring correlation
  
 ] 
 
---
+
 
 .pull-right[
 
-XXX
+* Measuring correlation
 
 ]
 
@@ -119,10 +120,9 @@ XXX
 
 > And lots of other times too!
 
---
+---
 
-**************************************************
-
+###  When to Get Help
 
 
 Remember:
@@ -137,12 +137,92 @@ Remember:
 
 &rarr; Struggling does NOT mean you are bad at stats!
 
+---
+
+
+## Thoughts on Data Collection
+
+**Random Sampling**
+
+
+Random sampling is important to ensure the sample is representative of the population.
+
+--
+
+Representativeness isn't about size.
+
++ Small random samples will tend to be more representative than large non-random samples.
+
+--
+
+How do we draw conclusions about the population from non-random samples?
+
+--
+
+&rarr; Investigate how your sampled cases (and respondents) are systematically different from the non-sampled cases (and non-respondents).
+
+---
+
+## Thoughts on Data Collection
+
+**Random Assignment**
+
+Random assignment allows you to explore **causal** relationships between your explanatory variables and the predictor variables.
+
+--
+
+How do we draw causal conclusions from studies without random assignment?
+
+--
+
+&rarr; With extreme care!  Try to control for all possible confounding variables.
+
+--
+
+&rarr; Discuss the associations/correlations you found.  Use domain knowledge to address potentially causal links.
+
+--
+
+&rarr; Take more stats to learn more about causal inference.
+
+
+--
+
+**Bottom Line:** We often have to use imperfect data to make decisions.
+
+
+---
+
+## Two Key Random Mechanisms
+
+
+```{r, echo = FALSE, out.width='80%'}
+knitr::include_graphics("img/ims_ch2.png")
+```
+
+
+---
+
+.left-column[
+
+## Recap
+
+]
+
+.right-column[
+
+```{r, echo = FALSE, out.width = '70%'}
+knitr::include_graphics("img/DAW.jpeg")
+```
+
+
+]
 
 ---
 
 ## Statistical Models
 
-### Two Main Motivations
+#### Two Main Motivations
 
 --
 
@@ -170,7 +250,7 @@ You can often tell the modeling motivation from the research question.  We will 
 
 --
 
-We will focus mainly on descriptive modeling in this course.  If you want to learn more about predictive modeling, take Math 243: Statistical Learning!
+We will focus mainly on **descriptive/explanatory modeling** in this course.  If you want to learn more about **predictive modeling**, take Stat 121A: Data Science 1 + Stat 121B: Data Science 2.
 
 ---
 
@@ -221,87 +301,98 @@ Consider this model when:
 
 ---
 
-### Example: Is there a linear relationship between tree diameter and tree height for the trees at the Woodstock Community Center?
+### Example: [The Ultimate Halloween Candy Power Ranking](https://fivethirtyeight.com/videos/the-ultimate-halloween-candy-power-ranking/)
 
-
-```{r  out.width = "70%", echo=FALSE, fig.align='center'}
-include_graphics("img/woodstock_cc.png") 
-```
-
----
-
-### Example: Trees at the Woodstock CC
-
-
-
-```{r}
-library(pdxTrees)
-woodstock_cc <- get_pdxTrees_parks(park = 
-                                     "Woodstock Community Center")
-
-ggplot(data = woodstock_cc, mapping = aes(x = DBH, 
-                                          y = Tree_Height)) +
-  geom_point()
-
-```
+> "The social contract of Halloween is simple: Provide adequate treats to costumed masses, or be prepared for late-night tricks from those dissatisfied with your offer. To help you avoid that type of vengeance, and to help you make good decisions at the supermarket this weekend, we wanted to figure out what Halloween candy people most prefer. So we devised an experiment: Pit dozens of fun-sized candy varietals against one another, and let the wisdom of the crowd decide which one was best." -- Walt Hickey
 
 --
 
-Linear trend? Direction of trend?
+> "While we don’t know who exactly voted, we do know this: 8,371 different IP addresses voted on about 269,000 randomly generated matchups.2 So, not a scientific survey or anything, but a good sample of what candy people like. "
 
-
----
-
-### Example: Trees at the Woodstock CC
-
-
-
-```{r}
-library(pdxTrees)
-woodstock_cc <- get_pdxTrees_parks(park = 
-                                     "Woodstock Community Center")
-
-ggplot(data = woodstock_cc, mapping = aes(x = DBH, 
-                                          y = Tree_Height)) +
-  geom_point() +
-  stat_smooth(method = "lm", se = FALSE)
-
-```
-
-
-
-Linear trend? Direction of trend?
 
 
 
 ---
 
-### Example: Trees at the Woodstock CC
+### Example: [The Ultimate Halloween Candy Power Ranking](https://fivethirtyeight.com/videos/the-ultimate-halloween-candy-power-ranking/)
 
 
 
 ```{r}
-library(pdxTrees)
-woodstock_cc <- get_pdxTrees_parks(park = 
-                                     "Woodstock Community Center")
+candy <- read_csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/candy-power-ranking/candy-data.csv")
 
-ggplot(data = woodstock_cc, mapping = aes(x = DBH, 
-                                          y = Tree_Height)) +
-  geom_point() +
-  stat_smooth(method = "lm", se = FALSE)
+glimpse(candy)
 
 ```
 
+---
+
+### Example: [The Ultimate Halloween Candy Power Ranking](https://fivethirtyeight.com/videos/the-ultimate-halloween-candy-power-ranking/)
+
+.pull-left[
+
+```{r candy, fig.show = 'hide', echo = FALSE}
+ggplot(data = candy, 
+       mapping = aes(x = pricepercent,
+                     y = winpercent)) +
+  geom_point(alpha = 0.6, size = 4, 
+             color = "chocolate4")
+```
+
+* Linear trend? 
+
+* Direction of trend?
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("candy", "png"))
+```
+
+]
+
+
+
+
+
+---
+
+
+
+### Example: [The Ultimate Halloween Candy Power Ranking](https://fivethirtyeight.com/videos/the-ultimate-halloween-candy-power-ranking/)
+
+.pull-left[
+
+```{r candy2, fig.show = 'hide', echo = FALSE}
+ggplot(data = candy, 
+       mapping = aes(x = pricepercent,
+                     y = winpercent)) +
+  geom_point(alpha = 0.6, size = 4, 
+             color = "chocolate4") +
+  stat_smooth(method = "lm", se = FALSE,
+              color = "deeppink2")
+```
 
 **A simple linear regression model would be suitable for these data.**
 
 * But first, let's describe more plots!
 
----
+]
 
-class: center, middle, inverse
+.pull-right[
 
-# But before that: It's time for Trend Stretches!
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("candy2", "png"))
+```
+
+]
+
+
+
+
+
 
 ---
 
@@ -326,7 +417,7 @@ plot_grid(p1, p2, p3, p4, ncol=2, labels = c("A", "B", "C", "D"))
 
 --
 
-**Need a summary statistics that quantifies the strength and relationship of the linear trend!**
+#### Need a summary statistics that quantifies the strength and relationship of the linear trend!
 
 
 
@@ -335,7 +426,7 @@ plot_grid(p1, p2, p3, p4, ncol=2, labels = c("A", "B", "C", "D"))
 
 ## (Sample) Correlation Coefficient
 
-* Measures the strength and direction of linear relationship between two quantitative variables
+* Measures the **strength** and **direction** of **linear** relationship between two quantitative variables
 
 --
 
@@ -356,12 +447,14 @@ plot_grid(p1, p2, p3, p4, ncol=2, labels = c("A", "B", "C", "D"))
 --
 
 ```{r}
-woodstock_cc %>%
-  summarize(cor_ht_dbh = cor(Tree_Height, DBH))
+candy %>%
+  summarize(cor = cor(pricepercent, winpercent))
 ```
 
 
 ---
+
+.pull-left[
 
 ```{r, echo = FALSE, fig.height=5, fig.width=7.5, fig.align='center'}
 
@@ -369,10 +462,17 @@ plot_grid(p1, p2, p3, p4, ncol=2, labels = c("A", "B", "C", "D"))
 
 ```
 
+]
+
+.pull-right[
+
 Any guesses on the correlations for A, B, C, or D?
 
+]
 
 --
+
+.pull-right[
 
 ```{r}
 dat %>%
@@ -380,15 +480,19 @@ dat %>%
             C = cor(x, y3), D = cor(x, y4))
 ```
 
+]
+
 ---
 
 ## New Example
 
 ```{r, echo = FALSE}
 # Load new dataset
-dat2 <- datasaurus <- read_csv("~/shared_data/stat100/data/datasaurus.csv")
+dat2 <- read_csv("~/shared_data/stat100/data/datasaurus.csv")
 ```
 
+
+.pull-left[
 
 ```{r}
 # Correlation coefficients
@@ -397,9 +501,15 @@ dat2 %>%
   summarize(cor = cor(x, y))
 ```
 
+]
+
 --
 
+.pull-right[
+
 * Conclude that $x$ and $y$ have the same relationship across these different datasets because the correlation is the same?
+
+]
 
 ---
 
@@ -412,125 +522,41 @@ ggplot(data = dat2, mapping = aes(x = x, y = y)) +
   facet_wrap(~ dataset, ncol = 3)
 ```
 
+
 ---
 
-### Simple Linear Regression
+class: center, middle, inverse
 
-
-Let's return to the Example: Trees at the Woodstock CC
-
-
-
-```{r, echo = FALSE}
-library(pdxTrees)
-woodstock_cc <- get_pdxTrees_parks(park = 
-                                     "Woodstock Community Center")
-
-ggplot(data = woodstock_cc, mapping = aes(x = DBH, 
-                                          y = Tree_Height)) +
-  geom_point() 
-
-```
-
-* A line is a reasonable model form.
-
---
-
-* Where should the line be?
-    + Slope? Intercept?
-
+# It's Time for Trend Stretches!
 
 ---
 
 ### Simple Linear Regression
 
 
-Let's return to the Example: Trees at the Woodstock CC
-
-
+.pull-left[
 
 ```{r, echo = FALSE}
-library(pdxTrees)
-woodstock_cc <- get_pdxTrees_parks(park = 
-                                     "Woodstock Community Center")
-
-ggplot(data = woodstock_cc, mapping = aes(x = DBH, 
-                                          y = Tree_Height)) +
-  geom_point() +
-  geom_abline(intercept = 15, slope = 2.1, size = 1,
-              color = "darkgreen") 
-
+knitr::include_graphics(knitr::fig_chunk("candy2", "png"))
 ```
 
+]
+
+.pull-right[
+
+Let's return to the Candy Example.
+
+
 * A line is a reasonable model form.
+
 
 
 * Where should the line be?
     + Slope? Intercept?
 
-
----
-
-### Simple Linear Regression
+]
 
 
-Let's return to the Example: Trees at the Woodstock CC
-
-
-
-```{r, echo = FALSE}
-library(pdxTrees)
-woodstock_cc <- get_pdxTrees_parks(park = 
-                                     "Woodstock Community Center")
-
-ggplot(data = woodstock_cc, mapping = aes(x = DBH, 
-                                          y = Tree_Height)) +
-  geom_point() +
-  geom_abline(intercept = 15, slope = 2.1, size = 1,
-              color = "darkgreen") +
-  geom_smooth(method = "lm", se = FALSE)
-  
-
-```
-
-* A line is a reasonable model form.
-
-
-* Where should the line be?
-    + Slope? Intercept?
-
-    
----
-
-### Simple Linear Regression
-
-
-Let's return to the Example: Trees at the Woodstock CC
-
-
-
-```{r, echo = FALSE}
-library(pdxTrees)
-woodstock_cc <- get_pdxTrees_parks(park = 
-                                     "Woodstock Community Center")
-
-ggplot(data = woodstock_cc, mapping = aes(x = DBH, 
-                                          y = Tree_Height)) +
-  geom_point() +
-  geom_abline(intercept = 15, slope = 2.1, size = 1,
-              color = "darkgreen") +
-  geom_smooth(method = "lm", se = FALSE) +
-  geom_abline(intercept = 10, slope = 2.8, size = 1,
-              color = "orange")
-  
-
-```
-
-* A line is a reasonable model form.
-
-
-* Where should the line be?
-    + Slope? Intercept?
 
 ---
 
@@ -595,22 +621,28 @@ $$
 
 ### Method of Least Squares
 
-* Let's focus on the orange line.  
 
-```{r, echo=FALSE}
-ggplot(data = woodstock_cc, mapping = aes(x = DBH, 
-                                          y = Tree_Height)) +
-  geom_point() +
-  geom_abline(intercept = 10, slope = 2.8, size = 1,
-              color = "orange") +
-  annotate("segment", x = woodstock_cc$DBH, xend = woodstock_cc$DBH, 
-           y = woodstock_cc$Tree_Height, yend = 10 + 2.8*woodstock_cc$DBH, 
+```{r, echo=FALSE, eval = TRUE}
+ggplot(data = candy, 
+       mapping = aes(x = pricepercent,
+                     y = winpercent)) +
+  geom_point(alpha = 0.6, size = 4, 
+             color = "chocolate4") +
+  stat_smooth(method = "lm", se = FALSE,
+              color = "deeppink2") +
+  annotate("segment", x = candy$pricepercent, 
+           xend = candy$pricepercent, 
+           y = candy$winpercent, yend = 42 + 17.8*candy$pricepercent, 
            color = "darkblue", arrow = arrow(length = unit(0.03, "npc"))) + 
   geom_point()
   
 ```
 
+--
+
 * Want residuals to be small.
+
+--
 
 * Minimize some function of the residuals.  
 
@@ -663,25 +695,43 @@ Called the **least squares line** or the **line of best fit**.
 ### Method of Least Squares
 
 
+
+.pull-left[
+
 `ggplot2` will compute the line and add it to your plot using `geom_smooth(method = "lm")`
 
-```{r, echo = TRUE}
-ggplot(data = woodstock_cc, mapping = aes(x = DBH, 
-                                          y = Tree_Height)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = FALSE) 
+```{r candy3, fig.show = 'hide', echo = FALSE}
+ggplot(data = candy, 
+       mapping = aes(x = pricepercent,
+                     y = winpercent)) +
+  geom_point(alpha = 0.6, size = 4, 
+             color = "chocolate4") +
+  stat_smooth(method = "lm", se = FALSE,
+              color = "deeppink2")
 ```
 
---
+
 
 But what are the **exact** values of $\hat{\beta}_o$ and $\hat{\beta}_1$?
+
+
+]
+
+.pull-right[
+
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("candy3", "png"))
+```
+
+]
 
 ---
 
 ### Constructing the Simple Linear Regression Model in R
 
 ```{r}
-mod <- lm(Tree_Height ~ DBH, data = woodstock_cc)
+mod <- lm(winpercent ~ pricepercent, data = candy)
 
 library(moderndive)
 get_regression_table(mod)
@@ -705,21 +755,22 @@ Intercept:
 ### Prediction
 
 ```{r}
-new_cases <- data.frame(DBH = c(10, 25, 40))
+new_cases <- data.frame(pricepercent = c(0.25, 0.85, 1.5))
 predict(mod, newdata = new_cases)
 ```
 
-We didn't have any trees in our sample with a diameter of 10 inches.  Can we still make this prediction?
+We didn't have any trees in our sample with a price percentage of 85%.  Can we still make this prediction?
+
 
 --
 
-&rarr;  Called *interpolation*
+&rarr;  Called **interpolation**
 
-We didn't have any trees in our sample with a diameter above 30 inches, can we make a prediction at 40 inches?
+We didn't have any candies in our sample with a price percentage of 150%.  Can we still make this prediction?
 
 --
 
-&rarr;  Called *extrapolation*
+&rarr;  Called **extrapolation**
 
 
 
@@ -728,17 +779,20 @@ We didn't have any trees in our sample with a diameter above 30 inches, can we m
 
 ### Cautions
 
-1. Careful to only predict values within the range of $x$ values in the sample.
+.pull-left[
 
---
+* Careful to only predict values within the range of $x$ values in the sample.
 
-2. Make sure to investigate **influential points**.
 
---
 
-What is an **outlier**?
+* Make sure to investigate **influential points**.
 
---
+
+**Q:** What is an **outlier**?
+
+]
+
+.pull-right[
 
 ```{r, echo = FALSE}
 set.seed(13681)
@@ -753,6 +807,12 @@ ggplot(dat, aes(x, y1)) + geom_point() +
   stat_smooth(method = "lm", se = FALSE, data = dat[-51,], color = "purple") +
   stat_smooth(method = "lm", se = FALSE, data = dat[-52,], color = "orange")  
 ```
+
+
+]
+
+---
+
 
 ### Linear Regression
 
@@ -770,11 +830,13 @@ Linear regression is a flexible class of models that allow for:
 
 --
 
-* BUT the response variable is quantitative.
+* BUT the **response variable is quantitative**.
 
 ********************
 
-### Explore today: Categorical Explanatory Variable
+--
+
+### What About A Categorical Explanatory Variable?
 
 --
 
@@ -791,9 +853,9 @@ Linear regression is a flexible class of models that allow for:
 
 **Can a simple smile have an effect on punishment assigned following an infraction?** In a 1995 study, Hecht and LeFrance examined the effect of a smile on the leniency of disciplinary action for wrongdoers. Participants in the experiment took on the role of members of a college disciplinary panel judging students accused of cheating. For each suspect, along with a description of the offense, a picture was provided with either a smile or neutral facial expression. A leniency score was calculated based on the disciplinary decisions made by the participants.
 
-* Response variable:
+**Response variable?**
 
-* Explanatory variable: 
+**Explanatory variable?**
 
 
 ---
@@ -834,6 +896,8 @@ glimpse(smiles)
 
 ---
 
+### Example: The Smile-Leniency Effect
+
 ```{r}
 # Summarize
 smiles %>%
@@ -843,25 +907,34 @@ smiles %>%
 ```
 
 
-```{r}
-# Visualize
-ggplot(smiles, aes(x = Group, y = Leniency)) +
-  geom_boxplot() +
-    stat_summary(fun = mean, geom = "point", color = "purple")
-```
-
-
 ---
 
-## Side-bar: Double Encoding
+### Example: The Smile-Leniency Effect
 
-```{r}
+
+.pull-left[
+
+```{r box, fig.show = 'hide'}
 # Visualize
-ggplot(smiles, aes(x = Group, y = Leniency, fill = Group)) +
+ggplot(smiles, aes(x = Group, 
+                   y = Leniency)) +
   geom_boxplot() +
-    stat_summary(fun = mean, geom = "point", color = "purple") +
-  guides(fill = FALSE)
+    stat_summary(fun = mean,
+                 geom = "point",
+                 color = "purple",
+                 size = 4)
 ```
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("box", "png"))
+```
+
+]
+
 
 
 ---
@@ -881,7 +954,9 @@ $$
 
 When $x = 0$:
 
---
+
+<br>
+
 <br>
 
 When $x = 1$:
@@ -920,10 +995,6 @@ predict(mod, newdata = new)
 
 
 
----
-
-
-### Reminders
 
 
 
