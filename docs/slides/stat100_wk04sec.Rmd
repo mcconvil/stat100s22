@@ -286,7 +286,7 @@ library(reprex)
 ```
 
 
-(3) Put the code you want to use in the script file and make sure it runs.
+(3) Put the code you want to use in the script file and make sure it runs.  
 
 ```{r, eval = FALSE}
 library(tidyverse)
@@ -312,7 +312,7 @@ penguins %>%
 
 #### `reprex` Practice Time!
 
-Let's now practice sharing our graphs from Problem 7 on P-Set 3 using `reprex`.
+Let's now practice sharing our graphs from Problem 6 on P-Set 3 using `reprex`.  If you haven't gotten there yet, try posting the `penguins` example.
 
 Notes:
 

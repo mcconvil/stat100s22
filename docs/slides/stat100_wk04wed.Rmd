@@ -537,6 +537,13 @@ class: center, middle, inverse
 
 # It's Time for Trend Stretches!
 
+
+```{r, echo = FALSE, fig.height=5, fig.width=7.5, fig.align='center'}
+
+plot_grid(p1, p2, p3, p4, ncol=2, labels = c("A", "B", "C", "D"))
+
+```
+
 ---
 
 ### Simple Linear Regression
