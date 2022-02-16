@@ -309,6 +309,13 @@ Consider this model when:
 
 > "While we don’t know who exactly voted, we do know this: 8,371 different IP addresses voted on about 269,000 randomly generated matchups.2 So, not a scientific survey or anything, but a good sample of what candy people like. "
 
+---
+
+### Example: [The Ultimate Halloween Candy Power Ranking](https://fivethirtyeight.com/videos/the-ultimate-halloween-candy-power-ranking/)
+
+```{r, echo = FALSE, out.width='80%'}
+knitr::include_graphics("img/candy_ex.png")
+```
 
 
 
@@ -332,6 +339,7 @@ glimpse(candy)
 .pull-left[
 
 ```{r candy, fig.show = 'hide', echo = FALSE}
+library(ggrepel)
 ggplot(data = candy, 
        mapping = aes(x = pricepercent,
                      y = winpercent)) +
@@ -742,12 +750,12 @@ get_regression_table(mod)
 
 ### Interpretation
 
-Slope:
+Slope: 17.8
 
 
 <br><br><br> <br> <br> <br>
 
-Intercept:
+Intercept: 42.0
 
 
 ---
@@ -759,14 +767,14 @@ new_cases <- data.frame(pricepercent = c(0.25, 0.85, 1.5))
 predict(mod, newdata = new_cases)
 ```
 
-We didn't have any trees in our sample with a price percentage of 85%.  Can we still make this prediction?
+We didn't have any treats in our sample with a price percentage of 85%.  Can we still make this prediction?
 
 
 --
 
 &rarr;  Called **interpolation**
 
-We didn't have any candies in our sample with a price percentage of 150%.  Can we still make this prediction?
+We didn't have any treats in our sample with a price percentage of 150%.  Can we still make this prediction?
 
 --
 
@@ -994,7 +1002,21 @@ predict(mod, newdata = new)
 ```
 
 
+---
 
+## And, For Those Buying Late Valentine Gifts...
+
+```{r echo = FALSE}
+library(ggrepel)
+ggplot(data = candy, 
+       mapping = aes(x = pricepercent,
+                     y = winpercent)) +
+  geom_point(alpha = 0.6, size = 4, 
+             color = "chocolate4") +
+  geom_text_repel(aes(label = competitorname), size = 4,
+                  force = 2, show.legend  = FALSE,
+                  box.padding = 1)
+```
 
 
 

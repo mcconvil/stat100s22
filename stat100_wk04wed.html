@@ -296,6 +296,11 @@ Consider this model when:
 
 &gt; "While we don’t know who exactly voted, we do know this: 8,371 different IP addresses voted on about 269,000 randomly generated matchups.2 So, not a scientific survey or anything, but a good sample of what candy people like. "
 
+---
+
+### Example: [The Ultimate Halloween Candy Power Ranking](https://fivethirtyeight.com/videos/the-ultimate-halloween-candy-power-ranking/)
+
+&lt;img src="img/candy_ex.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 
 
@@ -383,7 +388,7 @@ glimpse(candy)
 
 ---
 
-&lt;img src="stat100_wk04wed_files/figure-html/unnamed-chunk-6-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="stat100_wk04wed_files/figure-html/unnamed-chunk-7-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 --
 
@@ -434,7 +439,7 @@ candy %&gt;%
 
 .pull-left[
 
-&lt;img src="stat100_wk04wed_files/figure-html/unnamed-chunk-8-1.png" width="540" style="display: block; margin: auto;" /&gt;
+&lt;img src="stat100_wk04wed_files/figure-html/unnamed-chunk-9-1.png" width="540" style="display: block; margin: auto;" /&gt;
 
 ]
 
@@ -514,7 +519,7 @@ dat2 %&gt;%
 
 ###  Always graph the data when exploring relationships!
 
-&lt;img src="stat100_wk04wed_files/figure-html/unnamed-chunk-12-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="stat100_wk04wed_files/figure-html/unnamed-chunk-13-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -614,7 +619,7 @@ $$
 ### Method of Least Squares
 
 
-&lt;img src="stat100_wk04wed_files/figure-html/unnamed-chunk-14-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="stat100_wk04wed_files/figure-html/unnamed-chunk-15-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 --
 
@@ -719,12 +724,12 @@ get_regression_table(mod)
 
 ### Interpretation
 
-Slope:
+Slope: 17.8
 
 
 &lt;br&gt;&lt;br&gt;&lt;br&gt; &lt;br&gt; &lt;br&gt; &lt;br&gt;
 
-Intercept:
+Intercept: 42.0
 
 
 ---
@@ -742,14 +747,14 @@ predict(mod, newdata = new_cases)
 ## 46.42443 57.09409 68.65289
 ```
 
-We didn't have any trees in our sample with a price percentage of 85%.  Can we still make this prediction?
+We didn't have any treats in our sample with a price percentage of 85%.  Can we still make this prediction?
 
 
 --
 
 &amp;rarr;  Called **interpolation**
 
-We didn't have any candies in our sample with a price percentage of 150%.  Can we still make this prediction?
+We didn't have any treats in our sample with a price percentage of 150%.  Can we still make this prediction?
 
 --
 
@@ -777,7 +782,7 @@ We didn't have any candies in our sample with a price percentage of 150%.  Can w
 
 .pull-right[
 
-&lt;img src="stat100_wk04wed_files/figure-html/unnamed-chunk-18-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="stat100_wk04wed_files/figure-html/unnamed-chunk-19-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 
 ]
@@ -996,7 +1001,11 @@ predict(mod, newdata = new)
 ```
 
 
+---
 
+## And, For Those Buying Late Valentine Gifts...
+
+&lt;img src="stat100_wk04wed_files/figure-html/unnamed-chunk-25-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 
 
