@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Multiple Linear Regression</title>
+    <meta charset="utf-8" />
+    <script src="libsSlides/header-attrs-2.11/header-attrs.js"></script>
+    <link href="libsSlides/remark-css-0.0.1/hygge.css" rel="stylesheet" />
+    <script src="libsSlides/fabric-4.3.1/fabric.min.js"></script>
+    <link href="libsSlides/xaringanExtra-scribble-0.0.1/scribble.css" rel="stylesheet" />
+    <script src="libsSlides/xaringanExtra-scribble-0.0.1/scribble.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', function() { window.xeScribble = new Scribble({"pen_color":["#FF0000"],"pen_size":3,"eraser_size":30,"palette":[]}) })</script>
+    <link rel="stylesheet" href="more.css" type="text/css" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+
+background-image: url("img/DAW.png")
+background-position: left
+background-size: 50%
+class: middle, center, inverse
+
+
+.pull-right[
+
+
+
+## .whitish[Multiple Linear Regression]
+
+&lt;br&gt;
+
+&lt;br&gt;
+
+### .whitish[Kelly McConville]
+
+#### .yellow[ Stat 100 | Week 5 | Spring 2022] 
+
+]
+
+
+
+---
+
+## Announcements
+
+
+* Project Assignment 1 due on Friday.
+* Mid-Term Exam: Wednesday, March 9th - Friday, March 11th
+* After turning in Project Assignment 1, please fill out [this feedback survey](https://forms.gle/ytMfBBi2iBJKby8w6) (also on Canvas and in the announcements channel) by Friday, March 4th.
+    + We will give groups one set of feedback on Gradescope but will take your feedback into account when doing our final assessments.
+
+****************************
+
+--
+
+## Goals for Today
+
+.pull-left[
+
+
+* Recap: Posting code and reproducible examples in Slack
+ 
+* Recap: Simple Linear Regression
+
+ 
+] 
+
+
+
+.pull-right[
+
+* Broadening our idea of linear regression models
+
+* Discuss **multiple** linear regression model
+
+* Explore interaction terms
+
+]
+
+
+---
+
+class: inverse, middle, center
+
+###  Tips for posting coding questions in Slack
+
+&lt;img src="img/reprex.png" width="15%" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Recap: Simple Linear Regression
+
+.pull-left[
+
+* Response variable `\((y)\)`: quantitative
+
+* Explanatory variable `\((x)\)`: quantitative
+
+]
+
+--
+
+.pull-right[
+
+
+
+
+&lt;img src="stat100_wk05wed_files/figure-html/unnamed-chunk-3-1.png" width="288" style="display: block; margin: auto;" /&gt;
+
+
+]
+
+--
+
+
+.pull-left[
+
+**Goals:**
+
+&amp;rarr; Determine a reasonable form for `\(f()\)`. 
+
+
+
+$$ 
+`\begin{align}
+y &amp;= f(x) + \epsilon \\
+y &amp;= \beta_o + \beta_1 x + \epsilon
+\end{align}`
+$$
+]
+
+
+---
+
+
+### Recap: Simple Linear Regression
+
+
+**Goals:**
+
+&amp;rarr; Estimate `\(f()\)` with `\(\hat{f}()\)` using the data and the **Method of Least Squares**.
+
+
+
+
+```r
+mod &lt;- lm(winpercent ~ pricepercent, data = candy)
+
+library(moderndive)
+get_regression_table(mod)
+```
+
+```
+## # A tibble: 2 × 7
+##   term         estimate std_error statistic p_value lower_ci upper_ci
+##   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1 intercept        42.0      2.91     14.4    0        36.2      47.8
+## 2 pricepercent     17.8      5.30      3.35   0.001     7.23     28.3
+```
+
+
+--
+
+&amp;rarr; Generate predicted values: `\(\hat{y} = \hat{f}(x)\)`.
+
+
+
+```r
+new_cases &lt;- data.frame(pricepercent = c(0.25, 0.85, 1.5))
+predict(mod, newdata = new_cases)
+```
+
+```
+##        1        2        3 
+## 46.42443 57.09409 68.65289
+```
+
+---
+
+
+### Recap: Simple Linear Regression
+
+.pull-left[
+
+* Did also consider when the explanatory variable is **categorical**.
+
+
+
+]
+
+--
+
+.pull-right[
+
+
+
+
+&lt;img src="stat100_wk05wed_files/figure-html/unnamed-chunk-7-1.png" width="288" style="display: block; margin: auto;" /&gt;
+
+
+]
+
+--
+
+
+.pull-left[
+
+**Goals:**
+
+&amp;rarr; Determine a reasonable form for `\(f()\)`. 
+
+
+
+$$ 
+`\begin{align}
+y &amp;= f(x) + \epsilon \\
+y &amp;= \beta_o + \beta_1 x + \epsilon
+\end{align}`
+$$
+]
+
+
+---
+
+
+### Recap: Simple Linear Regression
+
+
+**Goals:**
+
+&amp;rarr; Estimate `\(f()\)` with `\(\hat{f}()\)` using the data and the **Method of Least Squares**.
+
+
+
+
+```r
+mod &lt;- lm(Leniency ~ Group, data = smiles)
+library(moderndive)
+get_regression_table(mod)
+```
+
+```
+## # A tibble: 2 × 7
+##   term         estimate std_error statistic p_value lower_ci upper_ci
+##   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1 intercept       4.12      0.275     15.0    0        3.57      4.67
+## 2 Group: smile    0.794     0.389      2.04   0.045    0.017     1.57
+```
+
+
+--
+
+&amp;rarr; Generate predicted values: `\(\hat{y} = \hat{f}(x)\)`.
+
+
+
+```r
+new &lt;- data.frame(Group = c("smile", "neutral"))
+predict(mod, newdata = new)
+```
+
+```
+##        1        2 
+## 4.911765 4.117647
+```
+
+---
+
+class: middle, inverse, center
+
+## Before we start adding more explanatory variables...
+
+--
+
+### What form of randomness did our anchoring study have: random sampling or random assignment?
+
+--
+
+### How did that form of randomness impact your conclusions?
+
+
+
+
+---
+
+## Multiple Linear Regression
+
+Linear regression is a flexible class of models that allow for:
+
+* Both quantitative and categorical explanatory variables.
+
+--
+
+* Multiple explanatory variables.
+
+--
+
+* Curved relationships between the response variable and the explanatory variable.
+
+--
+
+* BUT the response variable is **quantitative**.
+
+
+---
+
+
+### Multiple Linear Regression
+
+**Form of the Model:**
+
+--
+
+$$ 
+`\begin{align}
+y &amp;= \beta_o + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + \epsilon
+\end{align}`
+$$
+
+
+--
+
+#### How does extending to more predictors change our process?
+
+--
+
+**What doesn't change:**
+
+--
+
+&amp;rarr; Still use **Method of Least Squares** to estimate coefficients
+
+--
+
+&amp;rarr; Still use `lm()` to fit the model and `predict()` for prediction
+
+
+
+--
+
+**What does change:**
+
+--
+
+&amp;rarr; Meaning of the coefficients are more complicated and depend on other variables in the model
+
+--
+
+&amp;rarr; Need to decide which variables to include and how (linear term, squared term...)
+
+---
+
+### Multiple Linear Regression
+
+* We are going to see a few examples today and next lecture.
+
+--
+
+* We will need to return to modeling later in the course to more definitively answer questions about **model selection**.
+
+
+---
+
+## Example 
+
+Meadowfoam is a plant that grows in the Pacific Northwest and is harvested for its seed oil.  In a randomized experiment, researchers at Oregon State University looked at how two light-related factors influenced the number of flowers per meadowfoam plant, the primary measure of productivity for this plant.  The two light measures were light intensity (in mmol/ `\(m^2\)` /sec) and the timing of onset of the light (early or late in terms of photo periodic floral induction).
+
+&lt;br&gt; 
+
+
+**Response variable**: 
+
+&lt;br&gt; 
+
+**Explanatory variables**: 
+
+
+&lt;br&gt; &lt;br&gt; &lt;br&gt; 
+
+**Model Form:**
+
+---
+
+### Data Loading and Wrangling
+
+
+```r
+library(tidyverse)
+library(Sleuth3)
+data(case0901)
+
+# Recode the timing variable
+case0901 &lt;- case0901 %&gt;%
+  mutate(TimeCat = case_when(
+    Time == 1 ~ "Late",
+    Time == 2 ~ "Early"
+    )) 
+```
+
+
+---
+
+### Visualizing the Data
+
+.pull-left[
+
+
+```r
+ggplot(case0901,
+       aes(x = Intensity,
+           y = Flowers,
+           color = TimeCat)) + 
+  geom_point(size = 4)
+```
+
+Why don't I have to include `data = ` and `mapping = ` in my `ggplot()` layer?
+
+
+]
+
+.pull-right[
+
+&lt;img src="stat100_wk05wed_files/figure-html/meadowfoam-1.png" width="768" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+
+---
+
+### Building the Linear Regression Model
+
+
+
+```r
+modFlowers &lt;- lm(Flowers ~ Intensity + TimeCat, data = case0901)
+
+library(moderndive)
+get_regression_table(modFlowers)
+```
+
+```
+## # A tibble: 3 × 7
+##   term          estimate std_error statistic p_value lower_ci upper_ci
+##   &lt;chr&gt;            &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1 intercept        83.5      3.27      25.5        0   76.7      90.3 
+## 2 Intensity        -0.04     0.005     -7.89       0   -0.051    -0.03
+## 3 TimeCat: Late   -12.2      2.63      -4.62       0  -17.6      -6.69
+```
+
+---
+
+### Interpreting the Coefficients
+
+
+.pull-left[
+
+
+```r
+ggplot(case0901, 
+       aes(x = Intensity,
+           y = Flowers,
+           color = TimeCat)) + 
+  geom_point(size = 4) + 
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+]
+
+.pull-right[
+
+&lt;img src="stat100_wk05wed_files/figure-html/meadowfoam2-1.png" width="768" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+
+&lt;br&gt; 
+--
+
+Is the assumption of **equal slopes** reasonable here?
+
+
+---
+
+### Prediction
+
+
+```r
+flowersNew &lt;- data.frame(Intensity = 700, 
+                         TimeCat = "Early")
+predict(modFlowers, newdata = flowersNew)
+```
+
+```
+##        1 
+## 55.13417
+```
+
+---
+
+### New Example
+
+For this example, we will use data collected by the website pollster.com, which aggregated 102 presidential polls from August 29th, 2008 through the end of September.  We want to determine the best model to explain the variable `Margin`, measured by the difference in preference between Barack Obama and John McCain.  Our potential predictors are `Days` (the number of days after the Democratic Convention) and `Charlie` (indicator variable on whether poll was conducted before or after the first ABC interview of Sarah Palin with Charlie Gibson). 
+
+--
+
+.pull-left[
+
+
+```r
+Pollster08 &lt;- 
+  read_csv("~/shared_data/stat100/data/Pollster08.csv")
+glimpse(Pollster08)
+```
+
+```
+## Rows: 102
+## Columns: 11
+## $ PollTaker &lt;chr&gt; "Rasmussen", "Zogby", "Diageo/Hotline", "CBS", "CNN", "Rasmu…
+## $ PollDates &lt;chr&gt; "8/28-30/08", "8/29-30/08", "8/29-31/08", "8/29-31/08", "8/2…
+## $ MidDate   &lt;chr&gt; "8/29", "8/30", "8/30", "8/30", "8/30", "8/31", "8/31", "9/1…
+## $ Days      &lt;dbl&gt; 1, 2, 2, 2, 2, 3, 3, 4, 5, 5, 5, 5, 6, 6, 8, 8, 9, 9, 9, 9, …
+## $ n         &lt;dbl&gt; 3000, 2020, 805, 781, 927, 3000, 1200, 1728, 2771, 1000, 734…
+## $ Pop       &lt;chr&gt; "LV", "LV", "RV", "RV", "RV", "LV", "LV", "RV", "RV", "A", "…
+## $ McCain    &lt;dbl&gt; 46, 47, 39, 40, 48, 45, 43, 36, 42, 39, 42, 44, 46, 40, 48, …
+## $ Obama     &lt;dbl&gt; 49, 45, 48, 48, 49, 51, 49, 40, 49, 42, 42, 49, 48, 46, 45, …
+## $ Margin    &lt;dbl&gt; 3, -2, 9, 8, 1, 6, 6, 4, 7, 3, 0, 5, 2, 6, -3, 5, -4, -1, -2…
+## $ Charlie   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+## $ Meltdown  &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …
+```
+
+]
+
+.pull-right[
+
+**Response variable**: 
+
+&lt;br&gt; 
+
+
+
+**Explanatory variables**: 
+
+]
+
+---
+
+### Loading and Visualizing the Data
+
+.pull-left[
+
+
+```r
+ggplot(Pollster08,
+       aes(x = Days,
+           y = Margin, 
+           color = Charlie)) +
+  geom_point(size = 3)
+```
+
+
+]
+
+.pull-right[
+
+&lt;img src="stat100_wk05wed_files/figure-html/polls-1.png" width="768" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+What is wrong with how one of the variables is mapped in the graph?
+
+
+
+---
+
+### Loading and Visualizing the Data
+
+.pull-left[
+
+
+```r
+ggplot(Pollster08, 
+       aes(x = Days,
+           y = Margin, 
+           color = factor(Charlie))) +
+  geom_point(size = 3)
+```
+
+
+]
+
+.pull-right[
+
+&lt;img src="stat100_wk05wed_files/figure-html/polls2-1.png" width="768" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+--
+
+Is the assumption of **equal slopes** reasonable here?
+
+
+---
+
+### Model Forms
+
+**Same Slopes Model:**
+
+&lt;br&gt; &lt;br&gt; &lt;br&gt; 
+
+**Different Slopes Model:**
+
+
+* Line for `\(x_2 = 1\)`:
+
+&lt;br&gt; &lt;br&gt; &lt;br&gt; 
+
+
+* Line for `\(x_2 = 0\)`: 
+
+
+
+---
+
+### Fit the Linear Regression Model
+
+
+```r
+modPoll &lt;- lm(Margin ~ Days*factor(Charlie), data = Pollster08)
+
+get_regression_table(modPoll)
+```
+
+```
+## # A tibble: 4 × 7
+##   term                  estimate std_error statistic p_value lower_ci upper_ci
+##   &lt;chr&gt;                    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1 intercept                5.57      1.09       5.11       0    3.40     7.73 
+## 2 Days                    -0.598     0.121     -4.96       0   -0.838   -0.359
+## 3 factor(Charlie): 1     -10.1       1.92      -5.25       0  -13.9     -6.29 
+## 4 Days:factor(Charlie)1    0.921     0.136      6.75       0    0.65     1.19
+```
+
+---
+
+### Adding the Regression Model to the Curve
+
+.pull-left[
+
+
+```r
+ggplot(Pollster08, 
+       aes(x = Days, 
+           y = Margin, 
+           color = factor(Charlie))) +
+  geom_point(size = 3) +
+  stat_smooth(method = lm, se = FALSE)
+```
+
+]
+
+.pull-right[
+
+&lt;img src="stat100_wk05wed_files/figure-html/polls3-1.png" width="768" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+--
+
+Is our modeling goal here **predictive** or **descriptive**?
+
+---
+
+## Reminders:
+
+* Project Assignment 1 is due on Gradescope on Friday at 5pm.
+    + Only one person needs to upload it.
+    + Please add the names of your group members in the upload process.
+* After turning in Project Assignment 1, please fill out [this feedback survey](https://forms.gle/ytMfBBi2iBJKby8w6) (also on Canvas and in the announcements channel) by Friday, March 4th.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"ratio": "16:9",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

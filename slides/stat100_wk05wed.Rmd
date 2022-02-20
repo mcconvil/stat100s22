@@ -1,0 +1,654 @@
+---
+title: Multiple Linear Regression
+output:
+  xaringan::moon_reader:
+    css: ["more.css", "xaringan-themer.css", "hygge"]
+    lib_dir: libsSlides
+    self_contained: false
+    nature:
+      highlightStyle: github
+      ratio: '16:9'      
+      highlightLines: true
+      countIncrementalSlides: false
+      navigation:
+        scroll: false
+    seal: false
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, 
+                      fig.retina = 3, fig.align = 'center',
+                      fig.asp = 0.75, fig.width = 8)
+library(knitr)
+library(tidyverse)
+theme_update(text = element_text(size = 20))
+```
+
+```{r xaringan-scribble, echo=FALSE}
+xaringanExtra::use_scribble()
+```
+
+
+background-image: url("img/DAW.png")
+background-position: left
+background-size: 50%
+class: middle, center, inverse
+
+
+.pull-right[
+
+
+
+## .whitish[Multiple Linear Regression]
+
+<br>
+
+<br>
+
+### .whitish[Kelly McConville]
+
+#### .yellow[ Stat 100 | Week 5 | Spring 2022] 
+
+]
+
+
+
+---
+
+## Announcements
+
+
+* Project Assignment 1 due on Friday.
+* Mid-Term Exam: Wednesday, March 9th - Friday, March 11th
+* After turning in Project Assignment 1, please fill out [this feedback survey](https://forms.gle/ytMfBBi2iBJKby8w6) (also on Canvas and in the announcements channel) by Friday, March 4th.
+    + We will give groups one set of feedback on Gradescope but will take your feedback into account when doing our final assessments.
+
+****************************
+
+--
+
+## Goals for Today
+
+.pull-left[
+
+
+* Recap: Posting code and reproducible examples in Slack
+ 
+* Recap: Simple Linear Regression
+
+ 
+] 
+
+
+
+.pull-right[
+
+* Broadening our idea of linear regression models
+
+* Discuss **multiple** linear regression model
+
+* Explore interaction terms
+
+]
+
+
+---
+
+class: inverse, middle, center
+
+###  Tips for posting coding questions in Slack
+
+```{r, echo = FALSE, out.width= "15%"}
+knitr::include_graphics("img/reprex.png")
+``` 
+
+---
+
+### Recap: Simple Linear Regression
+
+.pull-left[
+
+* Response variable $(y)$: quantitative
+
+* Explanatory variable $(x)$: quantitative
+
+]
+
+--
+
+.pull-right[
+
+
+```{r, echo = FALSE}
+candy <- read_csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/candy-power-ranking/candy-data.csv")
+```
+
+```{r echo = FALSE, fig.width=4}
+library(ggrepel)
+ggplot(data = candy, 
+       mapping = aes(x = pricepercent,
+                     y = winpercent)) +
+  geom_point(alpha = 0.6, size = 4, 
+             color = "chocolate4")
+```
+
+
+]
+
+--
+
+
+.pull-left[
+
+**Goals:**
+
+&rarr; Determine a reasonable form for $f()$. 
+
+
+
+$$ 
+\begin{align}
+y &= f(x) + \epsilon \\
+y &= \beta_o + \beta_1 x + \epsilon
+\end{align}
+$$
+]
+
+
+---
+
+
+### Recap: Simple Linear Regression
+
+
+**Goals:**
+
+&rarr; Estimate $f()$ with $\hat{f}()$ using the data and the **Method of Least Squares**.
+
+
+
+```{r}
+mod <- lm(winpercent ~ pricepercent, data = candy)
+
+library(moderndive)
+get_regression_table(mod)
+```
+
+
+--
+
+&rarr; Generate predicted values: $\hat{y} = \hat{f}(x)$.
+
+
+```{r}
+new_cases <- data.frame(pricepercent = c(0.25, 0.85, 1.5))
+predict(mod, newdata = new_cases)
+```
+
+---
+
+
+### Recap: Simple Linear Regression
+
+.pull-left[
+
+* Did also consider when the explanatory variable is **categorical**.
+
+
+
+]
+
+--
+
+.pull-right[
+
+
+```{r, echo = FALSE}
+library(Lock5Data)
+# Load data
+data(Smiles)
+smiles <- Smiles
+```
+
+```{r echo = FALSE, fig.width=4}
+ggplot(smiles, aes(x = Group, 
+                   y = Leniency)) +
+  geom_boxplot() +
+    stat_summary(fun = mean,
+                 geom = "point",
+                 color = "purple",
+                 size = 4)
+```
+
+
+]
+
+--
+
+
+.pull-left[
+
+**Goals:**
+
+&rarr; Determine a reasonable form for $f()$. 
+
+
+
+$$ 
+\begin{align}
+y &= f(x) + \epsilon \\
+y &= \beta_o + \beta_1 x + \epsilon
+\end{align}
+$$
+]
+
+
+---
+
+
+### Recap: Simple Linear Regression
+
+
+**Goals:**
+
+&rarr; Estimate $f()$ with $\hat{f}()$ using the data and the **Method of Least Squares**.
+
+
+
+```{r}
+mod <- lm(Leniency ~ Group, data = smiles)
+library(moderndive)
+get_regression_table(mod)
+```
+
+
+--
+
+&rarr; Generate predicted values: $\hat{y} = \hat{f}(x)$.
+
+
+```{r}
+new <- data.frame(Group = c("smile", "neutral"))
+predict(mod, newdata = new)
+```
+
+---
+
+class: middle, inverse, center
+
+## Before we start adding more explanatory variables...
+
+--
+
+### What form of randomness did our anchoring study have: random sampling or random assignment?
+
+--
+
+### How did that form of randomness impact your conclusions?
+
+
+
+
+---
+
+## Multiple Linear Regression
+
+Linear regression is a flexible class of models that allow for:
+
+* Both quantitative and categorical explanatory variables.
+
+--
+
+* Multiple explanatory variables.
+
+--
+
+* Curved relationships between the response variable and the explanatory variable.
+
+--
+
+* BUT the response variable is **quantitative**.
+
+
+---
+
+
+### Multiple Linear Regression
+
+**Form of the Model:**
+
+--
+
+$$ 
+\begin{align}
+y &= \beta_o + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + \epsilon
+\end{align}
+$$
+
+
+--
+
+#### How does extending to more predictors change our process?
+
+--
+
+**What doesn't change:**
+
+--
+
+&rarr; Still use **Method of Least Squares** to estimate coefficients
+
+--
+
+&rarr; Still use `lm()` to fit the model and `predict()` for prediction
+
+
+
+--
+
+**What does change:**
+
+--
+
+&rarr; Meaning of the coefficients are more complicated and depend on other variables in the model
+
+--
+
+&rarr; Need to decide which variables to include and how (linear term, squared term...)
+
+---
+
+### Multiple Linear Regression
+
+* We are going to see a few examples today and next lecture.
+
+--
+
+* We will need to return to modeling later in the course to more definitively answer questions about **model selection**.
+
+
+---
+
+## Example 
+
+Meadowfoam is a plant that grows in the Pacific Northwest and is harvested for its seed oil.  In a randomized experiment, researchers at Oregon State University looked at how two light-related factors influenced the number of flowers per meadowfoam plant, the primary measure of productivity for this plant.  The two light measures were light intensity (in mmol/ $m^2$ /sec) and the timing of onset of the light (early or late in terms of photo periodic floral induction).
+
+<br> 
+
+
+**Response variable**: 
+
+<br> 
+
+**Explanatory variables**: 
+
+
+<br> <br> <br> 
+
+**Model Form:**
+
+---
+
+### Data Loading and Wrangling
+
+```{r}
+library(tidyverse)
+library(Sleuth3)
+data(case0901)
+
+# Recode the timing variable
+case0901 <- case0901 %>%
+  mutate(TimeCat = case_when(
+    Time == 1 ~ "Late",
+    Time == 2 ~ "Early"
+    )) 
+```
+
+
+---
+
+### Visualizing the Data
+
+.pull-left[
+
+```{r meadowfoam, fig.show = 'hide', echo = TRUE}
+ggplot(case0901,
+       aes(x = Intensity,
+           y = Flowers,
+           color = TimeCat)) + 
+  geom_point(size = 4)
+
+```
+
+Why don't I have to include `data = ` and `mapping = ` in my `ggplot()` layer?
+
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("meadowfoam", "png"))
+```
+
+]
+
+
+
+---
+
+### Building the Linear Regression Model
+
+
+```{r}
+modFlowers <- lm(Flowers ~ Intensity + TimeCat, data = case0901)
+
+library(moderndive)
+get_regression_table(modFlowers)
+```
+
+---
+
+### Interpreting the Coefficients
+
+
+.pull-left[
+
+```{r meadowfoam2, fig.show = 'hide', echo = TRUE}
+ggplot(case0901, 
+       aes(x = Intensity,
+           y = Flowers,
+           color = TimeCat)) + 
+  geom_point(size = 4) + 
+  geom_smooth(method = "lm", se = FALSE)
+
+```
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE, fig.width=7}
+knitr::include_graphics(knitr::fig_chunk("meadowfoam2", "png"))
+```
+
+]
+
+
+
+<br> 
+--
+
+Is the assumption of **equal slopes** reasonable here?
+
+
+---
+
+### Prediction
+
+```{r}
+flowersNew <- data.frame(Intensity = 700, 
+                         TimeCat = "Early")
+predict(modFlowers, newdata = flowersNew)
+```
+
+---
+
+### New Example
+
+For this example, we will use data collected by the website pollster.com, which aggregated 102 presidential polls from August 29th, 2008 through the end of September.  We want to determine the best model to explain the variable `Margin`, measured by the difference in preference between Barack Obama and John McCain.  Our potential predictors are `Days` (the number of days after the Democratic Convention) and `Charlie` (indicator variable on whether poll was conducted before or after the first ABC interview of Sarah Palin with Charlie Gibson). 
+
+--
+
+.pull-left[
+
+```{r}
+Pollster08 <- 
+  read_csv("~/shared_data/stat100/data/Pollster08.csv")
+glimpse(Pollster08)
+```
+
+]
+
+.pull-right[
+
+**Response variable**: 
+
+<br> 
+
+
+
+**Explanatory variables**: 
+
+]
+
+---
+
+### Loading and Visualizing the Data
+
+.pull-left[
+
+```{r polls, fig.show='hide'}
+ggplot(Pollster08,
+       aes(x = Days,
+           y = Margin, 
+           color = Charlie)) +
+  geom_point(size = 3)
+```
+
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("polls", "png"))
+```
+
+]
+
+
+What is wrong with how one of the variables is mapped in the graph?
+
+
+
+---
+
+### Loading and Visualizing the Data
+
+.pull-left[
+
+```{r polls2, fig.show='hide'}
+ggplot(Pollster08, 
+       aes(x = Days,
+           y = Margin, 
+           color = factor(Charlie))) +
+  geom_point(size = 3)
+```
+
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("polls2", "png"))
+```
+
+]
+
+
+--
+
+Is the assumption of **equal slopes** reasonable here?
+
+
+---
+
+### Model Forms
+
+**Same Slopes Model:**
+
+<br> <br> <br> 
+
+**Different Slopes Model:**
+
+
+* Line for $x_2 = 1$:
+
+<br> <br> <br> 
+
+
+* Line for $x_2 = 0$: 
+
+
+
+---
+
+### Fit the Linear Regression Model
+
+```{r}
+modPoll <- lm(Margin ~ Days*factor(Charlie), data = Pollster08)
+
+get_regression_table(modPoll)
+```
+
+---
+
+### Adding the Regression Model to the Curve
+
+.pull-left[
+
+```{r polls3, fig.show='hide'}
+ggplot(Pollster08, 
+       aes(x = Days, 
+           y = Margin, 
+           color = factor(Charlie))) +
+  geom_point(size = 3) +
+  stat_smooth(method = lm, se = FALSE)
+```
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("polls3", "png"))
+```
+
+]
+
+
+--
+
+Is our modeling goal here **predictive** or **descriptive**?
+
+---
+
+## Reminders:
+
+* Project Assignment 1 is due on Gradescope on Friday at 5pm.
+    + Only one person needs to upload it.
+    + Please add the names of your group members in the upload process.
+* After turning in Project Assignment 1, please fill out [this feedback survey](https://forms.gle/ytMfBBi2iBJKby8w6) (also on Canvas and in the announcements channel) by Friday, March 4th.

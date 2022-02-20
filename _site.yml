@@ -41,7 +41,10 @@ navbar:
           href: stat100_wk04wed.html           
         - text: "Week 4 Section"
           icon: fa-file
-          href: stat100_wk04sec.html          
+          href: stat100_wk04sec.html
+        - text: "Week 5 Wed"
+          icon: fa-file
+          href: stat100_wk05wed.html              
 output:
   html_document:
 #    css: styles.css
