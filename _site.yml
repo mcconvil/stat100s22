@@ -44,10 +44,13 @@ navbar:
           href: stat100_wk04sec.html
         - text: "Week 5 Wed"
           icon: fa-file
-          href: stat100_wk05wed.html              
+          href: stat100_wk05wed.html
+        - text: "Week 6 Mon"
+          icon: fa-file
+          href: stat100_wk06mon.html               
 output:
   html_document:
-#    css: styles.css
+    css: ["styles.css", "more.css"]
     theme: yeti
 #    highlight: tango
 output_dir: docs

@@ -28,3 +28,7 @@ blockquote {
   width: 95%;
   flex: 1 1 auto;
 }
+
+.tiny .remark-code { /*Change made here*/
+  font-size: 105% !important;
+}

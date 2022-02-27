@@ -63,6 +63,7 @@ class: middle, center, inverse
 * Mid-Term Exam: Wednesday, March 9th - Friday, March 11th
 * After turning in Project Assignment 1, please fill out [this feedback survey](https://forms.gle/ytMfBBi2iBJKby8w6) (also on Canvas and in the announcements channel) by Friday, March 4th.
     + We will give groups one set of feedback on Gradescope but will take your feedback into account when doing our final assessments.
+* PDFing the slide decks.
 
 ****************************
 
