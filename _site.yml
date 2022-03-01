@@ -45,7 +45,7 @@ navbar:
         - text: "Week 5 Wed"
           icon: fa-file
           href: stat100_wk05wed.html
-        - text: "Week 6 Mon"
+        - text: "Week 6 Mon + Wed"
           icon: fa-file
           href: stat100_wk06mon.html               
 output:

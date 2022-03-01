@@ -484,16 +484,16 @@ What should we do about the item non-response?
 NHANES %&gt;%
   drop_na(Depressed) %&gt;%
   group_by(Depressed) %&gt;%
-  summarize(MeanSleep = mean(SleepHrsNight))
+  summarize(MeanSleep = mean(SleepHrsNight, na.rm = TRUE))
 ```
 
 ```
 ## # A tibble: 3 × 2
 ##   Depressed MeanSleep
 ##   &lt;fct&gt;         &lt;dbl&gt;
-## 1 None             NA
-## 2 Several          NA
-## 3 Most             NA
+## 1 None           7.00
+## 2 Several        6.74
+## 3 Most           6.35
 ```
 
 ---
@@ -845,48 +845,27 @@ get_regression_table(mod2, print = TRUE)
 ```r
 movies2 %&gt;%
   select(RottenTomatoes, AudienceScore, OpeningWeekend, 
-         DomesticGross, TheatersOpenWeek) %&gt;%
+         DomesticGross, Budget) %&gt;%
   na.omit() %&gt;%
   cor()
 ```
 
 ```
-##                  RottenTomatoes AudienceScore OpeningWeekend DomesticGross
-## RottenTomatoes        1.0000000    0.67904126      0.1482138     0.2477617
-## AudienceScore         0.6790413    1.00000000      0.3368534     0.4421614
-## OpeningWeekend        0.1482138    0.33685340      1.0000000     0.8823562
-## DomesticGross         0.2477617    0.44216141      0.8823562     1.0000000
-## TheatersOpenWeek     -0.1892605    0.03874516      0.6520931     0.5681251
-##                  TheatersOpenWeek
-## RottenTomatoes        -0.18926052
-## AudienceScore          0.03874516
-## OpeningWeekend         0.65209307
-## DomesticGross          0.56812510
-## TheatersOpenWeek       1.00000000
+##                RottenTomatoes AudienceScore OpeningWeekend DomesticGross
+## RottenTomatoes     1.00000000     0.6777896      0.1300611     0.2295097
+## AudienceScore      0.67778958     1.0000000      0.3134529     0.4203241
+## OpeningWeekend     0.13006115     0.3134529      1.0000000     0.8838860
+## DomesticGross      0.22950971     0.4203241      0.8838860     1.0000000
+## Budget             0.05605458     0.2140603      0.7489754     0.7303424
+##                    Budget
+## RottenTomatoes 0.05605458
+## AudienceScore  0.21406033
+## OpeningWeekend 0.74897538
+## DomesticGross  0.73034236
+## Budget         1.00000000
 ```
 
 Also look at scatterplots!
-
----
-
-### Considering Other Explanatory Variables
-
-
-```r
-mod3 &lt;- lm(RottenTomatoes ~ AudienceScore + TheatersOpenWeek, 
-           data = movies2)
-get_regression_table(mod3, print = TRUE) 
-```
-
-
-
-|term             | estimate| std_error| statistic| p_value| lower_ci| upper_ci|
-|:----------------|--------:|---------:|---------:|-------:|--------:|--------:|
-|intercept        |    2.299|     4.600|     0.500|   0.618|   -6.754|   11.351|
-|AudienceScore    |    1.012|     0.060|    16.955|   0.000|    0.894|    1.129|
-|TheatersOpenWeek |   -0.006|     0.001|    -5.325|   0.000|   -0.008|   -0.004|
-
-
 
 ---
 
@@ -969,6 +948,8 @@ get_regression_table(mod2, print = TRUE)
 
 
 
+
+
 ---
 
 ###  Model Building Guidance
@@ -991,6 +972,38 @@ $$
 ]
 
 --
+
+.pull-right[
+
+Returning the 2008 Election Example:
+
+&lt;img src="stat100_wk06mon_files/figure-html/unnamed-chunk-24-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+---
+
+###  Model Building Guidance
+
+We often have several potential explanatory variables.  How do we determine which to include in the model and in what form?
+
+
+
+.pull-left[
+
+**Guiding Principle**: Capture the general trend, not the noise.
+
+$$
+`\begin{align}
+y &amp;= f(x) + \epsilon \\
+y &amp;= \mbox{TREND} + \mbox{NOISE}
+\end{align}`
+$$
+
+]
+
+
 
 .pull-right[
 
@@ -1064,38 +1077,6 @@ Returning the 2008 Election Example:
 
 ]
 
-
----
-
-###  Model Building Guidance
-
-We often have several potential explanatory variables.  How do we determine which to include in the model and in what form?
-
-
-
-.pull-left[
-
-**Guiding Principle**: Capture the general trend, not the noise.
-
-$$
-`\begin{align}
-y &amp;= f(x) + \epsilon \\
-y &amp;= \mbox{TREND} + \mbox{NOISE}
-\end{align}`
-$$
-
-]
-
-
-
-.pull-right[
-
-Returning the 2008 Election Example:
-
-&lt;img src="stat100_wk06mon_files/figure-html/unnamed-chunk-28-1.png" width="576" style="display: block; margin: auto;" /&gt;
-
-]
-
 ---
 
 ###  Model Building Guidance
@@ -1162,7 +1143,7 @@ We often have several potential explanatory variables.  How do we determine whic
 **Guiding Principle**:  Use your modeling motivation to determine how much you weight **interpretability** versus **prediction accuracy** when choosing the model.
 
 
-&lt;img src="stat100_wk06mon_files/figure-html/unnamed-chunk-31-1.png" width="936" style="display: block; margin: auto;" /&gt;
+&lt;img src="stat100_wk06mon_files/figure-html/unnamed-chunk-30-1.png" width="936" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -1175,97 +1156,6 @@ We often have several potential explanatory variables.  How do we determine whic
     + Writing out the **model form** and understanding the terms
     + **Building** and **visualizing** linear regression models in `R`
     + **Comparing** different potential models
-
----
-
-class: inverse, center, middle
-
-# Conceptual Review Time!
-
----
-
-class: inverse, center, middle
-
-# One can conclude a causal relationship between two variables if the study contains random sampling.
-
-
---
-
-## TRUE or FALSE
-
-## (1) or (2)
-
-
----
-
-class: inverse, center, middle
-
-# The larger the value of correlation coefficient, the stronger the linear relationship between two variables.
-
-
---
-
-## TRUE or FALSE
-
-## (1) or (2)
-
-
----
-
-class: inverse, center, middle
-
-# The mean tends to be larger than the median for right-skewed data.
-
-
---
-
-## TRUE or FALSE
-
-## (1) or (2)
-
-
----
-
-class: inverse, center, middle
-
-# A residual can only be non-negative.
-
-
---
-
-## TRUE or FALSE
-
-## (1) or (2)
-
-
----
-
-class: inverse, center, middle
-
-# A non-random sample of 10,000 individuals is better than a random sample of 1000. 
-
-
---
-
-## TRUE or FALSE
-
-## (1) or (2)
-
-
----
-
-class: inverse, center, middle
-
-# Bar graphs and histograms are the same graph since they both contain bars. 
-
-
---
-
-## TRUE or FALSE
-
-## (1) or (2)
-
-
 
 
 ---

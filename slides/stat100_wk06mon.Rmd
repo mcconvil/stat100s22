@@ -305,7 +305,7 @@ What should we do about the item non-response?
 NHANES %>%
   drop_na(Depressed) %>%
   group_by(Depressed) %>%
-  summarize(MeanSleep = mean(SleepHrsNight, na.rm = TRUE))
+  summarize(MeanSleep = mean(SleepHrsNight))
 ```
 
 ---
@@ -594,12 +594,24 @@ get_regression_table(mod2, print = TRUE)
 ```{r}
 movies2 %>%
   select(RottenTomatoes, AudienceScore, OpeningWeekend, 
-         DomesticGross, Budget) %>%
+         DomesticGross, TheatersOpenWeek) %>%
   na.omit() %>%
   cor()
 ```
 
 Also look at scatterplots!
+
+---
+
+### Considering Other Explanatory Variables
+
+```{r}
+mod3 <- lm(RottenTomatoes ~ AudienceScore + TheatersOpenWeek, 
+           data = movies2)
+get_regression_table(mod3, print = TRUE) 
+```
+
+
 
 ---
 
@@ -666,8 +678,9 @@ get_regression_table(mod2, print = TRUE)
 .pull-right[
 
 1. Determine and interpret the slope for a **Chinstrap** penguin using Model 1.
-1. Determine and interpret the slope for a **Chinstrap** penguin using Model 2.
 1. Determine and interpret the slope for a **Adelie** penguin using Model 1.
+1. In Model 1, interpret $\hat{\beta}_2$.
+1. Determine and interpret the slope for a **Chinstrap** penguin using Model 2.
 1. Determine and interpret the slope for a **Adelie** penguin using Model 2.
 
 ]
@@ -945,6 +958,97 @@ plot_grid(p1, p2, p3, ncol = 3)
     + Writing out the **model form** and understanding the terms
     + **Building** and **visualizing** linear regression models in `R`
     + **Comparing** different potential models
+
+---
+
+class: inverse, center, middle
+
+# Conceptual Review Time!
+
+---
+
+class: inverse, center, middle
+
+# One can conclude a causal relationship between two variables if the study contains random sampling.
+
+
+--
+
+## TRUE or FALSE
+
+## (1) or (2)
+
+
+---
+
+class: inverse, center, middle
+
+# The larger the value of correlation coefficient, the stronger the linear relationship between two variables.
+
+
+--
+
+## TRUE or FALSE
+
+## (1) or (2)
+
+
+---
+
+class: inverse, center, middle
+
+# The mean tends to be larger than the median for right-skewed data.
+
+
+--
+
+## TRUE or FALSE
+
+## (1) or (2)
+
+
+---
+
+class: inverse, center, middle
+
+# A residual can only be non-negative.
+
+
+--
+
+## TRUE or FALSE
+
+## (1) or (2)
+
+
+---
+
+class: inverse, center, middle
+
+# A non-random sample of 10,000 individuals is better than a random sample of 1000. 
+
+
+--
+
+## TRUE or FALSE
+
+## (1) or (2)
+
+
+---
+
+class: inverse, center, middle
+
+# Bar graphs and histograms are the same graph since they both contain bars. 
+
+
+--
+
+## TRUE or FALSE
+
+## (1) or (2)
+
+
 
 
 ---
