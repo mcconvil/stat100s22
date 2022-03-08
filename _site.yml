@@ -50,7 +50,10 @@ navbar:
           href: stat100_wk06mon.html
         - text: "Week 7 Mon"
           icon: fa-file
-          href: stat100_wk07mon.html            
+          href: stat100_wk07mon.html
+        - text: "Week 7 Wed"
+          icon: fa-file
+          href: stat100_wk07wed.html            
 output:
   html_document:
     css: ["styles.css", "more.css"]

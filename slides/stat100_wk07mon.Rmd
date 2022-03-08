@@ -59,7 +59,7 @@ class: middle, center, inverse
 
 ### Announcements
 
-
+* Final Exam: May 17 - May 20th
 * Mid-Term Exam: Wednesday, March 9th - Friday, March 11th
     + Sign up for your oral exam slot [here](https://docs.google.com/document/d/1fL0ge4JW_-KYqLzxD_oQeMXt3sLQvTdPW9N67OVbjAY/edit?usp=sharing) ASAP.  Only Thursday slots left.
     + Split: 
@@ -412,12 +412,12 @@ include_graphics("img/samp_dist.png")
 
 .pull-left[
 
-* Center?
+* Center? Shape?
 
 * Spread?
     + Standard error = standard deviation of the statistic
 
-* Shape?
+
 
 ]
 

@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Sampling Distributions</title>
+    <meta charset="utf-8" />
+    <script src="libsSlides/header-attrs-2.11/header-attrs.js"></script>
+    <link href="libsSlides/remark-css-0.0.1/hygge.css" rel="stylesheet" />
+    <script src="libsSlides/fabric-4.3.1/fabric.min.js"></script>
+    <link href="libsSlides/xaringanExtra-scribble-0.0.1/scribble.css" rel="stylesheet" />
+    <script src="libsSlides/xaringanExtra-scribble-0.0.1/scribble.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', function() { window.xeScribble = new Scribble({"pen_color":["#FF0000"],"pen_size":3,"eraser_size":30,"palette":[]}) })</script>
+    <link rel="stylesheet" href="more.css" type="text/css" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+
+background-image: url("img/DAW.png")
+background-position: left
+background-size: 50%
+class: middle, center, inverse
+
+
+.pull-right[
+
+
+
+## .whitish[Sampling Distributions]
+
+&lt;br&gt;
+
+&lt;br&gt;
+
+### .whitish[Kelly McConville]
+
+#### .yellow[ Stat 100 | Week 7 | Spring 2022] 
+
+]
+
+
+
+---
+
+### Announcements
+
+* Final Exam: May 17 - May 20th
+* Mid-Term Exam: Wednesday, March 9th - Friday, March 11th
+    + Sign up for your oral exam slot [here](https://docs.google.com/document/d/1fL0ge4JW_-KYqLzxD_oQeMXt3sLQvTdPW9N67OVbjAY/edit?usp=sharing) ASAP.  Only Thursday slots left.
+    + Split: 
+        + 20% Oral
+        + 80% Takehome
+* Review sheet key posted to shared folder.
+
+****************************
+
+--
+
+### Goals for Today
+
+.pull-left[
+
+* Knitting Strategies?
+
+* Discuss the ❤️ of statistical inference
+
+] 
+
+
+
+.pull-right[
+
+
+
+* **Sampling Distribution**
+    + Creation
+    + Properties
+    + Construction in `R`
+
+
+]
+
+---
+
+class: middle, center
+
+## When your Rmd doesn't knit, what do you try?
+
+
+
+---
+
+class: center, middle
+
+### Which Type Are You?
+
+.pull-left[
+
+### Data Visualizer
+
+
+&lt;iframe src="https://giphy.com/embed/d31vTpVi1LAcDvdm" width="480" height="362" frameBorder="0" class="giphy-embed" allowFullScreen&gt;&lt;/iframe&gt;&lt;p&gt;&lt;a href="https://giphy.com/gifs/netflix-d31vTpVi1LAcDvdm"&gt;via GIPHY&lt;/a&gt;&lt;/p&gt;
+
+]
+
+
+.pull-right[
+
+### Data Wrangler
+
+&lt;iframe src="https://giphy.com/embed/DbaUtl1DcLyrdwhzGJ" width="480" height="362" frameBorder="0" class="giphy-embed" allowFullScreen&gt;&lt;/iframe&gt;&lt;p&gt;&lt;a href="https://giphy.com/gifs/Amalgia-DbaUtl1DcLyrdwhzGJ"&gt;via GIPHY&lt;/a&gt;&lt;/p&gt;
+
+]
+
+
+---
+
+class: center, middle
+
+### Which Type Are You?
+
+.pull-left[
+
+### Model Builder
+
+
+&lt;iframe src="https://giphy.com/embed/xZsLh7B3KMMyUptD9D" width="480" height="270" frameBorder="0" class="giphy-embed" allowFullScreen&gt;&lt;/iframe&gt;&lt;p&gt;&lt;a href="https://giphy.com/gifs/tlceurope-xZsLh7B3KMMyUptD9D"&gt;via GIPHY&lt;/a&gt;&lt;/p&gt;
+
+]
+
+--
+
+
+.pull-right[
+
+### A Mix!
+
+&lt;iframe src="https://giphy.com/embed/cmzp1t3EJ87XNOaHRJ" width="260" height="350" frameBorder="0" class="giphy-embed" allowFullScreen&gt;&lt;/iframe&gt;&lt;p&gt;&lt;a href="https://giphy.com/gifs/giphcrawler2018-cmzp1t3EJ87XNOaHRJ"&gt;via GIPHY&lt;/a&gt;&lt;/p&gt;
+
+]
+
+
+---
+
+
+class: middle, center
+
+&lt;img src="img/DAW.png" width="750px"/&gt;
+
+
+
+
+---
+
+### The ❤️ of statistical inference is quantifying uncertainty
+
+&lt;img src="img/week4.005.jpeg" width="70%" style="display: block; margin: auto;" /&gt;
+
+--
+
+
+```r
+library(tidyverse)
+ce &lt;- read_csv("~/shared_data/stat100/data/ce.csv")
+summarize(ce, meanFINCBTAX = mean(FINCBTAX))
+```
+
+```
+## # A tibble: 1 × 1
+##   meanFINCBTAX
+##          &lt;dbl&gt;
+## 1       62480.
+```
+
+---
+
+### The ❤️ of statistical inference is quantifying uncertainty
+
+
+```r
+library(tidyverse)
+ce &lt;- read_csv("~/shared_data/stat100/data/ce.csv")
+summarize(ce, meanFINCBTAX = mean(FINCBTAX))
+```
+
+```
+## # A tibble: 1 × 1
+##   meanFINCBTAX
+##          &lt;dbl&gt;
+## 1       62480.
+```
+
+#### Distinguishing between the population and the sample
+
+--
+
+.pull-left[
+
+* **Parameters**: 
+    + Based on the **population**
+    + Unknown then if don't have data on the whole population
+    + EX: `\(\beta_o\)` and `\(\beta_1\)`
+    + EX: `\(\mu\)` = population mean
+
+]
+
+.pull-right[
+
+* **Statistics**: 
+    + Based on the **sample** data
+    + Known
+    + Usually estimate a population parameter
+    + EX: `\(\hat{\beta}_o\)` and `\(\hat{\beta}_1\)` 
+    + EX: `\(\bar{x}\)` = sample mean
+
+
+]
+
+
+---
+
+### Quantifying Our Uncertainty 
+
+`R` has been giving us uncertainty estimates:
+
+.pull-left[
+
+
+```r
+Pollster08 &lt;- 
+  read_csv("~/shared_data/stat100/data/Pollster08.csv")
+
+ggplot(Pollster08, aes(x = Days,
+                       y = Margin, 
+                       color = factor(Charlie))) +
+  geom_point() +
+  stat_smooth(method = "lm", se = TRUE) +
+  theme(legend.position = "bottom")
+```
+
+
+]
+
+.pull-right[
+
+
+&lt;img src="stat100_wk07mon_files/figure-html/polls-1.png" width="768" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+### Quantifying Our Uncertainty 
+
+`R` has been giving us uncertainty estimates:
+
+
+```r
+modPoll &lt;- lm(Margin ~ Days*factor(Charlie), data = Pollster08)
+library(moderndive)
+get_regression_table(modPoll)
+```
+
+```
+## # A tibble: 4 × 7
+##   term                  estimate std_error statistic p_value lower_ci upper_ci
+##   &lt;chr&gt;                    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1 intercept                5.57      1.09       5.11       0    3.40     7.73 
+## 2 Days                    -0.598     0.121     -4.96       0   -0.838   -0.359
+## 3 factor(Charlie): 1     -10.1       1.92      -5.25       0  -13.9     -6.29 
+## 4 Days:factor(Charlie)1    0.921     0.136      6.75       0    0.65     1.19
+```
+
+
+---
+
+### Quantifying Our Uncertainty 
+
+The [news and journal articles](https://www.pewresearch.org/fact-tank/2019/12/17/more-u-s-homeowners-say-they-are-considering-home-solar-panels/) are also giving us uncertainty estimates:
+
+
+.pull-left[
+
+&lt;img src="img/solar_panels.png" width="65%" style="display: block; margin: auto;" /&gt;
+
+
+]
+
+--
+
+
+.pull-right[
+
+
+&lt;img src="img/margin_of_error.png" width="85%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+### Quantifying Our Uncertainty 
+
+The [news and journal articles](https://rss.onlinelibrary.wiley.com/doi/abs/10.1111/1740-9713.01501) are also giving us uncertainty estimates:
+
+
+
+&lt;img src="img/ci_swimming.png" width="65%" style="display: block; margin: auto;" /&gt;
+
+
+
+
+---
+
+### Statistical Inference
+
+**Goal**: Draw conclusions about the population based on the sample.
+
+--
+
+**Main Flavors**
+
+&amp;rarr; Estimating numerical quantities (parameters).
+
+--
+
+&amp;rarr; Testing conjectures.
+
+---
+
+### Estimation
+
+**Goal**: Estimate a (population) parameter.  
+
+--
+
+Best guess?  
+
+&amp;rarr; The corresponding (sample) statistic 
+
+--
+
+**Example**: Are GIFs just another way for people to share videos of their pets?
+
+&lt;iframe src="https://giphy.com/embed/MCfhrrNN1goH6" width="280" height="240" frameBorder="0" class="giphy-embed" allowFullScreen&gt;&lt;/iframe&gt;&lt;p&gt;&lt;a href="https://giphy.com/gifs/easy-ear-MCfhrrNN1goH6"&gt;via GIPHY&lt;/a&gt;&lt;/p&gt;
+
+--
+
+Want to estimate the proportion of GIFs that feature animals.
+
+---
+
+### Estimation
+
+**Key Question**: How accurate is the statistic as an estimate of the parameter?
+
+--
+
+**Helpful Sub-Question**: If we take many samples, how much would the statistic vary from sample to sample?
+
+--
+
+Need two new concepts:
+
+--
+
+* The **sampling variability** of a statistic
+
+--
+
+* The **sampling distribution** of a statistic
+
+
+---
+
+class: inverse, center, middle
+
+## Let's learn about these ideas through an activity!
+
+## Go to [bit.ly/stat100-samp](https://bit.ly/stat100-samp).
+
+---
+
+## Sampling Distribution of a Statistic
+
+Steps to Construct an (Approximate) Sampling Distribution:
+
+1. Decide on a sample size, `\(n\)`.
+
+--
+
+2. Randomly select a sample of size `\(n\)` from the population.
+
+--
+
+3. Compute the sample statistic.
+
+--
+
+4.  Put the sample back in.
+
+--
+
+5. Repeat Steps 2 - 4 many (1000+) times.
+
+
+---
+
+## Sampling Distribution of a Statistic
+
+
+&lt;img src="img/samp_dist.png" width="55%" style="display: block; margin: auto;" /&gt;
+
+.pull-left[
+
+* Center? Shape?
+
+* Spread?
+    + Standard error = standard deviation of the statistic
+
+
+
+]
+
+
+
+--
+
+.pull-right[
+
+**What happens to the center/spread/shape as we increase the sample size?**
+
+
+**What happens to the center/spread/shape if the true parameter changes?**
+
+]
+
+
+---
+
+## Let's practice with the samplingDistributions.Rmd handout.
+
+#### Important Notes
+
+* To construct a **sampling distribution** for a statistic, we need access to the entire population so that we can take repeated samples from the population. 
+
+--
+
+* But if we have access to the entire population, then we don't need a sampling distribution!
+
+--
+
+* Often we only have access to a **single sample**.  In these cases, we will need to **approximate** the sampling distribution. 
+
+--
+
+* In this hand-out, we have the **entire population** and are constructing sampling distributions anyway to study their properties so that we can figure out how to approximate them well!
+
+---
+
+## Reminders:
+
+* Virtual option for in-person OHs this week.
+    + No OHs starting Wednesday at noon.
+* Mid-Term Exam: Wednesday, March 9th - Friday, March 11th
+    + Sign up for your oral exam slot [here](https://docs.google.com/document/d/1fL0ge4JW_-KYqLzxD_oQeMXt3sLQvTdPW9N67OVbjAY/edit?usp=sharing) ASAP.  Only Thursday slots left.
+    + Split: 
+        + 20% Oral
+        + 80% Takehome
+* Review sheet key posted to shared folder.
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"ratio": "16:9",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
