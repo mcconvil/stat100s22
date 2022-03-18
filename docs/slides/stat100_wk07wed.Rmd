@@ -30,6 +30,13 @@ theme_update(text = element_text(size = 20))
 xaringanExtra::use_scribble()
 ```
 
+class: inverse, middle, center
+
+
+# Grab 30 notecards!
+
+
+---
 
 background-image: url("img/DAW.png")
 background-position: left
@@ -59,6 +66,7 @@ class: middle, center, inverse
 
 ### Announcements
 
+* P-Set 6 is post.  Due in two weeks (Wed, March 23rd 9:00am).
 * Try again: Final Exam: May 10th - 13th
 * Mid-Term Exam: Wednesday, March 9th - Friday, March 11th
     + Takehome released at noon today in shared folder on the server.
@@ -100,6 +108,8 @@ class: middle, center, inverse
 
 Starting at noon today, will be located in: `shared_data` > `stat100` > `exams`.
 
+
+#### Let's go through the instructions page.
 
 First three things the exam will ask you to do:
 
@@ -406,3 +416,5 @@ include_graphics("img/cis.png")
     + Takehome released at noon today in shared folder on the server.
     + Only access the takehome when you are ready to start your 3 hour block!
     + Make sure to do the takehome BEFORE your oral exam time slot!
+
+* P-Set 6 is post.  Due in two weeks (Wed, March 23rd 9:00am).
