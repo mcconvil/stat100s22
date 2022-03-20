@@ -96,6 +96,12 @@ class: middle, center, inverse
 
 ---
 
+class: inverse, middle, center
+
+
+## `r emo::ji("thinking")` The second half of Stat 100 is more conceptually difficult. `r emo::ji("thinking")`
+
+---
 
 ### Bootstrapped Confidence Intervals
 
