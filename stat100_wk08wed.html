@@ -118,13 +118,14 @@ class: middle, center, inverse
 **Big Idea:**  
 
 * Make an assumption about the population parameter.
-    + &lt;span style="color:orange"&gt;ESP doesn't exist.  p, probability of guessing correctly, equals 0.25.&lt;/span&gt;
+    + &lt;span style="color:#E4844A"&gt;ESP doesn't exist.  p, probability of guessing correctly, equals 0.25.&lt;/span&gt;
 
 --
 
 .pull-left[
 
 * Generate a sampling distribution for a *test* statistic based on that assumption.
+    + Called a **null distribution**
 
 ]
 
@@ -143,10 +144,10 @@ class: middle, center, inverse
 .pull-left[
 
 * See if the test statistic based on the observed sample aligns with the generated sampling distribution or not.
-    + &lt;span style="color:orange"&gt; It is in the center-ish of the distribution. It isn't an unusual value.&lt;/span&gt;
+    + &lt;span style="color:#E4844A"&gt; It is in the center-ish of the distribution. It isn't an unusual value.&lt;/span&gt;
 
 * If it does, then we didn't learn much.  (Didn't prove the parameter equals the assumed value but it is still plausible)
-    + &lt;span style="color:orange"&gt; It is still possible that ESP doesn't exist.&lt;/span&gt;
+    + &lt;span style="color:#E4844A"&gt; It is still possible that ESP doesn't exist.&lt;/span&gt;
 
 ]
 
@@ -165,10 +166,10 @@ class: middle, center, inverse
 **Big Idea:**  
 
 * See if the test statistic based on the observed sample aligns with the generated sampling distribution or not.
-    + &lt;span style="color:orange"&gt; It is far in the tails of the distribution. It is an unusual value.&lt;/span&gt;
+    + &lt;span style="color:#E4844A"&gt; It is far in the tails of the distribution. It is an unusual value.&lt;/span&gt;
 
 * If it doesn't, then we have evidence that our assumption about the parameter was wrong. 
-    + &lt;span style="color:orange"&gt; We have evidence ESP exists.&lt;/span&gt;
+    + &lt;span style="color:#E4844A"&gt; We have evidence ESP exists.&lt;/span&gt;
 
 ]
 
@@ -192,6 +193,10 @@ class: middle, center, inverse
 
 --
 
+* By using `RMarkdown` Documents, we are learning a **reproducible** workflow.
+
+--
+
 * **Replicability**: If you follow my study design but collect new data (i.e. repeat my study on new subjects), you will come to the same conclusions that I did.  
 
 --
@@ -200,7 +205,17 @@ class: middle, center, inverse
     + [In cancer science, many "discoveries" don't hold up](https://www.reuters.com/article/us-science-cancer-idUSBRE82R12P20120328)
     + [Estimating the reproducibility of psychological science](https://science.sciencemag.org/content/349/6251/aac4716)
     + [Psychology Is Starting To Deal With Its Replication Problem](https://fivethirtyeight.com/features/psychology-is-starting-to-deal-with-its-replication-problem/)
-    
+
+--
+
+* And, sadly, **replication** studies of Bern and Honorton's ESP trials typically failed to find evidence of ESP.   
+
+---
+
+class: inverse, middle, center
+
+
+## Now Let's Start Learning the Language of Hypothesis Testing.
     
 ---
 
@@ -243,13 +258,13 @@ Then translate into a statistical problem:
 class: center, middle, inverse
 
 
-### Let's practice framing the hypotheses.
+## Let's Practice Framing the Hypotheses.
 
 ---
 
 ### Example 1
 
-A recent study indicates that babies may choose not to learn from someone they don’t trust. A group of 60 babies, aged 13 to 16 months, were randomly divided into two groups. Each baby watched an adult express great excitement while looking into a box. The babies were then shown the box and it either had a toy in it (the adult could be trusted) or it was empty (the adult was not reliable.) The same adult then turned on a push-on light with her forehead, and the number of babies who imitated the adult’s behavior by doing the same thing was counted. The researchers want to see if there is evidence that babies are more likely to imitate those they consider reliable.
+In 2005, the researchers, Antonioli and Reveley, poised the question "Does swimming with the dolphins help depression?"  To study this question, they recruited 30 subjects with clinical depression whose ages ranged from 18 to 65 years old.  Each subject discontinued any other treatment four weeks prior to the experiment and were randomly assigned to either swim with dolphins (the treatment group) or to do yoga (the control group).  After two weeks, each subject was categorized as “showed substantial improvement” or “did not show substantial improvement”.
 
 
 #### Write out Ho and Ha in terms of conjectures.
@@ -348,7 +363,7 @@ Once you have set-up your hypotheses...
 
 ### Hypothesis Testing Framework -- Null Distribution
 
-* **Null distribution**: Sampling distribution of the test statistic if the null hypothesis is true.
+**Null distribution**: Sampling distribution of the test statistic if the null hypothesis is true.
 
 --
 
@@ -365,6 +380,7 @@ Once you have set-up your hypotheses...
 --
 
 * Find the proportion of test statistics in the null distribution that are equal to or more extreme that the observed test statistic
+    + Let's draw some pictures.
     
 --
 
@@ -382,20 +398,20 @@ Once you have set-up your hypotheses...
 
 **For the sample proportion in the ESP Example:**
 
-Steps:
+#### Steps:
 
 1. Flip unfair coin (prop heads = 0.25) 329 times.
 2. Compute proportion of heads.
 3. Repeat 1 and 2 many times.
 
-R code:
+`R` code using the `infer` package:
 
 
 ```r
 null_dist &lt;- esp %&gt;%
   specify(response = guess, success = "correct") %&gt;%
   hypothesize(null = "point", p = 0.25) %&gt;%
-  generate(reps = 1000, type = "simulate") %&gt;%
+  generate(reps = 1000, type = "draw") %&gt;%
   calculate(stat ="prop")
 ```
 
@@ -414,20 +430,35 @@ class: center, middle, inverse
 
 ---
 
-##  Example
+###  Returning to Example 1
 
 In 2005, the researchers, Antonioli and Reveley, poised the question "Does swimming with the dolphins help depression?"  To study this question, they recruited 30 subjects with clinical depression whose ages ranged from 18 to 65 years old.  Each subject discontinued any other treatment four weeks prior to the experiment and were randomly assigned to either swim with dolphins (the treatment group) or to do yoga (the control group).  After two weeks, each subject was categorized as “showed substantial improvement” or “did not show substantial improvement”.
 
 
+
+Here's a contingency table of `improve` and `group`.
+
+
+```r
+dolphins %&gt;%
+  count(group, improve)
+```
+
+```
+##       group improve  n
+## 1   Control      no 12
+## 2   Control     yes  3
+## 3 Treatment      no  5
+## 4 Treatment     yes 10
+```
+
+
 #### How can we generate the null distribution for this scenario?
 
----
 
-## Reporting
 
-Here's an excerpt from Bem and Honorton (1994):
+#### Once you have your simulated null statistic, add it to the class dotplot at [https://bit.ly/stat100-dists](https://bit.ly/stat100-dists).
 
-&lt;img src="img/bem_honorton_1994_results.png" width="70%" style="display: block; margin: auto;" /&gt;
 
 
 ---

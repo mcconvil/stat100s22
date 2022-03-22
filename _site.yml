@@ -6,7 +6,7 @@ navbar:
     - text: "Homepage"
       icon: fa-home
       href: index.html
-    - text: "Slides"
+    - text: "Slides -- First Half"
       icon: fa-chart-area
       menu: 
         - text: "Week 0 Overview"
@@ -54,9 +54,15 @@ navbar:
         - text: "Week 7 Wed"
           icon: fa-file
           href: stat100_wk07wed.html
+    - text: "Slides -- Second Half"
+      icon: fa-chart-area
+      menu: 
         - text: "Week 8 Mon"
           icon: fa-file
-          href: stat100_wk08mon.html              
+          href: stat100_wk08mon.html
+        - text: "Week 8 Wed"
+          icon: fa-file
+          href: stat100_wk08wed.html          
 output:
   html_document:
     css: ["styles.css", "more.css"]
