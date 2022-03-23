@@ -58,6 +58,12 @@ class: middle, center, inverse
 
 ---
 
+background-image: url("img/EFoS_Stat_Flyer.png")
+background-position: contain
+background-size: 90%
+
+---
+
 ### Announcements
 
 * PA 2 is due Friday at 5pm.
@@ -479,6 +485,18 @@ dolphins %>%
 
 #### Once you have your simulated null statistic, add it to the class dotplot at [https://bit.ly/stat100-dists](https://bit.ly/stat100-dists).
 
+
+---
+
+class: inverse, middle, center
+
+
+## Let's return once more to confidence.
+
+
+---
+
+## Let's return once more to confidence.
 
 
 ---
