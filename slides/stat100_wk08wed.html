@@ -1,34 +1,25 @@
----
-title: Hypothesis Testing
-output:
-  xaringan::moon_reader:
-    css: ["more.css", "xaringan-themer.css", "hygge"]
-    lib_dir: libsSlides
-    self_contained: false
-    nature:
-      highlightStyle: github
-      ratio: '16:9'      
-      highlightLines: true
-      countIncrementalSlides: false
-      navigation:
-        scroll: false
-    seal: false
----
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Hypothesis Testing</title>
+    <meta charset="utf-8" />
+    <script src="libsSlides/header-attrs-2.11/header-attrs.js"></script>
+    <link href="libsSlides/remark-css-0.0.1/hygge.css" rel="stylesheet" />
+    <script src="libsSlides/fabric-4.3.1/fabric.min.js"></script>
+    <link href="libsSlides/xaringanExtra-scribble-0.0.1/scribble.css" rel="stylesheet" />
+    <script src="libsSlides/xaringanExtra-scribble-0.0.1/scribble.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', function() { window.xeScribble = new Scribble({"pen_color":["#FF0000"],"pen_size":3,"eraser_size":30,"palette":[]}) })</script>
+    <link rel="stylesheet" href="more.css" type="text/css" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
 
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE,
-                      message = FALSE, 
-                      fig.retina = 3, fig.align = 'center',
-                      fig.asp = 0.75, fig.width = 8)
-library(knitr)
-library(tidyverse)
-theme_update(text = element_text(size = 20))
-```
 
-```{r xaringan-scribble, echo=FALSE}
-xaringanExtra::use_scribble()
-```
+
+
+
 
 
 
@@ -44,9 +35,9 @@ class: middle, center, inverse
 
 ## .whitish[Hypothesis Testing]
 
-<br>
+&lt;br&gt;
 
-<br>
+&lt;br&gt;
 
 ### .whitish[Kelly McConville]
 
@@ -67,7 +58,7 @@ background-size: 90%
 ### Announcements
 
 * PA 2 is due Friday at 5pm.
-* `r emo::ji("tada")` We are now accepting Course Assistant/Teaching Fellow applications for Stat 100 for Fall 2022. To apply, fill out [this application](https://docs.google.com/forms/d/e/1FAIpQLScwKJaRfppRqXAzyxMMCeBUdwrzBudNONt0S9dc8lE2ZUlQwQ/viewform) by March 31st.
+* 🎉 We are now accepting Course Assistant/Teaching Fellow applications for Stat 100 for Fall 2022. To apply, fill out [this application](https://docs.google.com/forms/d/e/1FAIpQLScwKJaRfppRqXAzyxMMCeBUdwrzBudNONt0S9dc8lE2ZUlQwQ/viewform) by March 31st.
     + About 9-12 hours of work per week.  
     + Primary responsibilities: Lead a discussion section, hold office hours, grade assessments.
 
@@ -133,7 +124,7 @@ background-size: 90%
 **Big Idea:**  
 
 * Make an assumption about the population parameter.
-    + <span style="color:#E4844A">ESP doesn't exist.  p, probability of guessing correctly, equals 0.25.</span>
+    + &lt;span style="color:#E4844A"&gt;ESP doesn't exist.  p, probability of guessing correctly, equals 0.25.&lt;/span&gt;
 
 --
 
@@ -146,13 +137,7 @@ background-size: 90%
 
 .pull-right[
 
-```{r, echo = FALSE}
-# Generate sampling distribution under no ESP
-library(mosaic)
-guess_sampling_dist <- do(1000)*rflip(n = 53, prob = 0.25)
-ggplot(data = guess_sampling_dist, mapping = aes(x = prop)) +
-  geom_histogram(color = "white", bins = 13, fill = "orange")
-```
+&lt;img src="stat100_wk08wed_files/figure-html/unnamed-chunk-1-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ]
 
@@ -165,22 +150,16 @@ ggplot(data = guess_sampling_dist, mapping = aes(x = prop)) +
 .pull-left[
 
 * See if the test statistic based on the observed sample aligns with the generated sampling distribution or not.
-    + <span style="color:#E4844A"> It is in the center-ish of the distribution. It isn't an unusual value.</span>
+    + &lt;span style="color:#E4844A"&gt; It is in the center-ish of the distribution. It isn't an unusual value.&lt;/span&gt;
 
 * If it does, then we didn't learn much.  (Didn't prove the parameter equals the assumed value but it is still plausible)
-    + <span style="color:#E4844A"> It is still possible that ESP doesn't exist.</span>
+    + &lt;span style="color:#E4844A"&gt; It is still possible that ESP doesn't exist.&lt;/span&gt;
 
 ]
 
 .pull-right[
 
-```{r, echo = FALSE}
-p_hat <- 14/53
-# Graph the sampling distribution if guessing
-ggplot(data = guess_sampling_dist, mapping = aes(x = prop)) +
-  geom_histogram(color = "white", bins = 13, fill = "orange") +
-  geom_vline(xintercept = p_hat, color = "deeppink", size = 2)
-```
+&lt;img src="stat100_wk08wed_files/figure-html/unnamed-chunk-2-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ]
 
@@ -193,23 +172,16 @@ ggplot(data = guess_sampling_dist, mapping = aes(x = prop)) +
 **Big Idea:**  
 
 * See if the test statistic based on the observed sample aligns with the generated sampling distribution or not.
-    + <span style="color:#E4844A"> It is far in the tails of the distribution. It is an unusual value.</span>
+    + &lt;span style="color:#E4844A"&gt; It is far in the tails of the distribution. It is an unusual value.&lt;/span&gt;
 
 * If it doesn't, then we have evidence that our assumption about the parameter was wrong. 
-    + <span style="color:#E4844A"> We have evidence ESP exists.</span>
+    + &lt;span style="color:#E4844A"&gt; We have evidence ESP exists.&lt;/span&gt;
 
 ]
 
 .pull-right[
 
-```{r, echo = FALSE}
-p_hat <- 106/329
-guess_sampling_dist <- do(1000)*rflip(n = 329, prob = 0.25)
-# Graph the sampling distribution if guessing
-ggplot(data = guess_sampling_dist, mapping = aes(x = prop)) +
-  geom_histogram(color = "white", bins = 20, fill = "orange") +
-  geom_vline(xintercept = p_hat, color = "deeppink", size = 2)
-```
+&lt;img src="stat100_wk08wed_files/figure-html/unnamed-chunk-3-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ]
 
@@ -257,11 +229,11 @@ class: inverse, middle, center
 
 Have two competing hypothesis:
 
-* Null Hypothesis $(H_o)$: Dull hypothesis, status quo, random chance, no effect...
+* Null Hypothesis `\((H_o)\)`: Dull hypothesis, status quo, random chance, no effect...
 
 --
 
-* Alternative Hypothesis $(H_a)$: (Usually) contains the researchers' conjecture.
+* Alternative Hypothesis `\((H_a)\)`: (Usually) contains the researchers' conjecture.
 
 --
 
@@ -271,9 +243,9 @@ Must first take those hypotheses and translate them into statements about the po
 
 #### Example:
 
-$H_o$: ESP doesn't exist.
+`\(H_o\)`: ESP doesn't exist.
 
-$H_a$: ESP does exist.
+`\(H_a\)`: ESP does exist.
 
 --
 
@@ -281,11 +253,11 @@ Then translate into a statistical problem:
 
 --
 
-$p$ = probably of guessing correctly out of 4 images
+`\(p\)` = probably of guessing correctly out of 4 images
 
-$H_o$: $p = 0.25$ (or $p \leq 0.25$ )
+`\(H_o\)`: `\(p = 0.25\)` (or `\(p \leq 0.25\)` )
 
-$H_a$: $p > 0.25$
+`\(H_a\)`: `\(p &gt; 0.25\)`
 
 ---
 
@@ -304,9 +276,9 @@ In 2005, the researchers, Antonioli and Reveley, poised the question "Does swimm
 #### Write out Ho and Ha in terms of conjectures.
 
 
-<br> 
+&lt;br&gt; 
 
-<br>
+&lt;br&gt;
 
 
 
@@ -324,9 +296,9 @@ Let’s return to this example: Can a simple smile have an effect on punishment 
 #### Write out Ho and Ha in terms of conjectures.
 
 
-<br> 
+&lt;br&gt; 
 
-<br>
+&lt;br&gt;
 
 
 
@@ -343,9 +315,9 @@ Can you tell if a mouse is in pain by looking at its facial expression? A recent
 #### Write out Ho and Ha in terms of conjectures.
 
 
-<br> 
+&lt;br&gt; 
 
-<br>
+&lt;br&gt;
 
 
 
@@ -359,18 +331,18 @@ Can you tell if a mouse is in pain by looking at its facial expression? A recent
 
 Flavors of hypotheses:
 
-* $H_o$: parameter $=$ null value
+* `\(H_o\)`: parameter `\(=\)` null value
 
 --
 
 * One of the following:
-    + $H_a$: parameter $\neq$ null value 
-    + $H_a$: parameter $>$ null value 
-    + $H_a$: parameter $<$ null value 
+    + `\(H_a\)`: parameter `\(\neq\)` null value 
+    + `\(H_a\)`: parameter `\(&gt;\)` null value 
+    + `\(H_a\)`: parameter `\(&lt;\)` null value 
     
 --
 
-**Question**: But doesn't $H_o$ sometimes represent $\leq$ or $\geq$?
+**Question**: But doesn't `\(H_o\)` sometimes represent `\(\leq\)` or `\(\geq\)`?
 
 ---
 
@@ -382,7 +354,7 @@ Once you have set-up your hypotheses...
 
 --
 
-* Assume $H_o$ is correct.  
+* Assume `\(H_o\)` is correct.  
 
 --
 
@@ -405,11 +377,11 @@ Once you have set-up your hypotheses...
 
 --
 
-**p-value** = Probability of the observed test statistic or more extreme if $H_o$ is true
+**p-value** = Probability of the observed test statistic or more extreme if `\(H_o\)` is true
 
 --
 
-* More extreme = direction of $H_a$
+* More extreme = direction of `\(H_a\)`
 
 --
 
@@ -418,12 +390,12 @@ Once you have set-up your hypotheses...
     
 --
 
-* If the p-value is small, we have evidence for $H_a$.
-    + Notice I am talking about $H_a$, not $H_o$ here!
+* If the p-value is small, we have evidence for `\(H_a\)`.
+    + Notice I am talking about `\(H_a\)`, not `\(H_o\)` here!
 
 --
 
-* If the p-value is not small, we don't have evidence for $H_a$.
+* If the p-value is not small, we don't have evidence for `\(H_a\)`.
 
 
 ---
@@ -440,11 +412,12 @@ Once you have set-up your hypotheses...
 
 `R` code using the `infer` package:
 
-```{r, eval = FALSE}
-null_dist <- esp %>%
-  specify(response = guess, success = "correct") %>%
-  hypothesize(null = "point", p = 0.25) %>%
-  generate(reps = 1000, type = "draw") %>%
+
+```r
+null_dist &lt;- esp %&gt;%
+  specify(response = guess, success = "correct") %&gt;%
+  hypothesize(null = "point", p = 0.25) %&gt;%
+  generate(reps = 1000, type = "draw") %&gt;%
   calculate(stat ="prop")
 ```
 
@@ -467,15 +440,22 @@ class: center, middle, inverse
 
 In 2005, the researchers, Antonioli and Reveley, poised the question "Does swimming with the dolphins help depression?"  To study this question, they recruited 30 subjects with clinical depression whose ages ranged from 18 to 65 years old.  Each subject discontinued any other treatment four weeks prior to the experiment and were randomly assigned to either swim with dolphins (the treatment group) or to do yoga (the control group).  After two weeks, each subject was categorized as “showed substantial improvement” or “did not show substantial improvement”.
 
-```{r, message=FALSE,echo = FALSE}
-dolphins <- read.csv("~/shared_data/stat100/data/Dolphins.txt", sep="")
-```
+
 
 Here's a contingency table of `improve` and `group`.
 
-```{r}
-dolphins %>%
+
+```r
+dolphins %&gt;%
   count(group, improve)
+```
+
+```
+##       group improve  n
+## 1   Control      no 12
+## 2   Control     yes  3
+## 3 Treatment      no  5
+## 4 Treatment     yes 10
 ```
 
 
@@ -515,3 +495,130 @@ class: inverse, middle, center
 * We are now accepting Course Assistant/Teaching Fellow applications for Stat 100 for Fall 2022. To apply, fill out [this application](https://docs.google.com/forms/d/e/1FAIpQLScwKJaRfppRqXAzyxMMCeBUdwrzBudNONt0S9dc8lE2ZUlQwQ/viewform) by March 31st.
     + About 9-12 hours of work per week.  
     + Primary responsibilities: Lead a discussion section, hold office hours, grade assessments.
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"ratio": "16:9",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

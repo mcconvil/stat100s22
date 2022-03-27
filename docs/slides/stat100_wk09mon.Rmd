@@ -1,0 +1,580 @@
+---
+title: Decisions, Decisions
+output:
+  xaringan::moon_reader:
+    css: ["more.css", "xaringan-themer.css", "hygge"]
+    lib_dir: libsSlides
+    self_contained: false
+    nature:
+      highlightStyle: github
+      ratio: '16:9'      
+      highlightLines: true
+      countIncrementalSlides: false
+      navigation:
+        scroll: false
+    seal: false
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE,
+                      message = FALSE, 
+                      fig.retina = 3, fig.align = 'center',
+                      fig.asp = 0.75, fig.width = 8)
+library(knitr)
+library(tidyverse)
+theme_update(text = element_text(size = 20))
+```
+
+```{r xaringan-scribble, echo=FALSE}
+xaringanExtra::use_scribble()
+```
+
+
+
+background-image: url("img/DAW.png")
+background-position: left
+background-size: 50%
+class: middle, center, inverse
+
+
+.pull-right[
+
+
+
+## .whitish[Decisions, Decisions]
+
+<br>
+
+<br>
+
+### .whitish[Kelly McConville]
+
+#### .yellow[ Stat 100 | Week 9 | Spring 2022] 
+
+]
+
+
+
+---
+
+### Announcements
+
+* P-Set 7 is due on Wednesday.
+
+****************************
+
+--
+
+### Goals for Today
+
+.pull-left[
+
+
+* Circle back to **confidence**
+
+* More hypothesis testing with `infer`
+
+
+
+] 
+
+
+
+.pull-right[
+
+
+* More generating **null distributions**
+
+
+* **Decisions** in a hypothesis test
+    + Types of errors
+
+
+]
+
+---
+
+class: inverse, middle, center
+
+
+## Let's return once more to confidence.
+
+
+---
+
+## Let's return once more to confidence.
+
+
+---
+
+
+###  Problem 3 on the P-Set
+
+In 2005, the researchers, Antonioli and Reveley, poised the question "Does swimming with the dolphins help depression?"  To study this question, they recruited 30 subjects with clinical depression whose ages ranged from 18 to 65 years old.  Each subject discontinued any other treatment four weeks prior to the experiment and were randomly assigned to either swim with dolphins (the treatment group) or to do yoga (the control group).  After two weeks, each subject was categorized as “showed substantial improvement” or “did not show substantial improvement”.
+
+```{r, message=FALSE,echo = FALSE}
+dolphins <- read.csv("~/shared_data/stat100/data/Dolphins.txt", sep="")
+```
+
+Here's a contingency table of `improve` and `group`.
+
+```{r}
+dolphins %>%
+  count(group, improve)
+```
+
+
+#### How can we generate the null distribution for this scenario?
+
+
+
+#### Class generated null distribution: [https://bit.ly/stat100-dists](https://bit.ly/stat100-dists).
+
+
+
+
+---
+
+## Another Example
+
+Let's return to the penguins and ask if flipper length varies, on average, by the sex of the penguin.
+
+--
+
+$H_o: \mu_F - \mu_M = 0$ 
+
+$H_a: \mu_F - \mu_M \neq 0$ 
+
+--
+
+Need a null distribution for the difference in sample means.
+
+--
+
+**Question**: If I shuffle (permute) the `sex` column and then compute the difference in sample means, what do you expect the difference in sample means to equal?
+
+```{r, echo = FALSE}
+library(palmerpenguins)
+library(tidyverse)
+penguins %>%
+  drop_na(sex) %>%
+  select(flipper_length_mm, sex)
+```
+
+---
+
+## Generating a Null Distribution
+
+Let's return to the penguins and ask if flipper length varies, on average, by the sex of the penguin.
+
+
+
+$H_o: \mu_F - \mu_M = 0$ 
+
+$H_a: \mu_F - \mu_M \neq 0$ 
+
+
+
+Need a null distribution for the difference in sample means.
+
+Steps:
+
+1. Permute/shuffle the `sex` column.
+2. Compute the difference in sample means.
+3. Repeat 1 and 2 many times.
+
+Let's go back to the "hypothesisTestingFramework.Rmd" document and see how to implement this process with `infer`.
+
+---
+
+### Hypothesis Testing: Decisions, Decisions
+
+Once you get to the end of a hypothesis test you make one of two decisions:
+
+--
+
+(1) P-value is small.
+
+&rarr; I have evidence for $H_a$. Reject $H_o$.
+
+
+--
+
+(2) P-value is not small.
+
+&rarr; I don't have evidence for $H_a$. Fail to reject $H_o$.
+
+--
+
+Sometimes we make the correct decision.  Sometimes we make a mistake.  
+
+---
+
+### Hypothesis Testing: Decisions, Decisions
+
+Let's create a table of potential outcomes.
+
+<br> <br><br><br><br><br><br><br><br> <br> <br> <br>
+
+
+--
+
+$\alpha$ = prob of Type I error **under repeated sampling** = prob reject $H_o$ when it is true
+
+--
+
+$\beta$ = prob of Type II error **under repeated sampling** = prob fail to reject $H_o$ when $H_a$ is true.
+
+
+---
+
+### Hypothesis Testing: Decisions, Decisions
+
+Typically set $\alpha$ level beforehand.
+
+--
+
+Use $\alpha$ to determine "small" for a p-value.
+
+
+--
+
+(1) P-value ~~is~~ ~~small~~  $< \alpha$.
+
+&rarr; I have evidence for $H_a$. Reject $H_o$.
+
+
+(2) P-value ~~is~~ ~~not~~ ~~small~~  $\geq \alpha$.
+
+&rarr; I don't have evidence for $H_a$. Fail to reject $H_o$.
+
+
+---
+
+### Hypothesis Testing: Decisions, Decisions
+
+**Question**: How do I select $\alpha$?
+
+--
+
+* Will depend on the convention in your field.
+
+--
+
+* Want a small $\alpha$ and a small $\beta$. But they are related.  
+    + How?
+
+--
+
+**The smaller $\alpha$ is the larger $\beta$ will be.**
+
+--
+
+&rarr; Choose a lower $\alpha$ (e.g., 0.01, 0.001) when the Type I error is worse and a higher $\alpha$ (e.g., 0.1) when the Type II error is worse.
+
+--
+
+* Note: Can't easily compute $\beta$.  Why?
+
+
+* One more important term:
+    + **Power** = probability reject $H_o$ when the alternative is true.
+
+---
+
+### Example
+
+Suppose we have a baseball player who has been a 0.250 career hitter who suddenly improves to be a 0.333 hitter.  He wants a raise but needs to convince his manager that he has genuinely improved.  The manager offers to examine his performance in 20 at-bats.
+
+.pull-left[
+
+#### Ho:
+
+]
+
+.pull-right[
+
+#### Ha: 
+
+]
+
+
+--
+
+.pull-left[
+```{r, echo = FALSE, fig.asp = 0.65}
+dat <- data.frame(at_bats = c(rep("hit", 8), 
+                              rep("miss", 12)))
+
+
+
+library(infer)
+library(tidyverse)
+null <- dat %>%
+  specify(response = at_bats, success = "hit") %>%
+  hypothesize(null = "point", p = 0.25) %>%
+  generate(reps = 1000, type = "draw") %>%
+  calculate(stat = "prop") %>%
+  mutate(dist = "Null")
+
+alt <- dat %>%
+  specify(response = at_bats, success = "hit") %>%
+  hypothesize(null = "point", p = 0.333) %>%
+  generate(reps = 1000, type = "draw") %>%
+  calculate(stat = "prop") %>%
+  mutate(dist = "Alternative")
+
+both <- bind_rows(null, alt) %>%
+  mutate(dist = fct_relevel(dist, "Null"))
+
+both %>%
+  ggplot(mapping = aes(x = stat)) +
+  geom_histogram(bins = 40, color = "white") +
+  facet_wrap(~dist, ncol = 1) +
+  geom_vline(xintercept = 0.45, size = 2,
+             color = "turquoise4")
+
+
+# mean(null$stat >= 0.45)  
+
+power <- round(mean(alt$stat >= 0.45), digits = 2)
+```
+
+]
+
+--
+
+.pull-right[
+
+* When $\alpha$ is set to $0.05$, he needs to hit 9 or more (showcase a hitting average of at least 0.45) to get a small enough p-value to reject $H_o$.
+
+* When $\alpha$ is set to $0.05$, the power of this test is `r power`.
+
+* Why is the power **so low**?  
+
+* What aspects of the test could the baseball player change to **increase the power** of the test?
+
+
+]
+
+
+---
+
+### Example
+
+Suppose we have a baseball player who has been a 0.250 career hitter who suddenly improves to be a 0.333 hitter.  He wants a raise but needs to convince his manager that he has genuinely improved.  The manager offers to examine his performance in ~~20~~ 100 at-bats.
+
+**What will happen to the power of the test if we increase the sample size?**
+
+
+--
+
+.pull-left[
+
+```{r, echo = FALSE, fig.asp = 0.65}
+dat <- data.frame(at_bats = c(rep("hit", 40), 
+                              rep("miss", 60)))
+
+
+
+library(infer)
+library(tidyverse)
+null <- dat %>%
+  specify(response = at_bats, success = "hit") %>%
+  hypothesize(null = "point", p = 0.25) %>%
+  generate(reps = 1000, type = "draw") %>%
+  calculate(stat = "prop") %>%
+  mutate(dist = "Null")
+
+alt <- dat %>%
+  specify(response = at_bats, success = "hit") %>%
+  hypothesize(null = "point", p = 0.333) %>%
+  generate(reps = 1000, type = "draw") %>%
+  calculate(stat = "prop") %>%
+  mutate(dist = "Alternative")
+
+both <- bind_rows(null, alt) %>%
+  mutate(dist = fct_relevel(dist, "Null"))
+
+#quantile(null$stat, 0.95)
+# mean(null$stat >= 0.33)
+
+both %>%
+  ggplot(mapping = aes(x = stat)) +
+  geom_histogram(bins = 40, color = "white") +
+  facet_wrap(~dist, ncol = 1) +
+  geom_vline(xintercept = quantile(null$stat, 0.95) + .01, size = 2,
+             color = "turquoise4")
+
+
+  
+
+power <- round(mean(alt$stat >= quantile(null$stat, 0.95) + .01), digits = 2)
+```
+
+]
+
+--
+
+.pull-right[
+
+* Increasing the sample size increases the power.
+
+* When $\alpha$ is set to $0.05$ and the sample size is now 100, the power of this test is `r power`.
+
+
+]
+
+
+---
+
+### Example
+
+Suppose we have a baseball player who has been a 0.250 career hitter who suddenly improves to be a 0.333 hitter.  He wants a raise but needs to convince his manager that he has genuinely improved.  The manager offers to examine his performance in ~~20~~ 100 at-bats.
+
+**What will happen to the power of the test if we increase $\alpha$ to 0.1?**
+
+
+--
+
+.pull-left[
+
+```{r, echo = FALSE, fig.asp = 0.65}
+dat <- data.frame(at_bats = c(rep("hit", 40), 
+                              rep("miss", 60)))
+
+
+
+library(infer)
+library(tidyverse)
+null <- dat %>%
+  specify(response = at_bats, success = "hit") %>%
+  hypothesize(null = "point", p = 0.25) %>%
+  generate(reps = 1000, type = "draw") %>%
+  calculate(stat = "prop") %>%
+  mutate(dist = "Null")
+
+alt <- dat %>%
+  specify(response = at_bats, success = "hit") %>%
+  hypothesize(null = "point", p = 0.333) %>%
+  generate(reps = 1000, type = "draw") %>%
+  calculate(stat = "prop") %>%
+  mutate(dist = "Alternative")
+
+both <- bind_rows(null, alt) %>%
+  mutate(dist = fct_relevel(dist, "Null"))
+
+#quantile(null$stat, 0.9)
+# mean(null$stat >= 0.31)
+
+both %>%
+  ggplot(mapping = aes(x = stat)) +
+  geom_histogram(bins = 40, color = "white") +
+  facet_wrap(~dist, ncol = 1) +
+  geom_vline(xintercept = quantile(null$stat, 0.9) + .01, size = 2,
+             color = "turquoise4")
+
+
+  
+
+power <- round(mean(alt$stat >= quantile(null$stat, 0.9) + .01), digits = 2)
+```
+
+]
+
+--
+
+.pull-right[
+
+* Increasing $\alpha$ increases the power.
+    + Decreases $\beta$.
+
+* When $\alpha$ is set to $0.1$ and the sample size is  100, the power of this test is `r power`.
+
+
+]
+
+---
+
+### Example
+
+Suppose we have a baseball player who has been a 0.250 career hitter who suddenly improves to be a ~~0.333~~ 0.400 hitter.  He wants a raise but needs to convince his manager that he has genuinely improved.  The manager offers to examine his performance in ~~20~~ 100 at-bats.
+
+**What will happen to the power of the test if he is an even better player?**
+
+
+--
+
+.pull-left[
+
+```{r, echo = FALSE, fig.asp = 0.65}
+dat <- data.frame(at_bats = c(rep("hit", 40), 
+                              rep("miss", 60)))
+
+
+
+library(infer)
+library(tidyverse)
+null <- dat %>%
+  specify(response = at_bats, success = "hit") %>%
+  hypothesize(null = "point", p = 0.25) %>%
+  generate(reps = 1000, type = "draw") %>%
+  calculate(stat = "prop") %>%
+  mutate(dist = "Null")
+
+alt <- dat %>%
+  specify(response = at_bats, success = "hit") %>%
+  hypothesize(null = "point", p = 0.4) %>%
+  generate(reps = 1000, type = "draw") %>%
+  calculate(stat = "prop") %>%
+  mutate(dist = "Alternative")
+
+both <- bind_rows(null, alt) %>%
+  mutate(dist = fct_relevel(dist, "Null"))
+
+#quantile(null$stat, 0.9)
+# mean(null$stat >= 0.31)
+
+both %>%
+  ggplot(mapping = aes(x = stat)) +
+  geom_histogram(bins = 40, color = "white") +
+  facet_wrap(~dist, ncol = 1) +
+  geom_vline(xintercept = quantile(null$stat, 0.9) + .01, size = 2,
+             color = "turquoise4")
+
+
+  
+
+power <- round(mean(alt$stat >= quantile(null$stat, 0.9) + .01), digits = 2)
+```
+
+]
+
+--
+
+.pull-right[
+
+* **Effect size**: Difference between true value of the parameter and null value.
+    + Often standardized.
+
+* Increasing the effect size increases the power.
+
+* When $\alpha$ is set to $0.1$, the sample size is 100, and the true probability of hitting the ball is 0.4, the power of this test is `r power`.
+
+
+]
+
+---
+
+## Thoughts on Power
+
+* What aspects of the test did the player actually have control over?
+
+--
+
+* Why is it easier to set $\alpha$ than to set $\beta$ or power?
+
+--
+
+* For those who will be collecting your own data someday, power calculations are in your future!

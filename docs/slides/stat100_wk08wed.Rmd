@@ -488,6 +488,14 @@ dolphins %>%
 
 ---
 
+class: center, middle, inverse
+
+
+### Let's look at the second example of the "hypothesisTestingFramework.Rmd".
+
+
+---
+
 class: inverse, middle, center
 
 
