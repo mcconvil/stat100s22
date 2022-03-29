@@ -51,7 +51,7 @@ class: middle, center, inverse
 
 ### Announcements
 
-XXX
+* For Project Assignment 2, please fill out [this feedback survey](https://docs.google.com/forms/d/e/1FAIpQLSfDP1vo4xIbmk5aNA0hwFRMKvT74iQaPw4ja8u1RbuOpPNxlw/viewform) by Friday, April 1st.
 
 ****************************
 
@@ -82,7 +82,6 @@ XXX
 
 ]
 
----
 
 
 ---
@@ -135,17 +134,19 @@ class: inverse, center, middle
 ### Hypothesis Testing: Decisions, Decisions
 
 
-`\(\alpha\)` = prob of Type I error **under repeated sampling** = prob reject `\(H_o\)` when it is true
+* `\(\alpha\)` = prob of Type I error **under repeated sampling** = prob reject `\(H_o\)` when it is true
 
 
-`\(\beta\)` = prob of Type II error **under repeated sampling** = prob fail to reject `\(H_o\)` when `\(H_a\)` is true.
+* `\(\beta\)` = prob of Type II error **under repeated sampling** = prob fail to reject `\(H_o\)` when `\(H_a\)` is true.
 
-Set `\(\alpha\)` beforehand.  Use as the cut-off for p-value.
+* Set `\(\alpha\)` beforehand.  Use as the cut-off for p-value.
 
-**The smaller `\(\alpha\)` is the larger `\(\beta\)` will be.**
+* **The smaller `\(\alpha\)` is the larger `\(\beta\)` will be.**
 
 
-Choose a lower `\(\alpha\)` (e.g., 0.01, 0.001) when the Type I error is worse and a higher `\(\alpha\)` (e.g., 0.1) when the Type II error is worse.
+* Choose a lower `\(\alpha\)` (e.g., 0.01, 0.001) when the Type I error is worse and a higher `\(\alpha\)` (e.g., 0.1) when the Type II error is worse.
+
+* The power of a test depends on sample size, `\(\alpha\)`, and the true effect size.
 
 ---
 
@@ -153,7 +154,7 @@ Choose a lower `\(\alpha\)` (e.g., 0.01, 0.001) when the Type I error is worse a
 
 --
 
-* The original intention of the p-value was as an informal measure to judge whether or not a researcher should take a second look.
+* The original intention of the p-value was as an **informal** measure to judge whether or not a researcher should take a second look.
 
 --
 
@@ -161,17 +162,64 @@ Choose a lower `\(\alpha\)` (e.g., 0.01, 0.001) when the Type I error is worse a
 
 --
 
+**What were/are the consequences of "p-value &lt; 0.05" = "statistically significant"?**
+
+
+--
+
 * **A consequence**: The p-value is often misinterpreted to be the probability the null hypothesis is true.  
     + A p-value of 0.003 does not mean there's a 0.3% chance that ESP doesn't exist!
     
---
+---
+
+### Let's Talk About P-values
+
+
+.pull-left[
 
 * **A consequence**: Researchers often put too much weight on the p-value and not enough weight on their domain knowledge/the implausibility of their conjecture.
 
+* [xkcd comic](https://xkcd.com/1132/)
 
---
+
+
+]
+
+.pull-right[
+
+
+&lt;img src="img/frequentists_vs_bayesians_2x.png" width="65%" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+
+---
+
+
+
+.pull-left[
+
+### Let's Talk About P-values
+
 
 * **A consequence**: [P-hacking](https://projects.fivethirtyeight.com/p-hacking/): Cherry-picking promising findings
+
+
+* [xkcd comic](https://www.explainxkcd.com/wiki/index.php/882:_Significant)
+
+
+]
+
+.pull-right[
+
+
+&lt;img src="img/significant.png" width="45%" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+
 
 ---
 
@@ -194,7 +242,7 @@ Choose a lower `\(\alpha\)` (e.g., 0.01, 0.001) when the Type I error is worse a
 
 --
 
-BUT the *effect sizes* were tiny:
+BUT the **effect sizes** were tiny:
 
 --
 
@@ -208,7 +256,7 @@ BUT the *effect sizes* were tiny:
 
 ---
 
-### Let's Talk About P-Values
+### Let's Talk About P-values
 
 The American Statistical Association created a set of principles to address misconceptions and misuse of p-values:
 
@@ -262,6 +310,7 @@ The American Statistical Association created a set of principles to address misc
 --
 
 * Understanding that a small p-value means evidence for `\(H_a\)` is important.
+    + Ex: Because the p-value is small, we have evidence for ESP.  
 
 --
 
@@ -270,7 +319,7 @@ The American Statistical Association created a set of principles to address misc
 
 --
     
-* Your ability to tell if a # is less than 0.05 is not a learning objective.  
+* Your ability to tell if a # is less than 0.05 is not a learning objective for Stat 100.  
 
 ---
 
@@ -372,6 +421,14 @@ class: inverse, middle, center
 
 ---
 
+class: inverse, middle, center
+
+## But let's first take a 2 minute stretch break.
+
+
+
+---
+
 ### Probability Models
 
 --
@@ -384,7 +441,7 @@ class: inverse, middle, center
 
 **Question**: How can we use theoretical models to approximate our distributions?
 
-&lt;img src="stat100_wk09wed_files/figure-html/unnamed-chunk-3-1.png" width="432" style="display: block; margin: auto;" /&gt;
+&lt;img src="stat100_wk09wed_files/figure-html/unnamed-chunk-5-1.png" width="432" style="display: block; margin: auto;" /&gt;
 
 ]
 
@@ -457,7 +514,7 @@ LLN tells us the proportion of extreme test stats is roughly equal to the true p
 .pull-right[
 
 
-&lt;img src="stat100_wk09wed_files/figure-html/unnamed-chunk-4-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="stat100_wk09wed_files/figure-html/unnamed-chunk-6-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ]
 
@@ -494,7 +551,7 @@ $$
 
 .pull-right[
 
-&lt;img src="stat100_wk09wed_files/figure-html/unnamed-chunk-5-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="stat100_wk09wed_files/figure-html/unnamed-chunk-7-1.png" width="576" style="display: block; margin: auto;" /&gt;
 We use this fact when we find a two-sided p-value.
 
 ]
@@ -519,19 +576,114 @@ Sometimes it is "easier" to find the complement event's probability.
 
 .pull-right[
 
-&lt;img src="stat100_wk09wed_files/figure-html/unnamed-chunk-6-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="stat100_wk09wed_files/figure-html/unnamed-chunk-8-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 
 
 ]
 
 
+---
+
+### Random Variables
+
+**Random variable** (RV) is a random process that **takes on numerical values**.
+
+--
+
+* Discrete RV: Takes on discrete values (countable number of possible values)
+    + EX: 0, 1, 2, 3, ...
+
+* Continuous RV: Can take on any value in a interval
+
+--
+
+* Random variables have **probability functions** that tell us the likelihood of specific values.
+
+* For discrete RV, probability function is:
+
+$$
+p(x) = P(X = x)
+$$
+where `\(\sum p(x) = 1\)`.
+
+--
+
+* Example: X = # when you roll die
+
+---
+
+### Random Variables
+
+For a random variable, care about its:
+
+--
+
+* Probability function: `\(p(x) = P(X = x)\)`
+
+--
+
+
+* Center: Mean of a RV:
+
+$$
+\mu = \sum x p(x)
+$$
+
+--
+
+* Spread: Variance of a RV:
+
+$$
+\sigma^2 = \sum (x - \mu)^2 p(x)
+$$
+* And, standard deviation of a RV: 
+
+$$
+\sigma = \sqrt{ \sum (x - \mu)^2 p(x)}
+$$
+
+--
+
+**Example**: What is the mean and variance for `\(X\)` = # when you roll die?
+
+**Question**: How do these measures relate to `\(\bar{x}\)` and `\(s^2\)`?
+
+
+---
+
+### Another Example:
+
+Suppose 4 students have still not received their graded Stat 100 Midterm (yes, let's pretend we actually have hand-written work) and that I hand back the exams randomly to each student.  Let X = the number of students who get their correct exam.
+
+--
+
+**Questions:**
+
+* Let's say the student's names are A(licia), B(ob), C(olin), and D(onna) and they are sitting in a row ABCD.  One possible outcome is ABDC (1st exam goes to A, 2nd to B, 3rd to D, 4th to C).  In that case, what does X equal?
+
+* List out all possible outcomes.  And for each outcome, determine what X equals.  
+
+* Why is P(X = 3) = 0?
+
+* Write out the probability distribution for X.
+
+* Determine the mean value of X. 
+
+* Determine the standard deviation of X.
+
+* What is the probability that at least one student gets their correct exam?
+
 
 ---
 
 ## Reminders:
 
-XXX
+* For Project Assignment 2, please fill out [this feedback survey](https://docs.google.com/forms/d/e/1FAIpQLSfDP1vo4xIbmk5aNA0hwFRMKvT74iQaPw4ja8u1RbuOpPNxlw/viewform) by Friday, April 1st.
+* We are still accepting Course Assistant/Teaching Fellow applications for Stat 100 for Fall 2022. To apply, fill out [this application](https://docs.google.com/forms/d/e/1FAIpQLScwKJaRfppRqXAzyxMMCeBUdwrzBudNONt0S9dc8lE2ZUlQwQ/viewform) by March 31st.
+    + About 9-12 hours of work per week.  
+    + Primary responsibilities: Lead a discussion section, hold office hours, grade assessments.
+
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

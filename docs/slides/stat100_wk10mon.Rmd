@@ -1,0 +1,145 @@
+---
+title: P-Value Pitfalls
+output:
+  xaringan::moon_reader:
+    css: ["more.css", "xaringan-themer.css", "hygge"]
+    lib_dir: libsSlides
+    self_contained: false
+    nature:
+      highlightStyle: github
+      ratio: '16:9'      
+      highlightLines: true
+      countIncrementalSlides: false
+      navigation:
+        scroll: false
+    seal: false
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE,
+                      message = FALSE, 
+                      fig.retina = 3, fig.align = 'center',
+                      fig.asp = 0.75, fig.width = 8)
+library(knitr)
+library(tidyverse)
+theme_update(text = element_text(size = 20))
+```
+
+```{r xaringan-scribble, echo=FALSE}
+xaringanExtra::use_scribble()
+```
+
+
+
+background-image: url("img/DAW.png")
+background-position: left
+background-size: 50%
+class: middle, center, inverse
+
+
+.pull-right[
+
+
+
+## .whitish[Probability Concepts]
+
+<br>
+
+<br>
+
+### .whitish[Kelly McConville]
+
+#### .yellow[ Stat 100 | Week 10 | Spring 2022] 
+
+]
+
+
+
+---
+
+### Announcements
+
+
+
+****************************
+
+--
+
+### Goals for Today
+
+.pull-left[
+
+
+
+
+
+
+
+] 
+
+
+
+.pull-right[
+
+
+
+
+
+]
+
+
+
+
+
+---
+
+### Conditional Probabilities
+
+> "Conditioning is the soul of statistics." — Joe Blitzstein, Stat 110 Prof
+
+--
+
+**Question**: What do we mean by "conditioning"?
+
+--
+
+Most polar bears are twins. Therefore, if you're a twin, you're probably a polar bear.
+
+--
+
+* P(twin given polar bear) $\neq$ P(polar bear given twin)
+
+
+--
+
+The p-value is a conditional probability.  
+
+--
+
+* P-value = P(data given $H_o$) ( $\neq$ P( $H_o$ given data))
+
+--
+
+**Other favorite examples:**
+
+* P(have COVID given wear mask) $\neq$ P(wear mask given have COVID)
+    + In a CDC study, P(wear mask given have COVID) = 0.71 while P(have COVID given wear mask) is much lower.
+    
+--
+
+* P(it is raining given there are clouds directly overhead) $\neq$ Pr(there are clouds directly overhead given it is raining)
+
+
+---
+
+
+
+
+
+---
+
+## Reminders:
+
+XXX
+
