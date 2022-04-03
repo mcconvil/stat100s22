@@ -1,34 +1,25 @@
----
-title: P-Value Pitfalls
-output:
-  xaringan::moon_reader:
-    css: ["more.css", "xaringan-themer.css", "hygge"]
-    lib_dir: libsSlides
-    self_contained: false
-    nature:
-      highlightStyle: github
-      ratio: '16:9'      
-      highlightLines: true
-      countIncrementalSlides: false
-      navigation:
-        scroll: false
-    seal: false
----
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>P-Value Pitfalls</title>
+    <meta charset="utf-8" />
+    <script src="libsSlides/header-attrs-2.11/header-attrs.js"></script>
+    <link href="libsSlides/remark-css-0.0.1/hygge.css" rel="stylesheet" />
+    <script src="libsSlides/fabric-4.3.1/fabric.min.js"></script>
+    <link href="libsSlides/xaringanExtra-scribble-0.0.1/scribble.css" rel="stylesheet" />
+    <script src="libsSlides/xaringanExtra-scribble-0.0.1/scribble.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', function() { window.xeScribble = new Scribble({"pen_color":["#FF0000"],"pen_size":3,"eraser_size":30,"palette":[]}) })</script>
+    <link rel="stylesheet" href="more.css" type="text/css" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
 
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, warning = FALSE,
-                      message = FALSE, 
-                      fig.retina = 3, fig.align = 'center',
-                      fig.asp = 0.75, fig.width = 8)
-library(knitr)
-library(tidyverse)
-theme_update(text = element_text(size = 20))
-```
 
-```{r xaringan-scribble, echo=FALSE}
-xaringanExtra::use_scribble()
-```
+
+
+
 
 
 
@@ -44,9 +35,9 @@ class: middle, center, inverse
 
 ## .whitish[P-Value Pitfalls]
 
-<br>
+&lt;br&gt;
 
-<br>
+&lt;br&gt;
 
 ### .whitish[Kelly McConville]
 
@@ -109,13 +100,13 @@ class: inverse, center, middle
 ##  Integrity of Data and Methods
 
 
-> "The ethical statistical practitioner seeks to understand and mitigate known or suspected limitations, defects, or biases in the data or methods and communicates potential impacts on the interpretation, conclusions, recommendations, decisions, or other results of statistical practices. "
+&gt; "The ethical statistical practitioner seeks to understand and mitigate known or suspected limitations, defects, or biases in the data or methods and communicates potential impacts on the interpretation, conclusions, recommendations, decisions, or other results of statistical practices. "
 
 ---
 
 ##  Integrity of Data and Methods
 
-> "Communicates the stated purpose and the intended use of statistical practices. Is transparent regarding a priori versus post hoc objectives and planned versus unplanned statistical practices. Discloses when multiple comparisons are conducted and any relevant adjustments."
+&gt; "Communicates the stated purpose and the intended use of statistical practices. Is transparent regarding a priori versus post hoc objectives and planned versus unplanned statistical practices. Discloses when multiple comparisons are conducted and any relevant adjustments."
 
 --
 
@@ -131,19 +122,19 @@ class: inverse, center, middle
 ### Hypothesis Testing: Decisions, Decisions
 
 
-* $\alpha$ = prob of Type I error **under repeated sampling** = prob reject $H_o$ when it is true
+* `\(\alpha\)` = prob of Type I error **under repeated sampling** = prob reject `\(H_o\)` when it is true
 
 
-* $\beta$ = prob of Type II error **under repeated sampling** = prob fail to reject $H_o$ when $H_a$ is true.
+* `\(\beta\)` = prob of Type II error **under repeated sampling** = prob fail to reject `\(H_o\)` when `\(H_a\)` is true.
 
-* Set $\alpha$ beforehand.  Use as the cut-off for p-value.
+* Set `\(\alpha\)` beforehand.  Use as the cut-off for p-value.
 
-* **The smaller $\alpha$ is the larger $\beta$ will be.**
+* **The smaller `\(\alpha\)` is the larger `\(\beta\)` will be.**
 
 
-* Choose a lower $\alpha$ (e.g., 0.01, 0.001) when the Type I error is worse and a higher $\alpha$ (e.g., 0.1) when the Type II error is worse.
+* Choose a lower `\(\alpha\)` (e.g., 0.01, 0.001) when the Type I error is worse and a higher `\(\alpha\)` (e.g., 0.1) when the Type II error is worse.
 
-* The power of a test depends on sample size, $\alpha$, and the true effect size.
+* The power of a test depends on sample size, `\(\alpha\)`, and the true effect size.
 
 ---
 
@@ -155,11 +146,11 @@ class: inverse, center, middle
 
 --
 
-* But to create simple statistical manuals for practitioners, the rule quickly became "p-value < 0.05" = "statistically significant".
+* But to create simple statistical manuals for practitioners, the rule quickly became "p-value &lt; 0.05" = "statistically significant".
 
 --
 
-**What were/are the consequences of "p-value < 0.05" = "statistically significant"?**
+**What were/are the consequences of "p-value &lt; 0.05" = "statistically significant"?**
 
 
 --
@@ -185,9 +176,7 @@ class: inverse, center, middle
 .pull-right[
 
 
-```{r  out.width = "65%", echo=FALSE, fig.align='center'}
-include_graphics("img/frequentists_vs_bayesians_2x.png") 
-```
+&lt;img src="img/frequentists_vs_bayesians_2x.png" width="65%" style="display: block; margin: auto;" /&gt;
 
 ]
 
@@ -213,9 +202,7 @@ include_graphics("img/frequentists_vs_bayesians_2x.png")
 .pull-right[
 
 
-```{r  out.width = "45%", echo=FALSE, fig.align='center'}
-include_graphics("img/significant.png") 
-```
+&lt;img src="img/significant.png" width="45%" style="display: block; margin: auto;" /&gt;
 
 ]
 
@@ -235,11 +222,11 @@ include_graphics("img/significant.png")
 
 --
 
-&rarr; Are less likely to divorce (p-value < 0.002)
+&amp;rarr; Are less likely to divorce (p-value &lt; 0.002)
 
 --
 
-&rarr; Are more likely to have high marital satisfaction (p-value < 0.001)
+&amp;rarr; Are more likely to have high marital satisfaction (p-value &lt; 0.001)
 
 --
 
@@ -301,9 +288,7 @@ The American Statistical Association created a set of principles to address misc
 
 * In 2014, George Cobb, Mount Holyoke College poised the following questions:
 
-```{r  out.width = "60%", echo=FALSE, fig.align='center'}
-include_graphics("img/Cobb.png") 
-```
+&lt;img src="img/Cobb.png" width="60%" style="display: block; margin: auto;" /&gt;
 
 --
 
@@ -312,7 +297,7 @@ include_graphics("img/Cobb.png")
 
 --
 
-* Understanding that a small p-value means evidence for $H_a$ is important.
+* Understanding that a small p-value means evidence for `\(H_a\)` is important.
     + Ex: Because the p-value is small, we have evidence for ESP.  
 
 --
@@ -328,9 +313,7 @@ include_graphics("img/Cobb.png")
 
 ### Reporting Results in Journal Articles
 
-```{r, echo = FALSE, out.width= "70%"}
-knitr::include_graphics("img/bem_honorton_1994_results.png")
-```
+&lt;img src="img/bem_honorton_1994_results.png" width="70%" style="display: block; margin: auto;" /&gt;
 
 
 
@@ -438,7 +421,7 @@ class: inverse, middle, center
 
 --
 
-> "All models are wrong but some are useful."  -- George Box
+&gt; "All models are wrong but some are useful."  -- George Box
 
 --
 
@@ -446,18 +429,7 @@ class: inverse, middle, center
 
 **Question**: How can we use theoretical models to approximate our distributions?
 
-```{r, echo=FALSE, fig.width = 6}
-library(tidyverse)
-library(palmerpenguins)
-library(infer)
-penguins %>%
-  drop_na(sex) %>%
-  specify(flipper_length_mm ~ sex) %>%
-  hypothesize(null = "independence") %>%
-  generate(reps = 1000, type = "permute") %>%
-  calculate(stat ="diff in means", order = c("female", "male")) %>%
-  visualize()
-```
+&lt;img src="stat100_wk09wed_files/figure-html/unnamed-chunk-5-1.png" width="432" style="display: block; margin: auto;" /&gt;
 
 ]
 
@@ -486,12 +458,12 @@ The **probability** of an outcome is the "long-run proportion" of times the outc
 --
 
 * EX: Want probability of rolling the #5
-    + Let $p_n$ = proportion of rolls that are 5 in n rolls
-    + Let $p$ = probability of rolling 5 = $P$(roll 5)
+    + Let `\(p_n\)` = proportion of rolls that are 5 in n rolls
+    + Let `\(p\)` = probability of rolling 5 = `\(P\)`(roll 5)
 
 --
 
-**Law of Large Numbers** (LLN) says that as $n$ increases, $p_n$ converges to $p$.
+**Law of Large Numbers** (LLN) says that as `\(n\)` increases, `\(p_n\)` converges to `\(p\)`.
 
 ---
 
@@ -523,37 +495,14 @@ $$
 \mbox{p-value} = \frac{\mbox{# of extreme test stats}}{\mbox{# of replications}}
 $$
 
-LLN tells us the proportion of extreme test stats is roughly equal to the true probability of observing the test statistic or more extreme under $H_o$.
+LLN tells us the proportion of extreme test stats is roughly equal to the true probability of observing the test statistic or more extreme under `\(H_o\)`.
 
 ]
 
 .pull-right[
 
 
-```{r, echo = FALSE}
-# Construct data frame of sample results
-esp <- data.frame(guess = c(rep("correct", 106),
-                            rep("incorrect", 329 - 106)))
-
-# Compute observed test statistic
-test_stat <- esp %>%
-  specify(response = guess, success = "correct") %>%
-  calculate(stat ="prop")
-
-
-# Generate null distribution 
-set.seed(411)
-null_dist <- esp %>%
-  specify(response = guess, success = "correct") %>%
-  hypothesize(null = "point", p = 0.25) %>%
-  generate(reps = 200, type = "draw") %>%
-  calculate(stat ="prop")
-
-# Graph null distribution with test statistic
-ggplot(null_dist, aes(x = stat)) +
-  geom_dotplot() +
-  geom_vline(xintercept = test_stat$stat, color = "deeppink", size = 2)
-```
+&lt;img src="stat100_wk09wed_files/figure-html/unnamed-chunk-6-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ]
 
@@ -563,14 +512,14 @@ ggplot(null_dist, aes(x = stat)) +
 
 ---
 
-### Probabilities: $P(\mbox{event})$
+### Probabilities: `\(P(\mbox{event})\)`
 
 * Probability of event = long-run proportion of event
 
 
 #### Useful properties of probabilities:
 
-(1)  $0 \leq P(\mbox{event}) \leq 1$
+(1)  `\(0 \leq P(\mbox{event}) \leq 1\)`
 
 --
 
@@ -590,19 +539,14 @@ $$
 
 .pull-right[
 
-```{r, echo = FALSE}
-ggplot(null_dist, aes(x = stat)) +
-  geom_histogram() +
-  geom_vline(xintercept = .3, color = "deeppink", size = 2) +
-  geom_vline(xintercept = .2, color = "deeppink", size = 2)
-```
+&lt;img src="stat100_wk09wed_files/figure-html/unnamed-chunk-7-1.png" width="576" style="display: block; margin: auto;" /&gt;
 We use this fact when we find a two-sided p-value.
 
 ]
 
 ---
 
-### Probabilities: $P(\mbox{event})$
+### Probabilities: `\(P(\mbox{event})\)`
 
 #### Useful properties of probabilities:
 
@@ -620,11 +564,7 @@ Sometimes it is "easier" to find the complement event's probability.
 
 .pull-right[
 
-```{r, echo = FALSE}
-ggplot(null_dist, aes(x = stat)) +
-  geom_histogram() +
-  geom_vline(xintercept = .3, color = "deeppink", size = 2)
-```
+&lt;img src="stat100_wk09wed_files/figure-html/unnamed-chunk-8-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 
 
@@ -653,7 +593,7 @@ ggplot(null_dist, aes(x = stat)) +
 $$
 p(x) = P(X = x)
 $$
-where $\sum p(x) = 1$.
+where `\(\sum p(x) = 1\)`.
 
 --
 
@@ -667,7 +607,7 @@ For a random variable, care about its:
 
 --
 
-* Probability function: $p(x) = P(X = x)$
+* Probability function: `\(p(x) = P(X = x)\)`
 
 --
 
@@ -693,9 +633,9 @@ $$
 
 --
 
-**Example**: What is the mean and variance for $X$ = # when you roll die?
+**Example**: What is the mean and variance for `\(X\)` = # when you roll die?
 
-**Question**: How do these measures relate to $\bar{x}$ and $s^2$?
+**Question**: How do these measures relate to `\(\bar{x}\)` and `\(s^2\)`?
 
 
 ---
@@ -732,3 +672,130 @@ Suppose 4 students have still not received their graded Stat 100 Midterm (yes, l
     + About 9-12 hours of work per week.  
     + Primary responsibilities: Lead a discussion section, hold office hours, grade assessments.
 
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"ratio": "16:9",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

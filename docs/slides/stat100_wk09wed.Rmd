@@ -247,7 +247,7 @@ BUT the **effect sizes** were tiny:
 
 --
 
-* Divorce rate of 7.67% for those who met online versus 5.96% for those who met in-person.
+* Divorce rate of 5.96% for those who met online versus 7.67% for those who met in-person.
 
 --
 
