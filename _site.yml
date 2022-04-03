@@ -6,6 +6,9 @@ navbar:
     - text: "Homepage"
       icon: fa-home
       href: index.html
+    - text: "Inference Summary Tables"
+      icon: fa-table
+      href: inference_procedures.html
     - text: "Slides -- First Half"
       icon: fa-chart-area
       menu: 

@@ -11,7 +11,7 @@
 
 
 
-<title>Lecture Slides</title>
+<title>Useful Summary Tables</title>
 
 <script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
@@ -32,6 +32,8 @@
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
@@ -433,12 +435,391 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Lecture Slides</h1>
+<h1 class="title toc-ignore">Useful Summary Tables</h1>
 
 </div>
 
 
-<p>Here I will post the lecture slides for Harvard’s Stat 100, Spring 2022.</p>
+<style type="text/css">
+h1, .h1, h2, .h2, h3, .h3 {
+    margin-top: 84px;
+}
+</style>
+<div id="symbols" class="section level3">
+<h3>Symbols</h3>
+<table class="table table-responsive table-bordered" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Response
+</th>
+<th style="text-align:left;">
+Explanatory
+</th>
+<th style="text-align:left;">
+Numerical_Quantity
+</th>
+<th style="text-align:left;">
+Parameter
+</th>
+<th style="text-align:left;">
+Statistic
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+quantitative
+</td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+mean
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(\mu\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(\bar{x}\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+proportion
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(p\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(\hat{p}\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+quantitative
+</td>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+difference in means
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(\mu_1 - \mu_2\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(\bar{x}_1 - \bar{x}_2\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+difference in proportions
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(p_1 - p_2\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(\hat{p}_1 - \hat{p}_2\)</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+quantitative
+</td>
+<td style="text-align:left;">
+quantitative
+</td>
+<td style="text-align:left;">
+correlation
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(\rho\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(r\)</span>
+</td>
+</tr>
+</tbody>
+</table></li>
+</ul></li>
+</ul>
+</div>
+<div id="common-test-statistics-and-approximate-distributions" class="section level3">
+<h3>Common Test Statistics and Approximate Distributions</h3>
+<table class="table table-responsive table-bordered" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Response
+</th>
+<th style="text-align:left;">
+Explanatory
+</th>
+<th style="text-align:left;">
+Numerical_Quantity
+</th>
+<th style="text-align:left;">
+Test_Statistic
+</th>
+<th style="text-align:left;">
+Distribution
+</th>
+<th style="text-align:left;">
+Assumptions
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+quantitative
+</td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+mean
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(\frac{\bar{x} - \mu_o}{s/\sqrt{n}}\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(t(df = n - 1)\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(n \geq 30\)</span> or data are normal
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+proportion
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(\frac{\hat{p} - p_o}{\sqrt{\frac{\hat{p}(1 - \hat{p})}{n}}}\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(N(0, 1)\)</span>
+</td>
+<td style="text-align:left;">
+Ten successes, Ten failures
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+quantitative
+</td>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+difference in means
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(\frac{\bar{x}_1 - \bar{x}_2 - 0}{\sqrt{\frac{s^2_1}{n_1} + \frac{s^2_2}{n_2}}}\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(t(df = \min(n_1, n_2) - 1)\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(n_1, n_2 \geq 30\)</span> or data are normal
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+difference in proportions
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(\frac{\hat{p}_1 - \hat{p}_2 - 0}{\sqrt{\frac{\hat{p}(1 - \hat{p})}{n_1} + \frac{\hat{p}(1 - \hat{p})}{n_2}}}\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(N(0, 1)\)</span>
+</td>
+<td style="text-align:left;">
+Ten successes, Ten failures in each category
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+quantitative
+</td>
+<td style="text-align:left;">
+quantitative
+</td>
+<td style="text-align:left;">
+correlation
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(\frac{r - 0}{\sqrt{\frac{1 - r^2}{n - 2}}}\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(t(df = n - 2)\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(n \geq 30\)</span> or data are normal
+</td>
+</tr>
+</tbody>
+</table></li>
+</ul></li>
+</ul>
+</div>
+<div id="common-distribution-based-confidence-interval-formulae" class="section level3">
+<h3>Common Distribution-Based Confidence Interval Formulae</h3>
+<table class="table table-responsive table-bordered" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Response
+</th>
+<th style="text-align:left;">
+Explanatory
+</th>
+<th style="text-align:left;">
+Numerical_Quantity
+</th>
+<th style="text-align:left;">
+Confidence_Interval
+</th>
+<th style="text-align:left;">
+Distribution
+</th>
+<th style="text-align:left;">
+Assumptions
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+quantitative
+</td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+mean
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(\bar{x} \pm t^*s/\sqrt{n}\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(t(df = n - 1)\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(n \geq 30\)</span> or data are normal
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+<ul>
+<li></td>
+<td style="text-align:left;">
+proportion
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(\hat{p} \pm z^* \sqrt{\frac{\hat{p}(1 - \hat{p})}{n}}\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(N(0, 1)\)</span>
+</td>
+<td style="text-align:left;">
+Ten successes, Ten failures
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+quantitative
+</td>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+difference in means
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(\bar{x}_1 - \bar{x}_2 \pm t^* \sqrt{\frac{s^2_1}{n_1} + \frac{s^2_2}{n_2}}\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(t(df = \min(n_1, n_2) - 1)\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(n_1, n_2 \geq 30\)</span> or data are normal
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+categorical
+</td>
+<td style="text-align:left;">
+difference in proportions
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(\hat{p}_1 - \hat{p}_2 \pm z^* \sqrt{\frac{\hat{p}_1(1 - \hat{p}_1)}{n_1} + \frac{\hat{p}_2(1 - \hat{p}_2)}{n_2}}\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(N(0, 1)\)</span>
+</td>
+<td style="text-align:left;">
+Ten successes, Ten failures in each category
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+quantitative
+</td>
+<td style="text-align:left;">
+quantitative
+</td>
+<td style="text-align:left;">
+correlation
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(r \pm t^* \sqrt{\frac{1 - r^2}{n - 2}}\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(t(df = n - 2)\)</span>
+</td>
+<td style="text-align:left;">
+<span class="math inline">\(n \geq 30\)</span> or data are normal
+</td>
+</tr>
+</tbody>
+</table></li>
+</ul></li>
+</ul>
+</div>
 
 
 

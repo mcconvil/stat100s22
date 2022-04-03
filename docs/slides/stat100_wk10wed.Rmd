@@ -1,0 +1,606 @@
+---
+title: Probability Concepts
+output:
+  xaringan::moon_reader:
+    css: ["more.css", "xaringan-themer.css", "hygge"]
+    lib_dir: libsSlides
+    self_contained: false
+    nature:
+      highlightStyle: github
+      ratio: '16:9'      
+      highlightLines: true
+      countIncrementalSlides: false
+      navigation:
+        scroll: false
+    seal: false
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE,
+                      message = FALSE, 
+                      fig.retina = 3, fig.align = 'center',
+                      fig.asp = 0.75, fig.width = 8,
+                      cache = TRUE)
+library(knitr)
+library(tidyverse)
+theme_update(text = element_text(size = 20),
+             plot.title = element_text(hjust = 0.5))
+```
+
+```{r xaringan-scribble, echo=FALSE}
+xaringanExtra::use_scribble()
+```
+
+
+
+background-image: url("img/DAW.png")
+background-position: left
+background-size: 50%
+class: middle, center, inverse
+
+
+.pull-right[
+
+
+
+## .whitish[Probability Concepts]
+
+<br>
+
+<br>
+
+### .whitish[Kelly McConville]
+
+#### .yellow[ Stat 100 | Week 10 | Spring 2022] 
+
+]
+
+
+
+---
+
+### Announcements
+
+* Project Assignment 3
+    + Conduct a hypothesis test and construct a confidence interval related to your research questions.
+    + Due Friday, April 22nd at 5pm
+
+****************************
+
+--
+
+### Goals for Today
+
+.pull-left[
+
+
+* Discuss the **Central Limit Theorem**
+
+* Approximate sampling distributions
+
+
+
+] 
+
+
+
+.pull-right[
+
+* Learn about a new group of test statistics based on **z-scores** 
+
+* Cover formula-based CIs
+
+
+]
+
+---
+
+### Ethics
+
+
+* Let's return once again to the ASA's ["Ethical Guidelines for Statistical Practice"](https://www.amstat.org/ASA/Your-Career/Ethical-Guidelines-for-Statistical-Practice.aspx).
+
+--
+
+* Come back to the sub-header "Responsibilities to Research Subjects"
+
+--
+
+* Reflect on data showing racial disparities in rates of COVID-19 cases and deaths
+    + Many reports showing higher impacts for Black and Latino individuals
+
+---
+
+class: inverse, center, middle
+
+##  Responsibilities to Research Subjects
+
+> "The ethical statistician protects and respects the rights and interests of human and animal subjects at all stages of their involvement in a project. This includes respondents to the census or to surveys, those whose data are contained in administrative records, and subjects of physically or psychologically invasive research."
+
+
+---
+
+##  Responsibilities to Research Subjects
+
+
+> "Recognizes any statistical descriptions of groups may carry risks of stereotypes and stigmatization. Statisticians should contemplate, and be sensitive to, the manner in which information is framed to avoid disproportionate harm to vulnerable groups."
+
+--
+
+### Example: Racial disparities in rates of COVID-19
+
+* Many media outlets noted higher disparities for racial minority groups.
+
+--
+
+* There has been a call for data to be released with more demographic detail.
+
+--
+
+> "It is equally important, however, that in documenting Covid-19 racial disparities, we contextualize such data with adequate analysis. Disparity figures without explanatory context can perpetuate harmful myths and misunderstandings that actually undermine the goal of eliminating health inequities." -- [Merlin Chowkwanyun and Adolph Reed](https://www.nejm.org/doi/full/10.1056/NEJMp2012910)
+
+---
+
+### Example: Racial disparities in rates of COVID-19
+
+Chowkwanyun and Reed point out:
+
+1. Race is a social construct but Lundy Braun, Professor of Pathology and Laboratory Medicine as well as Africana Studies has found medical discourse that continues to assume biological differences.
+
+--
+
+2. "Lone disparity figures can give rise to explanations grounded in racial stereotypes about behavioral patterns."
+
+--
+
+3. There are dangers, such as repressive forms of surveillance, with providing data on a fine-grain geographic level.
+
+--
+
+4. The erroneous perception that certain social problems are "racial" and so only concern certain groups has been used to justify budget cuts.  
+
+Need to provide the data WITH the following context:
+
+a. Socioeconomic status data
+
+--
+
+b. The role of stress from external sources, like racial discrimination
+
+--
+
+c. Spatial resource deficits
+    + Concentrations of respiratory hazards
+    + Uneven distribution of medical care facilities
+
+
+---
+
+### Recap
+
+* Statistics ARE random variables!
+
+--
+
+* We can often approximate the probability function of a statistic with the probability function of a named random variable (i.e., Normal, t, ...).
+
+--
+
+* $\hat{p}$ = sample proportion of correct receiver guesses out of 329 trials
+
+* Null Distribution and the probability function of a N(0.25, 0.024):
+
+```{r, echo = FALSE}
+library(infer)
+library(tidyverse)
+# Construct data frame of sample results
+esp <- data.frame(guess = c(rep("correct", 106),
+                            rep("incorrect", 329 - 106)))
+
+# Generate null distribution 
+set.seed(4111)
+null_dist <- esp %>%
+  specify(response = guess, success = "correct") %>%
+  hypothesize(null = "point", p = 0.25) %>%
+  generate(reps = 1000, type = "simulate") %>%
+  calculate(stat ="prop")
+
+# Graph null distribution with test statistic
+dat <- data.frame(x = seq(16, 36, length.out = 1000)/100) %>%
+  mutate(y = dnorm(x, mean = .25, sd = sqrt(.25*.75/329)))
+ggplot(null_dist, aes(x = stat, y = ..density..)) +
+  geom_histogram(bins = 23) +
+  geom_line(data = dat, mapping = aes(x, y), color = "deeppink", size = 2) +
+  xlim(.16, .36) + ylim(0, 17)
+```
+
+--
+
+How do I know what probability function is a good approximation?
+
+---
+
+### Approximating Sampling Distributions
+
+--
+
+**Central Limit Theorem:** For random samples and a large sample size $(n)$, the sampling distribution of the many sample statistics is approximately normal.
+
+--
+
+**Example**: Trees in Mount Tabor
+
+
+```{r, echo = FALSE, fig.width = 9, fig.height = 5 }
+library(pdxTrees)
+trees_mt_tabor <- get_pdxTrees_parks(park = "Mt Tabor Park")
+# Add column for Douglas-Fir
+trees_mt_tabor <- trees_mt_tabor %>%
+  mutate(Douglas_Fir = case_when(
+    Common_Name == "Douglas-Fir"  ~ "yes",
+    Common_Name != "Douglas-Fir"  ~ "no"))
+
+# Population distribution
+p1 <- ggplot(data = trees_mt_tabor, mapping = aes(x = Douglas_Fir)) +
+  geom_bar(aes(y = ..prop.., group = 1), stat = "count")  +
+  labs(title = "The Population Distribution")
+
+# Construct the sampling distribution
+samp_dist <- trees_mt_tabor %>% 
+  rep_sample_n(size = 50, reps = 1000) %>%
+  group_by(replicate) %>%
+  summarize(statistic = mean(Douglas_Fir == "yes"))
+
+# Theoretical Distribution
+dat <- data.frame(x = seq(35, 90, length.out = 1000)/100) %>%
+  mutate(y = dnorm(x, mean = .615, sd = sqrt(.615*(1 - .615)/50)))
+
+# Graph the sampling distribution
+p2 <- ggplot(data = samp_dist) + geom_blank() + theme_minimal()
+
+library(cowplot)
+plot_grid(p1, p2)
+```
+
+
+---
+
+### Approximating Sampling Distributions
+
+
+
+**Central Limit Theorem (CLT):** For random samples and a large sample size $(n)$, the sampling distribution of the many sample statistics is approximately normal.
+
+
+
+**Example**: Trees in Mount Tabor
+
+
+```{r, echo = FALSE, fig.width = 9, fig.height = 5 }
+library(pdxTrees)
+trees_mt_tabor <- get_pdxTrees_parks(park = "Mt Tabor Park")
+# Add column for Douglas-Fir
+trees_mt_tabor <- trees_mt_tabor %>%
+  mutate(Douglas_Fir = case_when(
+    Common_Name == "Douglas-Fir"  ~ "yes",
+    Common_Name != "Douglas-Fir"  ~ "no"))
+
+# Population distribution
+p1 <- ggplot(data = trees_mt_tabor, mapping = aes(x = Douglas_Fir)) +
+  geom_bar(aes(y = ..prop.., group = 1), stat = "count")  +
+  labs(title = "The Population Distribution")
+
+# Construct the sampling distribution
+samp_dist <- trees_mt_tabor %>% 
+  rep_sample_n(size = 50, reps = 1000) %>%
+  group_by(replicate) %>%
+  summarize(statistic = mean(Douglas_Fir == "yes"))
+
+# Theoretical Distribution
+dat <- data.frame(x = seq(35, 90, length.out = 1000)/100) %>%
+  mutate(y = dnorm(x, mean = .615, sd = sqrt(.615*(1 - .615)/50)))
+
+# Graph the sampling distribution
+p2 <- ggplot(data = samp_dist, mapping = , aes(x = statistic, y = ..density..)) +
+  geom_histogram(bins = 15) +
+  geom_line(data = dat, mapping = aes(x, y), color = "deeppink", size = 2) + labs(title = "The Sampling Distribution")
+
+library(cowplot)
+plot_grid(p1, p2)
+```
+
+--
+
+But **which** Normal?  (What is the value of $\mu$ and $\sigma$?)
+
+
+---
+
+### Approximating Sampling Distributions
+
+**Question**: But **which** normal?  (What is the value of $\mu$ and $\sigma$?)
+
+
+--
+
+* The sampling distribution of a statistic is always centered around: 
+
+--
+
+* The CLT also provides formula estimates of the standard error.
+    + The formula varies based on the statistic.
+
+---
+
+### Approximating the Sampling Distribution of a Sample Proportion
+
+CLT says: For large $n$ (At least 10 successes and 10 failures),
+
+--
+
+$$
+\hat{p} \sim N \left(p, \sqrt{\frac{p(1-p)}{n}} \right)
+$$
+
+--
+
+**Example**: Trees in Mount Tabor
+
+--
+
+* Parameter: $p$ = proportion of Douglas Fir = 0.615
+
+
+--
+
+* Statistic: $\hat{p}$ = proportion of Douglas Fir in a sample of 50 trees
+
+--
+
+
+$$
+\hat{p} \sim N \left(0.615, \sqrt{\frac{0.615(1-0.615)}{50}} \right)
+$$
+
+
+--
+
+**NOTE**: Can plug in the true parameter here because we had data on the whole population.
+
+---
+
+### Approximating the Sampling Distribution of a Sample Proportion
+
+**Question**: What do we do when we don't have access to the whole population?
+
+--
+
+* Have:
+
+$$
+\hat{p} \sim N \left(p, \sqrt{\frac{p(1-p)}{n}} \right)
+$$
+
+--
+
+**Answer**: We will have to estimate the SE.
+
+---
+
+### Side-bar #1: Z-score Test Statistics
+
+* All of our test statistics so far have been sample statistics.
+
+--
+
+* Another commonly used test statistic takes the form of a **z-score**.
+
+$$
+\mbox{Z-score} = \frac{X - \mu}{\sigma}
+$$
+
+--
+
+* Z-score measures how many standard deviations the sample statistic is away from its mean.
+
+--
+
+* Allows us to quickly (but roughly) classify results as unusual or not.
+    + $|$ Z-score $|$ > 2 &rarr; results are unusual/p-value will be smallish
+
+--
+
+* Commonly used because if $X \sim N(\mu, \sigma)$, then  
+
+$$
+\mbox{Z-score} = \frac{X - \mu}{\sigma} \sim N(0, 1)
+$$
+    
+---
+
+### Z-score Test Statistic in Action
+
+Let's consider conducting a hypothesis test for a single proportion: $p$
+--
+
+Need:
+
+* Hypotheses
+
+--
+
+* Test statistic and its null distribution
+
+--
+
+* P-value 
+
+
+
+---
+
+### Z-score Test Statistic in Action
+
+Let's consider conducting a hypothesis test for a single proportion: $p$
+
+--
+
+$H_o: p = p_o$ where $p_o$ = null value
+
+--
+
+$H_a: p > p_o$
+
+--
+
+By the CLT, under $H_o$:
+
+
+$$
+\hat{p} \sim N \left(p_o, \sqrt{\frac{p_o(1-p_o)}{n}} \right)
+$$
+--
+
+* Z-score test statistic:
+
+$$
+Z = \frac{\hat{p} - p_o}{\sqrt{\frac{p_o(1-p_o)}{n}}}
+$$
+--
+
+* Use $N(0, 1)$ to find the p-value
+
+
+---
+
+### Z-score Test Statistic in Action
+
+Let's consider conducting a hypothesis test for a single proportion: $p$
+
+**Example**: Bern and Honorton's (1994) extrasensory perception (ESP) studies
+
+```{r}
+# Use probability model to approximate null distribution
+prop.test(x = 106, n = 329, p = 0.25,
+          alternative = "greater")
+```
+
+---
+
+### Side-bar #2: Formula-Based CIs
+
+Suppose statistic $\sim N(\mu = \mbox{parameter}, \sigma = SE)$.
+
+--
+
+#### 95% CI for parameter: 
+
+$$
+\mbox{statistic} \pm 2 SE
+$$
+
+--
+
+Can generalize this formula!  
+
+--
+
+#### P% CI for parameter:
+
+$$
+\mbox{statistic} \pm z^* SE
+$$
+---
+
+
+###  Formula-Based CIs in Action
+
+Let's consider constructing a confidence interval for a single proportion: $p$
+
+--
+
+By the CLT,
+
+
+$$
+\hat{p} \sim N \left(p, \sqrt{\frac{p(1-p)}{n}} \right)
+$$
+--
+
+#### P% CI for parameter:
+
+\begin{align*}
+\mbox{statistic} \pm z^* SE
+\end{align*}
+
+---
+
+
+###  Formula-Based CIs in Action
+
+Let's consider constructing a confidence interval for a single proportion: $p$
+
+**Example**: Bern and Honorton's (1994) extrasensory perception (ESP) studies
+
+
+```{r}
+# Use probability model to approximate null distribution
+prop.test(x = 106, n = 329, p = 0.25,
+          alternative = "two.sided",
+          conf.level = 0.95)
+```
+
+---
+
+### Formula-Based CIs
+
+#### P% CI for parameter:
+
+$$
+\mbox{statistic} \pm z^* SE
+$$
+
+Notes:
+
+--
+
+* Didn't construct the bootstrap distribution.
+
+--
+
+* Need to check that $n$ is large and that the sample is random/representative.
+
+--
+
+* Interpretation of the CI doesn't change.
+
+--
+
+* For some parameters, the critical value  comes from a $t$ distribution.
+
+
+
+--
+
+* Now we have a formula for the Margin of Error.
+    + That will provide useful for sample size calculations.
+    
+---
+
+### Statistical Inference using Probability Models
+
+We went through theory-based inference for $p$. 
+
+--
+
+There are similar results for other parameters.  But the distribution changes!
+
+--
+
+Can find some common test statistics and CIs [on the course website](https://reed-statistics.github.io/math141f20/inference_procedures.html)
+
+
+
+
+
