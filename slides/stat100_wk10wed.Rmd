@@ -1,5 +1,5 @@
 ---
-title: Probability Concepts
+title: CLT and Theory-Based Inference
 output:
   xaringan::moon_reader:
     css: ["more.css", "xaringan-themer.css", "hygge"]
@@ -44,9 +44,12 @@ class: middle, center, inverse
 
 
 
-## .whitish[Probability Concepts]
+## .whitish[Central Limit Theorem]
 
-<br>
+## .whitish[and]
+
+## .whitish[Theory-Based Inference]
+
 
 <br>
 
@@ -171,15 +174,16 @@ b. The role of stress from external sources, like racial discrimination
 --
 
 c. Spatial resource deficits
-    + Concentrations of respiratory hazards
-    + Uneven distribution of medical care facilities
+
++ Concentrations of respiratory hazards
++ Uneven distribution of medical care facilities
 
 
 ---
 
 ### Recap
 
-* Statistics ARE random variables!
+* Sample statistics ARE random variables!
 
 --
 
@@ -191,7 +195,9 @@ c. Spatial resource deficits
 
 * Null Distribution and the probability function of a N(0.25, 0.024):
 
-```{r, echo = FALSE}
+.pull-left[
+
+```{r, echo = FALSE, fig.asp = 0.5}
 library(infer)
 library(tidyverse)
 # Construct data frame of sample results
@@ -215,9 +221,15 @@ ggplot(null_dist, aes(x = stat, y = ..density..)) +
   xlim(.16, .36) + ylim(0, 17)
 ```
 
+]
+
 --
 
-How do I know what probability function is a good approximation?
+.pull-right[
+
+How do I know **which** probability function is a good approximation?
+
+]
 
 ---
 
@@ -232,7 +244,7 @@ How do I know what probability function is a good approximation?
 **Example**: Trees in Mount Tabor
 
 
-```{r, echo = FALSE, fig.width = 9, fig.height = 5 }
+```{r, echo = FALSE, fig.asp = 0.55 }
 library(pdxTrees)
 trees_mt_tabor <- get_pdxTrees_parks(park = "Mt Tabor Park")
 # Add column for Douglas-Fir
@@ -244,7 +256,7 @@ trees_mt_tabor <- trees_mt_tabor %>%
 # Population distribution
 p1 <- ggplot(data = trees_mt_tabor, mapping = aes(x = Douglas_Fir)) +
   geom_bar(aes(y = ..prop.., group = 1), stat = "count")  +
-  labs(title = "The Population Distribution")
+  labs(title = "The Population\n Distribution")
 
 # Construct the sampling distribution
 samp_dist <- trees_mt_tabor %>% 
@@ -277,7 +289,7 @@ plot_grid(p1, p2)
 **Example**: Trees in Mount Tabor
 
 
-```{r, echo = FALSE, fig.width = 9, fig.height = 5 }
+```{r, echo = FALSE, fig.asp = 0.55 }
 library(pdxTrees)
 trees_mt_tabor <- get_pdxTrees_parks(park = "Mt Tabor Park")
 # Add column for Douglas-Fir
@@ -289,7 +301,7 @@ trees_mt_tabor <- trees_mt_tabor %>%
 # Population distribution
 p1 <- ggplot(data = trees_mt_tabor, mapping = aes(x = Douglas_Fir)) +
   geom_bar(aes(y = ..prop.., group = 1), stat = "count")  +
-  labs(title = "The Population Distribution")
+  labs(title = "The Population\n Distribution")
 
 # Construct the sampling distribution
 samp_dist <- trees_mt_tabor %>% 
@@ -304,7 +316,7 @@ dat <- data.frame(x = seq(35, 90, length.out = 1000)/100) %>%
 # Graph the sampling distribution
 p2 <- ggplot(data = samp_dist, mapping = , aes(x = statistic, y = ..density..)) +
   geom_histogram(bins = 15) +
-  geom_line(data = dat, mapping = aes(x, y), color = "deeppink", size = 2) + labs(title = "The Sampling Distribution")
+  geom_line(data = dat, mapping = aes(x, y), color = "deeppink", size = 2) + labs(title = "The Sampling\n Distribution")
 
 library(cowplot)
 plot_grid(p1, p2)
@@ -577,14 +589,14 @@ Notes:
 
 --
 
-* For some parameters, the critical value  comes from a $t$ distribution.
+* For some parameters, the critical value comes from a $t$ distribution.
 
 
 
 --
 
 * Now we have a formula for the Margin of Error.
-    + That will provide useful for sample size calculations.
+    + That will prove useful for sample size calculations.
     
 ---
 
@@ -598,7 +610,7 @@ There are similar results for other parameters.  But the distribution changes!
 
 --
 
-Can find some common test statistics and CIs [on the course website](https://reed-statistics.github.io/math141f20/inference_procedures.html)
+Can find some common test statistics and CIs [on the course website](https://mcconvil.github.io/stat100s22/inference_procedures.html)
 
 
 
