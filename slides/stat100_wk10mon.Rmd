@@ -62,6 +62,7 @@ class: middle, center, inverse
 
 ### Announcements
 
+* Yi's Office Hours are moved to Friday 5:30 - 7:30pm.
 * P-Set 8 is due on Wednesday.
 
 

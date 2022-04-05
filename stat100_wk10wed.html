@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>CLT and Theory-Based Inference</title>
+    <meta charset="utf-8" />
+    <script src="libsSlides/header-attrs-2.11/header-attrs.js"></script>
+    <link href="libsSlides/remark-css-0.0.1/hygge.css" rel="stylesheet" />
+    <script src="libsSlides/fabric-4.3.1/fabric.min.js"></script>
+    <link href="libsSlides/xaringanExtra-scribble-0.0.1/scribble.css" rel="stylesheet" />
+    <script src="libsSlides/xaringanExtra-scribble-0.0.1/scribble.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', function() { window.xeScribble = new Scribble({"pen_color":["#FF0000"],"pen_size":3,"eraser_size":30,"palette":[]}) })</script>
+    <link rel="stylesheet" href="more.css" type="text/css" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+
+
+background-image: url("img/DAW.png")
+background-position: left
+background-size: 50%
+class: middle, center, inverse
+
+
+.pull-right[
+
+
+
+## .whitish[Central Limit Theorem]
+
+## .whitish[and]
+
+## .whitish[Theory-Based Inference]
+
+
+&lt;br&gt;
+
+### .whitish[Kelly McConville]
+
+#### .yellow[ Stat 100 | Week 10 | Spring 2022] 
+
+]
+
+
+
+---
+
+### Announcements
+
+* Project Assignment 3 posted to the shared folder.
+    + Conduct a hypothesis test and construct a confidence interval related to your research questions from Project Assignment 1.
+    + Due Friday, April 22nd at 5pm
+
+****************************
+
+--
+
+### Goals for Today
+
+.pull-left[
+
+
+* Discuss the **Central Limit Theorem**
+
+* Approximate sampling distributions
+
+
+
+] 
+
+
+
+.pull-right[
+
+* Learn about a new group of test statistics based on **z-scores** 
+
+* Cover formula-based CIs
+
+
+]
+
+---
+
+### Ethics
+
+
+* Let's return once again to the ASA's ["Ethical Guidelines for Statistical Practice"](https://www.amstat.org/ASA/Your-Career/Ethical-Guidelines-for-Statistical-Practice.aspx).
+
+--
+
+* Come back to the sub-header "Responsibilities to Research Subjects"
+
+--
+
+* Reflect on data showing racial disparities in rates of COVID-19 cases and deaths
+    + Many reports showing higher impacts for Black and Latino individuals
+
+---
+
+class: inverse, center, middle
+
+##  Responsibilities to Research Subjects
+
+&gt; "The ethical statistician protects and respects the rights and interests of human and animal subjects at all stages of their involvement in a project. This includes respondents to the census or to surveys, those whose data are contained in administrative records, and subjects of physically or psychologically invasive research."
+
+
+---
+
+##  Responsibilities to Research Subjects
+
+
+&gt; "Recognizes any statistical descriptions of groups may carry risks of stereotypes and stigmatization. Statisticians should contemplate, and be sensitive to, the manner in which information is framed to avoid disproportionate harm to vulnerable groups."
+
+--
+
+### Example: Racial disparities in rates of COVID-19
+
+* Many media outlets noted higher disparities for racial minority groups.
+
+--
+
+* There has been a call for data to be released with more demographic detail.
+
+--
+
+&gt; "It is equally important, however, that in documenting Covid-19 racial disparities, we contextualize such data with adequate analysis. Disparity figures without explanatory context can perpetuate harmful myths and misunderstandings that actually undermine the goal of eliminating health inequities." -- [Merlin Chowkwanyun and Adolph Reed](https://www.nejm.org/doi/full/10.1056/NEJMp2012910)
+
+---
+
+### Example: Racial disparities in rates of COVID-19
+
+Chowkwanyun and Reed point out:
+
+1. Race is a social construct but Lundy Braun, Professor of Pathology and Laboratory Medicine as well as Africana Studies has found medical discourse that continues to assume biological differences.
+
+--
+
+2. "Lone disparity figures can give rise to explanations grounded in racial stereotypes about behavioral patterns."
+
+--
+
+3. There are dangers, such as repressive forms of surveillance, with providing data on a fine-grain geographic level.
+
+--
+
+4. The erroneous perception that certain social problems are "racial" and so only concern certain groups has been used to justify budget cuts.  
+
+Need to provide the data WITH the following context:
+
+a. Socioeconomic status data
+
+--
+
+b. The role of stress from external sources, like racial discrimination
+
+--
+
+c. Spatial resource deficits
+
++ Concentrations of respiratory hazards
++ Uneven distribution of medical care facilities
+
+---
+
+class: inverse, middle, center
+
+
+## Statistical inference topics are not very intuitive.
+
+--
+
+### Keep asking good questions in lecture and section and office hours and...
+
+
+---
+
+### Recap
+
+* Sample statistics ARE random variables!
+
+--
+
+* We can often **approximate** the probability function (i.e. sampling distribution) of a statistic with the probability function of a named random variable (i.e., Normal, t, ...).
+
+--
+
+* `\(\hat{p}\)` = sample proportion of correct receiver guesses out of 329 trials
+
+* Null Distribution and the probability function of a N(0.25, 0.024):
+
+.pull-left[
+
+&lt;img src="stat100_wk10wed_files/figure-html/unnamed-chunk-1-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+]
+
+--
+
+.pull-right[
+
+How do I know **which** probability function is a good approximation?
+
+]
+
+---
+
+### Approximating Sampling Distributions
+
+--
+
+
+**Central Limit Theorem (CLT):** For random samples and a large sample size `\((n)\)`, the sampling distribution of many sample statistics is approximately normal.
+
+--
+
+**Example**: Trees in Mount Tabor
+
+
+&lt;img src="stat100_wk10wed_files/figure-html/unnamed-chunk-2-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+### Approximating Sampling Distributions
+
+
+
+**Central Limit Theorem (CLT):** For random samples and a large sample size `\((n)\)`, the sampling distribution of many sample statistics is approximately normal.
+
+
+
+**Example**: Trees in Mount Tabor
+
+
+&lt;img src="stat100_wk10wed_files/figure-html/unnamed-chunk-3-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+--
+
+But **which** Normal?  (What is the value of `\(\mu\)` and `\(\sigma\)`?)
+
+
+---
+
+### Approximating Sampling Distributions
+
+**Question**: But **which** normal?  (What is the value of `\(\mu\)` and `\(\sigma\)`?)
+
+
+--
+
+* The sampling distribution of a statistic is always centered around: 
+
+--
+
+* The CLT also provides formula estimates of the standard error.
+    + The formula varies based on the statistic.
+
+---
+
+### Approximating the Sampling Distribution of a Sample Proportion
+
+CLT says: For large `\(n\)` (At least 10 successes and 10 failures),
+
+--
+
+$$
+\hat{p} \sim N \left(p, \sqrt{\frac{p(1-p)}{n}} \right)
+$$
+
+--
+
+**Example**: Trees in Mount Tabor
+
+--
+
+* Parameter: `\(p\)` = proportion of Douglas Fir = 0.615
+
+
+--
+
+* Statistic: `\(\hat{p}\)` = proportion of Douglas Fir in a sample of 50 trees
+
+--
+
+
+$$
+\hat{p} \sim N \left(0.615, \sqrt{\frac{0.615(1-0.615)}{50}} \right)
+$$
+
+
+--
+
+**NOTE**: Can plug in the true parameter here because we had data on the whole population.
+
+---
+
+### Approximating the Sampling Distribution of a Sample Proportion
+
+**Question**: What do we do when we don't have access to the whole population?
+
+--
+
+* Have:
+
+$$
+\hat{p} \sim N \left(p, \sqrt{\frac{p(1-p)}{n}} \right)
+$$
+
+--
+
+**Answer**: We will have to estimate the SE.
+
+---
+
+### Side-bar #1: Z-score Test Statistics
+
+* All of our test statistics so far have been sample statistics.
+
+--
+
+* Another commonly used test statistic takes the form of a **z-score**.
+
+$$
+\mbox{Z-score} = \frac{X - \mu}{\sigma}
+$$
+
+--
+
+* Z-score measures how many **standard deviations** the sample statistic is away from its **mean**.
+
+--
+
+* Allows us to quickly (but roughly) classify results as unusual or not.
+    + `\(|\)` Z-score `\(|\)` &gt; 2 &amp;rarr; results are unusual/p-value will be smallish
+
+--
+
+* Commonly used because if `\(X \sim N(\mu, \sigma)\)`, then  
+
+$$
+\mbox{Z-score} = \frac{X - \mu}{\sigma} \sim N(0, 1)
+$$
+    
+---
+
+### Z-score Test Statistic in Action
+
+Let's consider conducting a hypothesis test for a single proportion: `\(p\)`
+--
+
+Need:
+
+* Hypotheses
+
+--
+
+* Test statistic and its null distribution
+
+--
+
+* P-value 
+
+
+
+---
+
+### Z-score Test Statistic in Action
+
+Let's consider conducting a hypothesis test for a single proportion: `\(p\)`
+
+--
+
+`\(H_o: p = p_o\)` where `\(p_o\)` = null value
+
+--
+
+`\(H_a: p &gt; p_o\)`
+
+--
+
+By the CLT, under `\(H_o\)`:
+
+
+$$
+\hat{p} \sim N \left(p_o, \sqrt{\frac{p_o(1-p_o)}{n}} \right)
+$$
+--
+
+* Z-score test statistic:
+
+$$
+Z = \frac{\hat{p} - p_o}{\sqrt{\frac{p_o(1-p_o)}{n}}}
+$$
+--
+
+* Use `\(N(0, 1)\)` to find the p-value
+
+
+---
+
+
+### Z-score Test Statistic in Action
+
+Let's consider conducting a hypothesis test for a single proportion: `\(p\)`
+
+**Example**: Bern and Honorton's (1994) extrasensory perception (ESP) studies
+
+
+
+```r
+# Construct data frame of sample results
+esp &lt;- data.frame(guess = c(rep("correct", 106),
+                            rep("incorrect", 329 - 106)))
+```
+
+
+---
+
+
+### Z-score Test Statistic in Action
+
+Let's consider conducting a hypothesis test for a single proportion: `\(p\)`
+
+**Example**: Bern and Honorton's (1994) extrasensory perception (ESP) studies
+
+.pull-left[
+
+
+```r
+library(infer)
+# Compute observed test statistic
+test_stat &lt;- esp %&gt;%
+  specify(response = guess,
+          success = "correct") %&gt;%
+  hypothesize(null = "point", p = 0.25) %&gt;%  
+  calculate(stat ="z")
+test_stat
+```
+
+```
+## Response: guess (factor)
+## Null Hypothesis: point
+## # A tibble: 1 × 1
+##    stat
+##   &lt;dbl&gt;
+## 1  3.02
+```
+
+]
+
+--
+
+.pull-right[
+
+
+```r
+# Use N(0,1) to find p-value
+pnorm(q = test_stat$stat, mean = 0, sd = 1,
+      lower.tail = FALSE)
+```
+
+```
+## [1] 0.001247763
+```
+
+]
+
+---
+
+
+### Z-score Test Statistic in Action
+
+Let's consider conducting a hypothesis test for a single proportion: `\(p\)`
+
+**Example**: Bern and Honorton's (1994) extrasensory perception (ESP) studies
+
+
+```r
+# Use probability model to approximate null distribution
+prop.test(x = 106, n = 329, p = 0.25,
+          alternative = "greater")
+```
+
+```
+## 
+## 	1-sample proportions test with continuity correction
+## 
+## data:  106 out of 329, null probability 0.25
+## X-squared = 8.7629, df = 1, p-value = 0.001537
+## alternative hypothesis: true p is greater than 0.25
+## 95 percent confidence interval:
+##  0.2799539 1.0000000
+## sample estimates:
+##         p 
+## 0.3221884
+```
+
+---
+
+### Side-bar #2: Formula-Based CIs
+
+Suppose statistic `\(\sim N(\mu = \mbox{parameter}, \sigma = SE)\)`.
+
+--
+
+#### 95% CI for parameter: 
+
+$$
+\mbox{statistic} \pm 2 SE
+$$
+
+--
+
+Can generalize this formula!  
+
+--
+
+#### P% CI for parameter:
+
+$$
+\mbox{statistic} \pm z^* SE
+$$
+---
+
+
+###  Formula-Based CIs in Action
+
+Let's consider constructing a confidence interval for a single proportion: `\(p\)`
+
+--
+
+By the CLT,
+
+
+$$
+\hat{p} \sim N \left(p, \sqrt{\frac{p(1-p)}{n}} \right)
+$$
+--
+
+#### P% CI for parameter:
+
+`\begin{align*}
+\mbox{statistic} \pm z^* SE
+\end{align*}`
+
+---
+
+
+###  Formula-Based CIs in Action
+
+Let's consider constructing a confidence interval for a single proportion: `\(p\)`
+
+**Example**: Bern and Honorton's (1994) extrasensory perception (ESP) studies
+
+
+
+```r
+# Use probability model to approximate null distribution
+prop.test(x = 106, n = 329, p = 0.25,
+          alternative = "two.sided",
+          conf.level = 0.95)
+```
+
+```
+## 
+## 	1-sample proportions test with continuity correction
+## 
+## data:  106 out of 329, null probability 0.25
+## X-squared = 8.7629, df = 1, p-value = 0.003074
+## alternative hypothesis: true p is not equal to 0.25
+## 95 percent confidence interval:
+##  0.2725541 0.3760499
+## sample estimates:
+##         p 
+## 0.3221884
+```
+
+---
+
+### Formula-Based CIs
+
+#### P% CI for parameter:
+
+$$
+\mbox{statistic} \pm z^* SE
+$$
+
+Notes:
+
+--
+
+* Didn't construct the bootstrap distribution.
+
+--
+
+* Need to check that `\(n\)` is large and that the sample is random/representative.
+
+--
+
+* Interpretation of the CI doesn't change.
+
+--
+
+* For some parameters, the critical value comes from a `\(t\)` distribution.
+
+
+
+--
+
+* Now we have a formula for the Margin of Error.
+    + That will prove useful for **sample size calculations**.
+
+
+
+---
+
+background-image: url("img/hyp_testing_diagram.png")
+background-position: contain
+background-size: 80%
+
+### Statistical Inference Zoom Out -- Testing
+
+
+---
+
+background-image: url("img/ci_diagram.png")
+background-position: contain
+background-size: 70%
+
+### Statistical Inference Zoom Out -- Estimation
+
+
+---
+
+class: inverse, middle, center
+
+## Now let's explore how to do inference for a single mean.
+
+---
+
+### Inference for a Single Mean
+
+**Example:** *Are lakes in Florida more acidic or alkaline?* The pH of a liquid is the measure of its acidity or alkalinity where pure water has a pH of 7, a pH greater than 7 is alkaline and a pH less than 7 is acidic. The following dataset contains observations on 53 lakes in Florida.  Use these data to answer our question.
+
+
+```r
+library(tidyverse)
+FloridaLakes &lt;- read_csv("https://www.lock5stat.com/datasets1e/FloridaLakes.csv")
+```
+
+* **Cases**:
+
+&lt;br&gt;
+
+* **Variable of interest**:
+
+&lt;br&gt;
+
+* **Parameter of interest:**
+
+&lt;br&gt;
+
+* **Hypotheses:**
+
+&lt;br&gt;
+
+---
+
+### Inference for a Single Mean
+
+Let's consider conducting a hypothesis test for a single mean: `\(\mu\)`
+--
+
+Need:
+
+* Hypotheses
+
+--
+
+* Test statistic and its null distribution
+
+--
+
+* P-value 
+
+
+
+---
+
+### Inference for a Single Mean
+
+Let's consider conducting a hypothesis test for a single mean: `\(\mu\)`
+
+--
+
+`\(H_o: \mu = \mu_o\)` where `\(\mu_o\)` = null value
+
+--
+
+`\(H_a: \mu \neq \mu_o\)`
+
+--
+
+By the CLT, under `\(H_o\)`:
+
+
+$$
+\bar{x} \sim N \left(\mu_o, \frac{\sigma}{\sqrt{n}} \right)
+$$
+--
+
+* Z-score test statistic:
+
+$$
+Z = \frac{\bar{x} - \mu_o}{\frac{\sigma}{\sqrt{n}}}
+$$
+--
+
+* **Problem:** Don't know `\(\sigma\)`: the population standard deviation of our response variable!
+
+---
+
+### Inference for a Single Mean
+
+Let's consider conducting a hypothesis test for a single mean: `\(\mu\)`
+
+
+
+`\(H_o: \mu = \mu_o\)` where `\(\mu_o\)` = null value
+
+
+
+`\(H_a: \mu \neq \mu_o\)`
+
+
+
+By the CLT, under `\(H_o\)`:
+
+
+$$
+\bar{x} \sim N \left(\mu_o, \frac{\sigma}{\sqrt{n}} \right)
+$$
+
+
+* Z-score test statistic:
+
+$$
+t = \frac{\bar{x} - \mu_o}{\frac{s}{\sqrt{n}}}
+$$
+
+
+* **Problem:** Don't know `\(\sigma\)`: the population standard deviation of our response variable!
+
+* **Solution:** Plug in `\(s\)`: the sample standard deviation of our response variable!
+
+* Use `\(t(\mbox{df} = n - 1)\)` to find the p-value
+
+
+
+
+
+---
+
+### Inference for a Single Mean
+
+
+
+```r
+library(infer)
+
+#Compute obs stat
+t_obs &lt;- FloridaLakes %&gt;%
+  specify(response = pH) %&gt;%
+  hypothesize(null = "point", mu = 7) %&gt;%  
+  calculate(stat = "t")
+t_obs
+```
+
+```
+## Response: pH (numeric)
+## Null Hypothesis: point
+## # A tibble: 1 × 1
+##    stat
+##   &lt;dbl&gt;
+## 1 -2.31
+```
+
+--
+
+
+```r
+# Generate null distribution
+null_dist &lt;- FloridaLakes %&gt;%
+  specify(response = pH) %&gt;%
+  hypothesize(null = "point", mu = 7) %&gt;%
+  generate(reps = 1000, type = "bootstrap") %&gt;%
+  calculate(stat = "t")
+```
+
+
+---
+
+
+```r
+# Graph the null distribution
+null_dist %&gt;%
+  visualize(bins = 30) +
+  geom_vline(xintercept = t_obs$stat, color = "deeppink",
+             size = 2) +
+  geom_vline(xintercept = abs(t_obs$stat), color = "deeppink", 
+             size = 2)
+```
+
+&lt;img src="stat100_wk10wed_files/figure-html/unnamed-chunk-12-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+### Inference for a Single Mean
+
+What probability function is a good approximation to the null distribution?
+
+
+&lt;img src="stat100_wk10wed_files/figure-html/unnamed-chunk-13-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Inference for a Single Mean
+
+What probability function is a good approximation to the null distribution?
+
+
+&lt;img src="stat100_wk10wed_files/figure-html/unnamed-chunk-14-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+.pull-left[
+
+#### P-value using the generated null distribution:
+
+
+```r
+pvalue &lt;- null_dist %&gt;%
+  get_p_value(obs_stat = t_obs,
+              direction = "both")
+pvalue
+```
+
+```
+## # A tibble: 1 × 1
+##   p_value
+##     &lt;dbl&gt;
+## 1   0.016
+```
+
+]
+
+--
+
+.pull-right[
+
+#### P-value using an approximate probability function:
+
+
+```r
+# Using t distribution
+pt(q = t_obs$stat, df = 52)*2
+```
+
+```
+##          t 
+## 0.02468707
+```
+
+]
+
+--
+
+#### Do-it-all function:
+
+
+
+```r
+t.test(FloridaLakes$pH, mu = 7, conf.level = .90, alternative = "two.sided")
+```
+
+```
+## 
+## 	One Sample t-test
+## 
+## data:  FloridaLakes$pH
+## t = -2.3134, df = 52, p-value = 0.02469
+## alternative hypothesis: true mean is not equal to 7
+## 90 percent confidence interval:
+##  6.294176 6.886956
+## sample estimates:
+## mean of x 
+##  6.590566
+```
+
+
+
+---
+
+
+### Statistical Inference using Probability Models
+
+* We went through theory-based inference for `\(p\)` and for `\(\mu\)`. 
+
+--
+
+* There are similar results for other parameters.  But the specific named RV and its probability function change!
+
+--
+
+* Can find some common test statistics and confidence interval formulae [on the course website](https://mcconvil.github.io/stat100s22/inference_procedures.html).
+    + In this week's p-set, will explore inference for a difference in proportions.
+
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"ratio": "16:9",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

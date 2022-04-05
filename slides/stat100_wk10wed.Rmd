@@ -65,8 +65,8 @@ class: middle, center, inverse
 
 ### Announcements
 
-* Project Assignment 3
-    + Conduct a hypothesis test and construct a confidence interval related to your research questions.
+* Project Assignment 3 posted to the shared folder.
+    + Conduct a hypothesis test and construct a confidence interval related to your research questions from Project Assignment 1.
     + Due Friday, April 22nd at 5pm
 
 ****************************
@@ -178,6 +178,17 @@ c. Spatial resource deficits
 + Concentrations of respiratory hazards
 + Uneven distribution of medical care facilities
 
+---
+
+class: inverse, middle, center
+
+
+## Statistical inference topics are not very intuitive.
+
+--
+
+### Keep asking good questions in lecture and section and office hours and...
+
 
 ---
 
@@ -187,7 +198,7 @@ c. Spatial resource deficits
 
 --
 
-* We can often approximate the probability function of a statistic with the probability function of a named random variable (i.e., Normal, t, ...).
+* We can often **approximate** the probability function (i.e. sampling distribution) of a statistic with the probability function of a named random variable (i.e., Normal, t, ...).
 
 --
 
@@ -209,7 +220,7 @@ set.seed(4111)
 null_dist <- esp %>%
   specify(response = guess, success = "correct") %>%
   hypothesize(null = "point", p = 0.25) %>%
-  generate(reps = 1000, type = "simulate") %>%
+  generate(reps = 1000, type = "draw") %>%
   calculate(stat ="prop")
 
 # Graph null distribution with test statistic
@@ -237,7 +248,8 @@ How do I know **which** probability function is a good approximation?
 
 --
 
-**Central Limit Theorem:** For random samples and a large sample size $(n)$, the sampling distribution of the many sample statistics is approximately normal.
+
+**Central Limit Theorem (CLT):** For random samples and a large sample size $(n)$, the sampling distribution of many sample statistics is approximately normal.
 
 --
 
@@ -282,7 +294,7 @@ plot_grid(p1, p2)
 
 
 
-**Central Limit Theorem (CLT):** For random samples and a large sample size $(n)$, the sampling distribution of the many sample statistics is approximately normal.
+**Central Limit Theorem (CLT):** For random samples and a large sample size $(n)$, the sampling distribution of many sample statistics is approximately normal.
 
 
 
@@ -414,7 +426,7 @@ $$
 
 --
 
-* Z-score measures how many standard deviations the sample statistic is away from its mean.
+* Z-score measures how many **standard deviations** the sample statistic is away from its **mean**.
 
 --
 
@@ -485,6 +497,60 @@ $$
 
 
 ---
+
+
+### Z-score Test Statistic in Action
+
+Let's consider conducting a hypothesis test for a single proportion: $p$
+
+**Example**: Bern and Honorton's (1994) extrasensory perception (ESP) studies
+
+
+```{r}
+# Construct data frame of sample results
+esp <- data.frame(guess = c(rep("correct", 106),
+                            rep("incorrect", 329 - 106)))
+```
+
+
+---
+
+
+### Z-score Test Statistic in Action
+
+Let's consider conducting a hypothesis test for a single proportion: $p$
+
+**Example**: Bern and Honorton's (1994) extrasensory perception (ESP) studies
+
+.pull-left[
+
+```{r}
+library(infer)
+# Compute observed test statistic
+test_stat <- esp %>%
+  specify(response = guess,
+          success = "correct") %>%
+  hypothesize(null = "point", p = 0.25) %>%  
+  calculate(stat ="z")
+test_stat
+```
+
+]
+
+--
+
+.pull-right[
+
+```{r}
+# Use N(0,1) to find p-value
+pnorm(q = test_stat$stat, mean = 0, sd = 1,
+      lower.tail = FALSE)
+```
+
+]
+
+---
+
 
 ### Z-score Test Statistic in Action
 
@@ -596,21 +662,288 @@ Notes:
 --
 
 * Now we have a formula for the Margin of Error.
-    + That will prove useful for sample size calculations.
-    
+    + That will prove useful for **sample size calculations**.
+
+
+
 ---
+
+background-image: url("img/hyp_testing_diagram.png")
+background-position: contain
+background-size: 80%
+
+### Statistical Inference Zoom Out -- Testing
+
+
+---
+
+background-image: url("img/ci_diagram.png")
+background-position: contain
+background-size: 70%
+
+### Statistical Inference Zoom Out -- Estimation
+
+
+---
+
+class: inverse, middle, center
+
+## Now let's explore how to do inference for a single mean.
+
+---
+
+### Inference for a Single Mean
+
+**Example:** *Are lakes in Florida more acidic or alkaline?* The pH of a liquid is the measure of its acidity or alkalinity where pure water has a pH of 7, a pH greater than 7 is alkaline and a pH less than 7 is acidic. The following dataset contains observations on 53 lakes in Florida.  Use these data to answer our question.
+
+```{r}
+library(tidyverse)
+FloridaLakes <- read_csv("https://www.lock5stat.com/datasets1e/FloridaLakes.csv")
+```
+
+* **Cases**:
+
+<br>
+
+* **Variable of interest**:
+
+<br>
+
+* **Parameter of interest:**
+
+<br>
+
+* **Hypotheses:**
+
+<br>
+
+---
+
+### Inference for a Single Mean
+
+Let's consider conducting a hypothesis test for a single mean: $\mu$
+--
+
+Need:
+
+* Hypotheses
+
+--
+
+* Test statistic and its null distribution
+
+--
+
+* P-value 
+
+
+
+---
+
+### Inference for a Single Mean
+
+Let's consider conducting a hypothesis test for a single mean: $\mu$
+
+--
+
+$H_o: \mu = \mu_o$ where $\mu_o$ = null value
+
+--
+
+$H_a: \mu \neq \mu_o$
+
+--
+
+By the CLT, under $H_o$:
+
+
+$$
+\bar{x} \sim N \left(\mu_o, \frac{\sigma}{\sqrt{n}} \right)
+$$
+--
+
+* Z-score test statistic:
+
+$$
+Z = \frac{\bar{x} - \mu_o}{\frac{\sigma}{\sqrt{n}}}
+$$
+--
+
+* **Problem:** Don't know $\sigma$: the population standard deviation of our response variable!
+
+---
+
+### Inference for a Single Mean
+
+Let's consider conducting a hypothesis test for a single mean: $\mu$
+
+
+
+$H_o: \mu = \mu_o$ where $\mu_o$ = null value
+
+
+
+$H_a: \mu \neq \mu_o$
+
+
+
+By the CLT, under $H_o$:
+
+
+$$
+\bar{x} \sim N \left(\mu_o, \frac{\sigma}{\sqrt{n}} \right)
+$$
+
+
+* Z-score test statistic:
+
+$$
+t = \frac{\bar{x} - \mu_o}{\frac{s}{\sqrt{n}}}
+$$
+
+
+* **Problem:** Don't know $\sigma$: the population standard deviation of our response variable!
+
+* **Solution:** Plug in $s$: the sample standard deviation of our response variable!
+
+* Use $t(\mbox{df} = n - 1)$ to find the p-value
+
+
+
+
+
+---
+
+### Inference for a Single Mean
+
+
+```{r}
+library(infer)
+
+#Compute obs stat
+t_obs <- FloridaLakes %>%
+  specify(response = pH) %>%
+  hypothesize(null = "point", mu = 7) %>%  
+  calculate(stat = "t")
+t_obs
+```
+
+--
+
+```{r}
+# Generate null distribution
+null_dist <- FloridaLakes %>%
+  specify(response = pH) %>%
+  hypothesize(null = "point", mu = 7) %>%
+  generate(reps = 1000, type = "bootstrap") %>%
+  calculate(stat = "t")
+
+```
+
+
+---
+
+```{r}
+# Graph the null distribution
+null_dist %>%
+  visualize(bins = 30) +
+  geom_vline(xintercept = t_obs$stat, color = "deeppink",
+             size = 2) +
+  geom_vline(xintercept = abs(t_obs$stat), color = "deeppink", 
+             size = 2)
+```
+
+
+---
+
+### Inference for a Single Mean
+
+What probability function is a good approximation to the null distribution?
+
+
+```{r, echo = FALSE}
+# Graph the null distribution
+null_dist %>%
+  visualize(bins = 30) +
+  geom_vline(xintercept = t_obs$stat, color = "deeppink",
+             size = 2) +
+  geom_vline(xintercept = abs(t_obs$stat), color = "deeppink", 
+             size = 2)
+```
+
+---
+
+### Inference for a Single Mean
+
+What probability function is a good approximation to the null distribution?
+
+
+```{r, echo = FALSE}
+# Graph the null distribution
+null_dist %>%
+  visualize(bins = 30, method = "both", dens_color = "orange") +
+  geom_vline(xintercept = t_obs$stat, color = "deeppink",
+             size = 2) +
+  geom_vline(xintercept = abs(t_obs$stat), color = "deeppink", 
+             size = 2)
+```
+
+
+---
+
+.pull-left[
+
+#### P-value using the generated null distribution:
+
+```{r}
+pvalue <- null_dist %>%
+  get_p_value(obs_stat = t_obs,
+              direction = "both")
+pvalue
+
+```
+
+]
+
+--
+
+.pull-right[
+
+#### P-value using an approximate probability function:
+
+```{r}
+# Using t distribution
+pt(q = t_obs$stat, df = 52)*2
+```
+
+]
+
+--
+
+#### Do-it-all function:
+
+
+```{r}
+t.test(FloridaLakes$pH, mu = 7, conf.level = .90, alternative = "two.sided")
+```
+
+
+
+---
+
 
 ### Statistical Inference using Probability Models
 
-We went through theory-based inference for $p$. 
+* We went through theory-based inference for $p$ and for $\mu$. 
 
 --
 
-There are similar results for other parameters.  But the distribution changes!
+* There are similar results for other parameters.  But the specific named RV and its probability function change!
 
 --
 
-Can find some common test statistics and CIs [on the course website](https://mcconvil.github.io/stat100s22/inference_procedures.html)
+* Can find some common test statistics and confidence interval formulae [on the course website](https://mcconvil.github.io/stat100s22/inference_procedures.html).
+    + In this week's p-set, will explore inference for a difference in proportions.
 
 
 
