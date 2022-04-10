@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Theory-Based Inference, Day II</title>
+    <meta charset="utf-8" />
+    <script src="libsSlides/header-attrs-2.11/header-attrs.js"></script>
+    <link href="libsSlides/remark-css-0.0.1/hygge.css" rel="stylesheet" />
+    <script src="libsSlides/fabric-4.3.1/fabric.min.js"></script>
+    <link href="libsSlides/xaringanExtra-scribble-0.0.1/scribble.css" rel="stylesheet" />
+    <script src="libsSlides/xaringanExtra-scribble-0.0.1/scribble.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', function() { window.xeScribble = new Scribble({"pen_color":["#FF0000"],"pen_size":3,"eraser_size":30,"palette":[]}) })</script>
+    <script src="libsSlides/kePrint-0.0.1/kePrint.js"></script>
+    <link href="libsSlides/lightable-0.0.1/lightable.css" rel="stylesheet" />
+    <link rel="stylesheet" href="more.css" type="text/css" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+
+
+background-image: url("img/DAW.png")
+background-position: left
+background-size: 50%
+class: middle, center, inverse
+
+
+.pull-right[
+
+
+
+## .whitish[Theory-Based Inference]
+
+## .whitish[and]
+
+## .whitish[Sample Size Calculations]
+
+
+&lt;br&gt;
+
+### .whitish[Kelly McConville]
+
+#### .yellow[ Stat 100 | Week 11 | Spring 2022] 
+
+]
+
+
+---
+
+background-image: url("img/ggparty.001.jpeg")
+background-position: contain
+background-size: 90%
+
+
+---
+
+background-image: url("img/ggparty.002.jpeg")
+background-position: contain
+background-size: 90%
+
+
+---
+
+background-image: url("img/ggparty.003.jpeg")
+background-position: contain
+background-size: 90%
+
+
+---
+
+class: middle, center
+
+### If you are able to attend, please RSVP here:
+
+### [bit.ly/stat100-ggparty](https://bit.ly/stat100-ggparty)
+
+---
+
+### Announcements
+
+* Project Assignment 3 is due Friday, April 22nd at 5pm
+
+****************************
+
+--
+
+### Goals for Today
+
+.pull-left[
+
+
+* Theory-based inference
+
+* Sample size calculations
+
+] 
+
+
+
+.pull-right[
+
+* Paired data
+
+* Lots of examples
+
+
+]
+
+---
+
+### Recap:
+
+**Central Limit Theorem (CLT):** For random samples and a large sample size `\((n)\)`, the sampling distribution of many sample statistics is approximately normal.
+
+--
+
+.pull-left[
+
+#### Sample Proportion Version
+
+When `\(n\)` is large (at least 10 successes and 10 failures):
+
+$$
+\hat{p} \sim N \left(p, \sqrt{\frac{p(1-p)}{n}} \right)
+$$
+
+]
+
+--
+
+.pull-right[
+
+#### Sample Mean Version
+
+When `\(n\)` is large (at least 30):
+
+$$
+\bar{x} \sim N \left(\mu, \frac{\sigma}{\sqrt{n}} \right)
+$$
+]
+
+
+---
+
+### But There Are [Several Versions](https://mcconvil.github.io/stat100s22/inference_procedures.html)!
+
+&lt;table class="table table-responsive table-bordered" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Response &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Explanatory &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Numerical_Quantity &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Parameter &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Statistic &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; quantitative &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; - &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; mean &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; `\(\mu\)` &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; `\(\bar{x}\)` &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; categorical &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; - &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; proportion &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; `\(p\)` &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; `\(\hat{p}\)` &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; quantitative &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; categorical &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; difference in means &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; `\(\mu_1 - \mu_2\)` &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; `\(\bar{x}_1 - \bar{x}_2\)` &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; categorical &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; categorical &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; difference in proportions &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; `\(p_1 - p_2\)` &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; `\(\hat{p}_1 - \hat{p}_2\)` &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; quantitative &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; quantitative &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; correlation &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; `\(\rho\)` &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; `\(r\)` &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+
+---
+
+### Recap:
+
+**Z-score test statistics**: 
+
+$$
+\mbox{Z-score} = \frac{\mbox{statistic} - \mu}{\sigma}
+$$
+
+--
+
+* Usually follows a **standard normal** or a **t** distribution.
+
+--
+
+* Use the approximate distribution to find the p-value.
+
+---
+
+### Recap:
+
+**Formula-Based** P*100% Confidence Intervals
+
+$$
+\mbox{statistic} \pm z^* SE
+$$
+
+where `\(P(-z^* \leq Z \leq z^*) = P\)`
+
+--
+
+OR
+
+$$
+\mbox{statistic} \pm t^* SE
+$$
+
+where `\(P(-t^* \leq t \leq t^*) = P\)`
+
+
+---
+
+class: inverse, middle, center
+
+
+## How do we do probability model calculations in `R`?
+
+
+---
+
+### Probability Calculations in R
+
+
+**Question**: How do I compute **probabilities** in R?
+
+.pull-left[
+
+&lt;img src="stat100_wk11mon_files/figure-html/unnamed-chunk-2-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+]
+
+--
+
+.pull-right[
+
+
+```r
+pnorm(q = 1, mean = 0, sd = 1)
+```
+
+```
+## [1] 0.8413447
+```
+
+```r
+pt(q = 1, df = 52)
+```
+
+```
+## [1] 0.8390293
+```
+
+]
+
+**Doesn't seem quite right**...
+
+---
+
+### Probability Calculations in R
+
+
+**Question**: How do I compute **probabilities** in R?
+
+.pull-left[
+
+&lt;img src="stat100_wk11mon_files/figure-html/unnamed-chunk-4-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right[
+
+
+```r
+pnorm(q = 1, mean = 0, sd = 1,
+      lower.tail = FALSE)
+```
+
+```
+## [1] 0.1586553
+```
+
+```r
+pt(q = 1, df = 52, lower.tail = FALSE)
+```
+
+```
+## [1] 0.1609707
+```
+
+]
+
+
+---
+
+### P*100% CI for parameter:
+
+$$
+\mbox{statistic} \pm z^* SE
+$$
+
+.pull-left[
+
+**Question**: How do I find the correct critical values `\((z^* \mbox{ or } t^*)\)` for the confidence interval?
+
+&lt;img src="stat100_wk11mon_files/figure-html/unnamed-chunk-6-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+--
+
+.pull-right[
+
+
+```r
+qnorm(p = 0.975, mean = 0, sd = 1)
+```
+
+```
+## [1] 1.959964
+```
+
+```r
+qt(p = 0.975, df = 52)
+```
+
+```
+## [1] 2.006647
+```
+
+]
+
+---
+
+### P*100% CI for parameter:
+
+$$
+\mbox{statistic} \pm z^* SE
+$$
+.pull-left[
+
+**Question**: What percentile/quantile do I need for a 90% CI?
+
+&lt;img src="stat100_wk11mon_files/figure-html/unnamed-chunk-8-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+]
+
+--
+
+.pull-right[
+
+
+```r
+qnorm(p = 0.95, mean = 0, sd = 1)
+```
+
+```
+## [1] 1.644854
+```
+
+```r
+qt(p = 0.95, df = 52)
+```
+
+```
+## [1] 1.674689
+```
+
+]
+
+---
+
+### Probability Calculations in R
+
+**To help you remember**:
+
+Want a **P**robability? 
+
+--
+
+&amp;rarr; use `pnorm()`, `pt()`, ...
+
+--
+
+Want a **Q**uantile (i.e. percentile)?
+
+--
+
+&amp;rarr; use `qnorm()`, `qt()`, ...
+
+
+---
+
+### Probability Calculations in R
+
+**Question**: When might I want to do probability calculations in R?
+
+--
+    
+&amp;rarr; Computed a test statistic that is approximated by a named random variable.  Want to compute the p-value with `p---()`
+
+--
+
+&amp;rarr; Compute a confidence interval.  Want to find the critical value with `q---()`.
+
+--
+
+&amp;rarr; To do a **Sample Size Calculation**.
+
+---
+
+### Sample Size Calculations
+
+* Very important part of the data analysis process!
+
+--
+
+* Happens BEFORE you collect data.
+
+--
+
+* You determine how large your sample size needs for a desired precision in your CI.
+    + There is also a hypothesis test version that we won't be covering in Stat 100.
+    
+---
+
+### Sample Size Calculations
+
+**Question**: Why do we need sample size calculations?
+
+--
+
+**Example**: Let's return to the dolphins for treating depression example.  
+
+--
+
+With a sample size of 30 and 95% confidence, we estimate that the improvement rate for depression is between 14.5 percentage points and 75 percentage points higher if you swim with a dolphin instead of doing yoga.
+
+--
+
+With a width of 60.5 percentage points, this 95% CI is a **wide**/very imprecise interval.  
+
+--
+
+**Question**: How could we make it narrower?  How could we decrease the Margin of Error (ME)?
+
+--
+
+&amp;rarr; **Decrease** the confidence level!
+
+--
+
+&amp;rarr; **Increase** the sample size!
+
+
+---
+
+### Sample Size Calculations -- Single Proportion
+
+Let's focus on estimating a single proportion.  Suppose we want to estimate the current proportion of Harvard undergraduates with COVID with 95% confidence and we want the margin of error on our interval to be less than or equal to 0.02.
+
+--
+
+Want 
+
+$$ 
+z^* \sqrt{\frac{\hat{p}(1 - \hat{p})}{n}} \leq B
+$$
+
+--
+
+Need to derive a formula that looks like 
+
+$$ 
+n \geq \quad ...
+$$
+
+--
+
+**Question**: How can we isolate `\(n\)` to be on a side by itself?
+
+
+---
+
+### Sample Size Calculations -- Single Proportion
+
+Let's focus on estimating a single proportion.  Suppose we want to estimate the current proportion of Harvard undergraduates with COVID with 95% confidence and we want the margin of error on our interval to be less than or equal to 0.02.
+
+**Sample size calculation:**
+
+$$
+n \geq \frac{\hat{p}(1 - \hat{p})z^{*2}}{B^2}
+$$
+--
+
+
+* What do we plug in for, `\(\hat{p}\)`, `\(z^{*}\)`, `\(B\)`?
+
+--
+
+* Will consider sample size calculations when estimating a **mean** on this week's p-set.
+
+---
+
+class: middle, center, inverse
+
+## Another important concept: Paired data
+
+
+---
+
+### Paired Data: Mean Difference
+
+**Example**: Is the mean number of free throw attempts awarded to the Miami Heat during games different from the mean number attempted by their opponents?
+
+
+```r
+library(tidyverse)
+library(Lock5Data)
+# Data
+data("MiamiHeat")
+select(MiamiHeat, Game, Location, Opp, FTA, OppFTA) %&gt;%
+  slice(1:6)
+```
+
+```
+##   Game Location Opp FTA OppFTA
+## 1    1     Away BOS  25     25
+## 2    2     Away PHI  31     11
+## 3    3     Home ORL  27     34
+## 4    4     Away NJN  34     23
+## 5    5     Home MIN  31     38
+## 6    6     Away NOH  24     17
+```
+
+
+
+* Variables of interest:
+
+
+* Parameter of interest:
+
+
+---
+
+### Paired Data: Mean Difference
+
+
+
+```r
+select(MiamiHeat, Game, Location, Opp, FTA, OppFTA) %&gt;%
+  slice(1:6)
+```
+
+```
+##   Game Location Opp FTA OppFTA
+## 1    1     Away BOS  25     25
+## 2    2     Away PHI  31     11
+## 3    3     Home ORL  27     34
+## 4    4     Away NJN  34     23
+## 5    5     Home MIN  31     38
+## 6    6     Away NOH  24     17
+```
+
+What are the cases?
+
+--
+
+How could we control for case-to-case variability?
+
+---
+
+### Paired Data: Mean Difference
+
+* Paired data: **repeated** observations on the same case
+
+--
+
+* Paired data should not be treated as **independent** observations
+    + Why not?
+
+--
+    
+* **Benefit of pairing**: By accounting for the case-to-case variability, any differences we see are more directly related to the explanatory variable.
+
+---
+
+### Paired Data: Mean Difference
+
+.pull-left[
+
+
+```r
+# Calculate Difference
+MiamiHeat &lt;- MiamiHeat %&gt;%
+  mutate(diff_FTA = FTA - OppFTA)
+
+# Visualize
+ggplot(data = MiamiHeat, 
+       mapping = aes(x = diff_FTA)) +
+  geom_histogram()
+```
+
+]
+
+.pull-right[
+
+&lt;img src="stat100_wk11mon_files/figure-html/heat-1.png" width="768" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+## Conducting a theory-based t-test
+
+.pull-left[
+
+
+```r
+# One-sample t-test
+t.test(x = MiamiHeat$diff_FTA)
+```
+
+```
+## 
+## 	One Sample t-test
+## 
+## data:  MiamiHeat$diff_FTA
+## t = 3.4946, df = 81, p-value = 0.0007727
+## alternative hypothesis: true mean is not equal to 0
+## 95 percent confidence interval:
+##  1.617539 5.894657
+## sample estimates:
+## mean of x 
+##  3.756098
+```
+
+]
+
+.pull-right[
+
+
+```r
+# Two-sample t-test
+# Ignoring the pairing
+t.test(x = MiamiHeat$FTA,
+       y = MiamiHeat$OppFTA)
+```
+
+```
+## 
+## 	Welch Two Sample t-test
+## 
+## data:  MiamiHeat$FTA and MiamiHeat$OppFTA
+## t = 3.2633, df = 158.73, p-value = 0.001348
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  1.482830 6.029365
+## sample estimates:
+## mean of x mean of y 
+##  27.90244  24.14634
+```
+
+
+]
+
+---
+
+### Assumptions
+
+All these methods that rely on the CLT, assume:
+
+* The sample size is large.
+
+--
+
+* The sample is a random sample.
+    + Observations are independent of each other.
+
+
+
+---
+
+class: inverse, center, middle
+
+### Let's going through more examples!
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"ratio": "16:9",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
