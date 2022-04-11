@@ -1,4 +1,10 @@
 base
+methods
+datasets
+utils
+grDevices
+graphics
+stats
 knitr
 kableExtra
 tidyverse
@@ -10,4 +16,3 @@ purrr
 dplyr
 stringr
 forcats
-Lock5Data
