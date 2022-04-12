@@ -75,6 +75,9 @@ background-size: 90%
 
 * Project Assignment 3 is due Friday, April 22nd at 5pm
 * RSVP for the Stat 100 ggparty at: [bit.ly/stat100-ggparty](https://bit.ly/stat100-ggparty)
+* Stat Department Applied Probability Event is this evening in SC-316, starting at 5pm.  There will be food and games!
+
+
 ****************************
 
 --
@@ -83,8 +86,9 @@ background-size: 90%
 
 .pull-left[
 
+* Finish up the Inference Examples handout.
 
-* Learn about Chi-Squared Random Variables
+* Learn about Chi-Squared Random Variables.
 
 ] 
 
@@ -149,24 +153,34 @@ library(tidyverse)
 library(infer)
 
 # Import data
-eye_data <- read_csv("/home/courses/math141f19/Data/eye_lighting.csv")
+eye_data <- read_csv("~/shared_data/stat100/data/eye_lighting.csv")
 ```
 
 ---
 
 ### Eyesight Example
 
+.pull-left[
 
 ```{r}
 eye_data %>%
   count(Lighting, Eye)
 ```
 
+]
+
+.pull-right[
 
 
 * **Cases**:
+
+
 * **Variables of interest**:
+
+
 * **Hypotheses**:
+
+]
 
 ---
 
@@ -174,10 +188,24 @@ eye_data %>%
 
 Does there appear to be a relationship/dependence?
 
-```{r}
-ggplot(data = eye_data, mapping = aes(x = Lighting, fill = Eye)) + 
+.pull-left[
+
+```{r eyeplot, fig.show = 'hide'}
+ggplot(data = eye_data, 
+       mapping = aes(x = Lighting,
+                     fill = Eye)) + 
   geom_bar(position = "fill")
 ```
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("eyeplot", "png"))
+```
+
+]
 
 ---
 
@@ -239,7 +267,7 @@ table(eye_data$Eye, eye_data$Lighting) %>%
 
 **Question**: If $H_o$ were correct, what table would we expect to see?
 
-Want a $H_o$ table that respects the marginal proportions:
+Want a $H_o$ table that respects the eye condition proportions:
 
 $$\hat{p}_{far} = 91/479$$
 
@@ -335,6 +363,8 @@ chisq.test(table(eye_data$Eye, eye_data$Lighting))$exp %>%
 
 ### Expected Table
 
+.pull-left[
+
 * How does this table represent $H_o$?
 
 
@@ -344,7 +374,11 @@ chisq.test(table(eye_data$Eye, eye_data$Lighting))$exp %>%
   kable(format = "html")
 ```
 
+]
+
 --
+
+.pull-right[
 
 ```{r, echo = FALSE}
 chisq.test(table(eye_data$Eye, eye_data$Lighting))$exp %>%
@@ -353,6 +387,8 @@ chisq.test(table(eye_data$Eye, eye_data$Lighting))$exp %>%
   ggplot(mapping = aes(x = Lighting, fill = Eye, y = value)) +
   geom_col(position = "fill")
 ```
+
+]
 
 ---
 
@@ -449,7 +485,7 @@ Want the test statistic to quantify the difference between the observed table an
 
 --
 
-For each cell: Compute a Z-score!
+For each cell: Compute a **Z-score**!
 
 --
 
@@ -564,9 +600,6 @@ Want the test statistic to quantify the difference between the observed table an
 &rarr; Large test statistics signify that results are unusual if $H_o$ is true.
 
 ---
-### Test Statistic
-
-Want the test statistic to quantify the difference between the observed table and the expected table.
 
 <table style="display: inline-block;">
  <thead>
@@ -694,7 +727,9 @@ eye_data %>%
 ### Generating the Null Distribution
 
 
-```{r}
+.pull-left[
+
+```{r null, fig.show = 'hide'}
 # Construct null distribution
 null_dist <- eye_data %>%
   specify(Eye ~ Lighting) %>%
@@ -706,27 +741,64 @@ null_dist <- eye_data %>%
 visualize(null_dist)
 ```
 
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("null", "png"))
+```
+
+]
+
 ---
 
 ### The Null Distribution
 
+.pull-left[
+
+**Key Observations about the distribution**:
+
+* Smallest possible value?
+
+
+* Shape?
+
+]
+
+
+.pull-right[
 
 ```{r, echo = FALSE}
 visualize(null_dist)
 ```
 
-**Key Observations**:
+]
 
-* Smallest possible value?
 
-<br>
-
-* Shape?
 
 ---
 
 ### The Null Distribution
 
+
+.pull-left[
+
+**Key Observations about the distribution**:
+
+* Smallest possible value?
+
+
+* Shape?
+
+
+* Is our observed test statistic of 56.5 unusual?
+
+
+]
+
+
+.pull-right[
 
 ```{r, echo = FALSE}
 visualize(null_dist) +
@@ -734,17 +806,8 @@ visualize(null_dist) +
              color = "deeppink")
 ```
 
-**Key Observations**:
+]
 
-* Smallest possible value?
-
-<br>
-
-* Shape?
-
-<br>
-
-* Is our observed test statistic of 56.5 unusual?
 
 ---
 
@@ -760,18 +823,26 @@ null_dist %>%
 
 ### Approximating the Null Distribution
 
-```{r}
-visualize(null_dist, method = "both")
-```
+
+.pull-left[
 
 If there are at least 5 observations in each cell, then 
 
 $$
 \mbox{test statistic} \sim \chi^2(df = (\mbox{# of rows} - 1)(\mbox{# of columns} - 1))
 $$
---
 
 The $df$ controls the center and spread of the distribution.
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+visualize(null_dist, method = "both", dens_color = "orange")
+```
+
+]
 
 ---
 
@@ -791,3 +862,12 @@ Conclusions?
 
 --
 * Decisions, decisions...
+
+
+---
+
+class: inverse, middle, center
+
+## Hope to see some of you at tonight's event!
+
+### 5pm Science Center 316

@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Inference for Categorical Variables</title>
+    <meta charset="utf-8" />
+    <script src="libsSlides/header-attrs-2.11/header-attrs.js"></script>
+    <link href="libsSlides/remark-css-0.0.1/hygge.css" rel="stylesheet" />
+    <script src="libsSlides/fabric-4.3.1/fabric.min.js"></script>
+    <link href="libsSlides/xaringanExtra-scribble-0.0.1/scribble.css" rel="stylesheet" />
+    <script src="libsSlides/xaringanExtra-scribble-0.0.1/scribble.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', function() { window.xeScribble = new Scribble({"pen_color":["#FF0000"],"pen_size":3,"eraser_size":30,"palette":[]}) })</script>
+    <link rel="stylesheet" href="more.css" type="text/css" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+
+
+background-image: url("img/DAW.png")
+background-position: left
+background-size: 50%
+class: middle, center, inverse
+
+
+.pull-right[
+
+
+
+## .whitish[Inference]
+
+## .whitish[for]
+
+## .whitish[Categorical Variables]
+
+
+&lt;br&gt;
+
+### .whitish[Kelly McConville]
+
+#### .yellow[ Stat 100 | Week 11 | Spring 2022] 
+
+]
+
+
+---
+
+
+background-image: url("img/ggparty.003.jpeg")
+background-position: contain
+background-size: 90%
+
+
+---
+
+### Announcements
+
+* Project Assignment 3 is due Friday, April 22nd at 5pm
+* RSVP for the Stat 100 ggparty at: [bit.ly/stat100-ggparty](https://bit.ly/stat100-ggparty)
+* Stat Department Applied Probability Event is this evening in SC-316, starting at 5pm.  There will be food and games!
+
+
+****************************
+
+--
+
+### Goals for Today
+
+.pull-left[
+
+* Finish up the Inference Examples handout.
+
+* Learn about Chi-Squared Random Variables.
+
+] 
+
+
+
+.pull-right[
+
+* Consider inference for categorical variables with **more than** 2 categories!
+
+
+]
+
+---
+
+
+### Inference for Categorical Variables
+
+Consider the situation where:
+
+* Response variable: categorical
+
+* Explanatory variable: categorical
+
+--
+
+* Parameter of interest: `\(p_1 - p_2\)`
+
+--
+
+This parameter of interest only makes sense if both variables are restricted to two categories.
+
+--
+
+It is time to learn how to study the relationship between two categorical variables when at least one have more than two categories.
+
+---
+
+### Hypotheses
+
+Consider the situation where:
+
+* Response variable: categorical
+
+* Explanatory variable: categorical
+
+--
+
+`\(H_o\)`: The two variables are independent.
+
+`\(H_a\)`: The two variables are dependent.
+
+---
+
+### Let's Return to the Eyesight Example
+
+
+Near-sightedness typically develops during the childhood years. Quinn, Shin, Maguire, and Stone (1999) examined the type of light children were exposed to and their eye health based on questionnaires filled out by the children's parents at a university pediatric ophthalmology clinic. 
+
+
+
+```r
+library(tidyverse)
+library(infer)
+
+# Import data
+eye_data &lt;- read_csv("~/shared_data/stat100/data/eye_lighting.csv")
+```
+
+---
+
+### Eyesight Example
+
+.pull-left[
+
+
+```r
+eye_data %&gt;%
+  count(Lighting, Eye)
+```
+
+```
+## # A tibble: 9 × 3
+##   Lighting Eye        n
+##   &lt;chr&gt;    &lt;chr&gt;  &lt;int&gt;
+## 1 dark     Far       40
+## 2 dark     Near      18
+## 3 dark     Normal   114
+## 4 night    Far       39
+## 5 night    Near      78
+## 6 night    Normal   115
+## 7 room     Far       12
+## 8 room     Near      41
+## 9 room     Normal    22
+```
+
+]
+
+.pull-right[
+
+
+* **Cases**:
+
+
+* **Variables of interest**:
+
+
+* **Hypotheses**:
+
+]
+
+---
+
+### Eyesight Example
+
+Does there appear to be a relationship/dependence?
+
+.pull-left[
+
+
+```r
+ggplot(data = eye_data, 
+       mapping = aes(x = Lighting,
+                     fill = Eye)) + 
+  geom_bar(position = "fill")
+```
+
+]
+
+.pull-right[
+
+&lt;img src="stat100_wk11wed_files/figure-html/eyeplot-1.png" width="768" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+### Eyesight Example
+
+Need a test statistic!
+
+--
+
+* Won't be a single sample statistic.  
+
+--
+
+* Needs to measure the discrepancy between the observed sample and the sample we'd expect to see if `\(H_o\)` were true
+
+--
+
+* Would be nice if its null distribution could be approximated by a known probability model
+
+
+---
+
+#### Table of Observed Results
+
+
+```r
+table(eye_data$Eye, eye_data$Lighting) %&gt;%
+  addmargins() %&gt;%
+  kable(format = "html")
+```
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; dark &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; night &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; room &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Sum &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Far &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 40 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 39 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 91 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Near &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 78 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 41 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 137 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Normal &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 114 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 115 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 251 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Sum &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 172 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 232 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 75 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 479 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+--
+
+
+**Question**: If `\(H_o\)` were correct, what table would we expect to see?
+
+
+--
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Far &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Near &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Normal &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Sum &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Far &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 53 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 53 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 53 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 159 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Near &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 53 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 53 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 53 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 159 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Normal &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 53 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 53 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 53 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 159 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Sum &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 159 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 159 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 159 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 477 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+#### Table of Observed Results
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; dark &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; night &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; room &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Sum &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Far &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 40 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 39 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 91 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Near &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 78 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 41 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 137 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Normal &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 114 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 115 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 251 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Sum &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 172 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 232 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 75 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 479 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+
+
+**Question**: If `\(H_o\)` were correct, what table would we expect to see?
+
+Want a `\(H_o\)` table that respects the eye condition proportions:
+
+`$$\hat{p}_{far} = 91/479$$`
+
+`$$\hat{p}_{nor} = 251/479$$`
+
+`$$\hat{p}_{nea} = 137/479$$`
+
+
+---
+
+#### Table of Observed Results
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; dark &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; night &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; room &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Sum &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Far &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 40 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 39 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 91 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Near &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 78 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 41 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 137 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Normal &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 114 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 115 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 251 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Sum &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 172 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 232 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 75 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 479 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+
+
+**Question**: If `\(H_o\)` were correct, what table would we expect to see?
+
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; dark &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; night &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; room &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Sum &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Far &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; (91/479)172 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; (91/479)232 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; (91/479)75 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 91 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Near &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; (137/479)172 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; (137/479)232 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; (137/479)75 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 137 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Normal &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; (251/479)172 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; (251/479)232 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; (251/479)75 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 251 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Sum &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 172 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 232 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 75 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 479 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+--
+
+* Still have the same totals but distributed the values differently within the table
+
+---
+
+#### Table of Observed Results
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; dark &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; night &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; room &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Sum &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Far &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 40 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 39 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 91 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Near &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 78 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 41 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 137 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Normal &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 114 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 115 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 251 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Sum &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 172 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 232 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 75 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 479 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+
+
+**Question**: If `\(H_o\)` were correct, what table would we expect to see?
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; dark &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; night &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; room &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Sum &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Far &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 32.67641 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 44.07516 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 14.24843 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 91 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Near &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 49.19415 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 66.35491 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21.45094 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 137 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Normal &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 90.12944 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 121.56994 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 39.30063 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 251 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Sum &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 172.00000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 232.00000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 75.00000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 479 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+### Expected Table
+
+.pull-left[
+
+* How does this table represent `\(H_o\)`?
+
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; dark &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; night &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; room &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Sum &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Far &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 32.67641 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 44.07516 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 14.24843 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 91 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Near &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 49.19415 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 66.35491 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21.45094 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 137 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Normal &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 90.12944 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 121.56994 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 39.30063 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 251 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Sum &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 172.00000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 232.00000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 75.00000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 479 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+]
+
+--
+
+.pull-right[
+
+&lt;img src="stat100_wk11wed_files/figure-html/unnamed-chunk-11-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+
+### Test Statistic
+
+Want the test statistic to quantify the difference between the observed table and the expected table.
+
+&lt;table style="display: inline-block;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; dark &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; night &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; room &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Sum &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Far &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 40 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 39 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 91 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Near &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 78 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 41 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 137 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Normal &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 114 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 115 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 251 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Sum &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 172 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 232 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 75 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 479 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+
+&lt;table style="display: inline-block;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; dark &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; night &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; room &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Sum &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Far &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 32.68 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 44.08 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 14.25 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 91 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Near &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 49.19 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 66.35 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21.45 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 137 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Normal &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 90.13 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 121.57 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 39.30 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 251 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Sum &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 172.00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 232.00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 75.00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 479 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+--
+
+For each cell: Compute a **Z-score**!
+
+--
+
+`\begin{align*}
+\mbox{Z-score} &amp;= \frac{\mbox{stat - mean}}{\mbox{SE}} \\
+&amp; = \frac{\mbox{observed - expected}}{\sqrt{\mbox{expected}}}
+\end{align*}`
+
+---
+
+### Test Statistic
+
+Want the test statistic to quantify the difference between the observed table and the expected table.
+
+&lt;table style="display: inline-block;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; dark &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; night &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; room &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Sum &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Far &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 40 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 39 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 91 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Near &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 78 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 41 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 137 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Normal &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 114 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 115 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 251 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Sum &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 172 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 232 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 75 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 479 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+
+&lt;table style="display: inline-block;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; dark &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; night &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; room &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Sum &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Far &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 32.68 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 44.08 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 14.25 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 91 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Near &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 49.19 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 66.35 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21.45 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 137 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Normal &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 90.13 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 121.57 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 39.30 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 251 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Sum &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 172.00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 232.00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 75.00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 479 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+
+
+**Test Statistic:**
+
+`\begin{align*}
+\chi^2 = \sum \left(\frac{\mbox{observed - expected}}{\sqrt{\mbox{expected}}} \right)^2
+\end{align*}`
+
+--
+
+&amp;rarr; Large test statistics signify that results are unusual if `\(H_o\)` is true.
+
+---
+
+&lt;table style="display: inline-block;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; dark &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; night &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; room &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Sum &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Far &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 40 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 39 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 91 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Near &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 78 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 41 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 137 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Normal &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 114 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 115 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 251 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Sum &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 172 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 232 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 75 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 479 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+
+&lt;table style="display: inline-block;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; dark &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; night &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; room &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Sum &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Far &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 32.68 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 44.08 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 14.25 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 91 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Near &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 49.19 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 66.35 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21.45 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 137 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Normal &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 90.13 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 121.57 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 39.30 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 251 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Sum &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 172.00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 232.00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 75.00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 479 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+
+
+
+```r
+library(infer)
+#Compute Chi-square test stat
+test_stat &lt;- eye_data %&gt;%
+  specify(Eye ~ Lighting) %&gt;%
+  calculate(stat = "Chisq") 
+test_stat
+```
+
+```
+## Response: Eye (factor)
+## Explanatory: Lighting (factor)
+## # A tibble: 1 × 1
+##    stat
+##   &lt;dbl&gt;
+## 1  56.5
+```
+
+--
+
+Is 56.5 large?  Is 56.5 unusual under `\(H_o\)`?
+
+---
+
+### Generating the Null Distribution
+
+
+```
+## # A tibble: 10 × 2
+##    Eye    Lighting
+##    &lt;chr&gt;  &lt;chr&gt;   
+##  1 Near   night   
+##  2 Near   night   
+##  3 Near   night   
+##  4 Normal room    
+##  5 Normal dark    
+##  6 Normal night   
+##  7 Normal night   
+##  8 Normal room    
+##  9 Normal night   
+## 10 Normal dark
+```
+
+--
+
+**Steps**:
+
+1. Shuffle lighting.
+2. Compute the new observed table.  
+3. Compute the test statistic.
+4. Repeat 1 - 3 many times.
+
+
+---
+
+### Generating the Null Distribution
+
+
+.pull-left[
+
+
+```r
+# Construct null distribution
+null_dist &lt;- eye_data %&gt;%
+  specify(Eye ~ Lighting) %&gt;%
+  hypothesize(null = "independence") %&gt;%
+  generate(reps = 1000, type = "permute") %&gt;%
+  calculate(stat = "Chisq")
+
+
+visualize(null_dist)
+```
+
+]
+
+.pull-right[
+
+&lt;img src="stat100_wk11wed_files/figure-html/null-1.png" width="768" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+### The Null Distribution
+
+.pull-left[
+
+**Key Observations about the distribution**:
+
+* Smallest possible value?
+
+
+* Shape?
+
+]
+
+
+.pull-right[
+
+&lt;img src="stat100_wk11wed_files/figure-html/unnamed-chunk-15-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+
+---
+
+### The Null Distribution
+
+
+.pull-left[
+
+**Key Observations about the distribution**:
+
+* Smallest possible value?
+
+
+* Shape?
+
+
+* Is our observed test statistic of 56.5 unusual?
+
+
+]
+
+
+.pull-right[
+
+&lt;img src="stat100_wk11wed_files/figure-html/unnamed-chunk-16-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+---
+
+### The P-value
+
+
+```r
+# Compute p-value
+null_dist %&gt;%
+  get_pvalue(obs_stat = test_stat, direction = "greater")
+```
+
+```
+## # A tibble: 1 × 1
+##   p_value
+##     &lt;dbl&gt;
+## 1       0
+```
+
+---
+
+### Approximating the Null Distribution
+
+
+.pull-left[
+
+If there are at least 5 observations in each cell, then 
+
+$$
+\mbox{test statistic} \sim \chi^2(df = (\mbox{# of rows} - 1)(\mbox{# of columns} - 1))
+$$
+
+The `\(df\)` controls the center and spread of the distribution.
+
+]
+
+.pull-right[
+
+&lt;img src="stat100_wk11wed_files/figure-html/unnamed-chunk-18-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+### The Chi-Squared Test
+
+
+```r
+chisq.test(table(eye_data$Eye, eye_data$Lighting))
+```
+
+```
+## 
+## 	Pearson's Chi-squared test
+## 
+## data:  table(eye_data$Eye, eye_data$Lighting)
+## X-squared = 56.513, df = 4, p-value = 1.565e-11
+```
+
+--
+
+Conclusions?
+
+--
+
+* Causation?
+
+--
+* Decisions, decisions...
+
+
+---
+
+class: inverse, middle, center
+
+## Hope to see some of you at tonight's event!
+
+### 5pm Science Center 316
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"ratio": "16:9",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
