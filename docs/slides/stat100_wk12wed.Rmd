@@ -1077,7 +1077,7 @@ mod4 <- lm(Rating ~ Date * Type, data = all)
 
 **Strategy**: Compute the $R^2$ value for each model and pick the one with the highest $R^2$.
 
-```{r, eval = FALSE}
+```{r}
 glance(mod1)
 glance(mod2)
 glance(mod3)
@@ -1085,7 +1085,7 @@ glance(mod3)
 
 ---
 
-```{r, eval = FALSE}
+```{r}
 glance(mod2)
 glance(mod3)
 glance(mod4)
@@ -1136,7 +1136,7 @@ Now we will penalize larger models.
 
 **Strategy**: Compute the adjusted $R^2$ value for each model and pick the one with the highest adjusted $R^2$.
 
-```{r, eval = FALSE}
+```{r}
 glance(mod2)
 glance(mod3)
 glance(mod4)
