@@ -55,7 +55,9 @@ class: middle, center, inverse
 
 
 
-## .whitish[Inference for]
+## .whitish[Inference]
+
+## .whitish[for]
 
 ## .whitish[Linear Regression]
 
