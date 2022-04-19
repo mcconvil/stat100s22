@@ -68,7 +68,7 @@ class: middle, center, inverse
 ### Announcements
 
 * Project Assignment 3 is due Friday, April 22nd at 5pm
-
+* Remember that Andrew's OHs today are shifted to 9-11pm.
 
 
 ****************************

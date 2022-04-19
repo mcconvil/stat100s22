@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Inference for Many Means</title>
+    <meta charset="utf-8" />
+    <script src="libsSlides/header-attrs-2.11/header-attrs.js"></script>
+    <link href="libsSlides/remark-css-0.0.1/hygge.css" rel="stylesheet" />
+    <script src="libsSlides/fabric-4.3.1/fabric.min.js"></script>
+    <link href="libsSlides/xaringanExtra-scribble-0.0.1/scribble.css" rel="stylesheet" />
+    <script src="libsSlides/xaringanExtra-scribble-0.0.1/scribble.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', function() { window.xeScribble = new Scribble({"pen_color":["#FF0000"],"pen_size":3,"eraser_size":30,"palette":[]}) })</script>
+    <link rel="stylesheet" href="more.css" type="text/css" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+
+
+background-image: url("img/DAW.png")
+background-position: left
+background-size: 50%
+class: middle, center, inverse
+
+
+.pull-right[
+
+
+
+## .whitish[ANOVA Test]
+
+## .whitish[Inference for]
+
+## .whitish[Many Means]
+
+
+&lt;br&gt;
+
+### .whitish[Kelly McConville]
+
+#### .yellow[ Stat 100 | Week 12 | Spring 2022] 
+
+]
+
+
+
+
+---
+
+### Announcements
+
+* Project Assignment 3 is due Friday, April 22nd at 5pm
+* Remember that Andrew's OHs today are shifted to 9-11pm.
+
+
+****************************
+
+--
+
+### Goals for Today
+
+.pull-left[
+
+* Cover the **ANOVA** test.
+
+* Learn about the F distribution.
+
+] 
+
+
+
+.pull-right[
+
+* Compare **Simulation** methods versus **Probability Model** methods for inference.
+
+* Start exploring inference for linear regression models.
+
+]
+
+---
+
+### Inference for Many Means
+
+Consider the situation where:
+
+* Response variable: quantitative
+
+* Explanatory variable: categorical
+
+--
+
+* Parameter of interest: `\(\mu_1 - \mu_2\)`
+
+--
+
+This parameter of interest only makes sense if the explanatory variable is restricted to two categories.
+
+--
+
+It is time to learn how to conduct inference for more than two means.
+
+---
+
+### Hypotheses
+
+Consider the situation where:
+
+* Response variable: quantitative
+
+* Explanatory variable: categorical
+
+--
+
+`\(H_o\)`: `\(\mu_1 = \mu_2 = \cdots = \mu_K\)`  (Variables are independent/not related.)
+
+`\(H_a\)`: At least one mean is not equal to the rest. (Variables are dependent/related)
+
+---
+
+### Example
+
+Do Audience Ratings vary by movie genre?
+
+
+```r
+library(tidyverse)
+# Load data
+library(Lock5Data)
+movies &lt;- HollywoodMovies2011 %&gt;%
+  filter(!(Genre %in% c("Fantasy", "Adventure"))) %&gt;%
+  drop_na(Genre, AudienceScore)
+```
+
+* **Cases**:
+
+
+* **Variables of interest (including type)**:
+
+
+* **Hypotheses**:
+
+---
+
+### Example
+
+.pull-left[
+
+Does there appear to be a relationship?
+
+
+```r
+ggplot(data = movies, 
+       mapping = aes(x = Genre,
+                     y = AudienceScore)) + 
+  geom_boxplot() +     
+  stat_summary(fun = mean, geom = "point", 
+               color = "purple",
+               shape = 8, size = 3)
+```
+
+]
+
+.pull-right[
+
+&lt;img src="stat100_wk12mon_files/figure-html/movies-1.png" width="768" style="display: block; margin: auto;" /&gt;
+
+]
+
+--
+
+What movie did the audience hate so much??
+
+
+---
+
+### Example
+
+.pull-left[
+
+Does there appear to be a relationship?
+
+
+```r
+bad &lt;- filter(movies, 
+        AudienceScore == min(AudienceScore))
+
+ggplot(data = movies, 
+       mapping = aes(x = Genre,
+                     y = AudienceScore)) + 
+  geom_boxplot() +     
+  stat_summary(fun = mean, geom = "point", 
+               color = "purple",
+               shape = 8, size = 3) +
+  geom_label(data = bad, 
+             mapping = aes(label = Movie))
+```
+
+]
+
+.pull-right[
+
+&lt;img src="stat100_wk12mon_files/figure-html/bad-1.png" width="768" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+What movie did the audience hate so much??
+
+---
+
+### Trespass
+
+&lt;img src="img/trespass.001.jpeg" width="1275" style="display: block; margin: auto;" /&gt;
+
+
+
+
+
+---
+
+### Test Statistic
+
+Need a test statistic!
+
+--
+
+* Won't be a sample statistic.  
+
+$$
+\bar{x}_1 - \bar{x}_2 - \cdots - \bar{x}_K \mbox{ won't work!}
+$$
+
+
+--
+
+* Needs to measure the discrepancy between the **observed** sample and the sample **we'd expect** to see if `\(H_o\)` were true.
+
+--
+
+* Would be nice if its null distribution could be approximated by a known probability model.
+
+******************************
+
+
+Let's return to the **name** of the test.
+
+--
+
+* Called "Analysis of **VARIANCE**" test.
+
+--
+
+* Not called "Analysis of **MEANS**" test.
+
+--
+
+**Question**: Why analyze **variability** to test differences in means?
+
+---
+
+###  Why analyze **variability** to test differences in means?
+
+Let's look at some simulated data for a moment.
+
+&lt;img src="stat100_wk12mon_files/figure-html/unnamed-chunk-5-1.png" width="864" style="display: block; margin: auto;" /&gt;
+
+**Question**: For which scenario are you most convinced that the means are different?
+
+---
+
+### Key Idea: Partitioning the Variability
+
+.pull-left[
+
+&lt;img src="stat100_wk12mon_files/figure-html/unnamed-chunk-6-1.png" width="864" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right[
+
+`\begin{align*}
+\mbox{Total Variability} &amp; = \\
+&amp; \mbox{Variability Between Groups} + \\
+&amp; \mbox{Variability Within Groups}
+\end{align*}`
+
+]
+
+--
+
+
+
+.pull-left[
+
+* Variability **Between** Groups: How much the group means vary
+    + Compare the red dots.
+
+]
+
+--
+
+.pull-right[
+
+* Variability **Within** Groups: How much natural group variability there is
+    + Within groups, compare the black dots to the red dot.
+ 
+]
+
+---
+
+### Key Idea: Partitioning the Variability
+
+
+`\begin{align*}
+\mbox{Total Variability} &amp; = \mbox{Variability Between Groups} + \mbox{Variability Within Groups}
+\end{align*}`
+
+
+
+* Variability **Between** Groups: How much the group means vary
+    + Compare the red dots.
+
+`\begin{align*}
+\mbox{Variability Between Groups} &amp;= \sum n_i (\bar{x}_i - \bar{x})^2 \\
+&amp; = \mbox{Sum of Squares Group} \\
+&amp; = \mbox{SSG} 
+\end{align*}`
+
+--
+
+* Variability **Within** Groups: How much natural group variability there is
+    + Within groups, compare the black dots to the red dot.
+    
+
+`\begin{align*}
+\mbox{Variability Within Groups} &amp;= \sum  (x - \bar{x}_i)^2 \\
+&amp; = \mbox{Sum of Squares Error} \\
+&amp; = \mbox{SSE} 
+\end{align*}`
+
+--
+
+* Total Variability: How much points vary from the overall mean
+
+`\begin{align*}
+\mbox{Total Variability} &amp;= \sum  (x - \bar{x})^2 \\
+&amp; = \mbox{Sum of Squares Total} \\
+&amp; = \mbox{SSTotal} 
+\end{align*}`
+
+---
+
+### Mean Squares
+
+Need to standardize the Sums of Squares to compare SSG to SSE.
+
+--
+
+`\begin{align*}
+\mbox{Mean Variability Between Groups} &amp; = \frac{\mbox{SSG}}{K - 1} 
+\end{align*}`
+
+`\begin{align*}
+\mbox{Mean Variability Within Groups} &amp; = \frac{\mbox{SSE}}{n - K} 
+\end{align*}`
+
+--
+
+* Now on a comparable scale!  
+
+* Now we can create a test statistic that compares these two measures of variability.
+
+---
+
+### Test Statistic
+
+In some ways, MSG is the natural test statistic but as we saw for this example, MSG alone isn't enough.
+
+&lt;img src="stat100_wk12mon_files/figure-html/unnamed-chunk-7-1.png" width="864" style="display: block; margin: auto;" /&gt;
+
+--
+
+Scenarios 2 and 3 have roughly the same MSG but we are much more convinced that the means are different for 2 than 3.  
+
+--
+
+That is where MSE comes in!
+
+---
+
+### Test Statistic
+
+$$
+F = \frac{\mbox{MSG}}{\mbox{MSE}} = \frac{\mbox{variance between groups}}{\mbox{variance within groups}}
+$$
+
+If `\(H_o\)` is true, then `\(F\)` should be roughly equal to what?
+
+--
+
+If `\(H_a\)` is true, then `\(F\)` should be greater than 1 because there is more variation in the group means than we'd expect if the population means are all equal.
+
+---
+
+### Returning to the Movies Example
+
+
+```r
+library(infer)
+#Compute F test stat
+test_stat &lt;- movies %&gt;%
+  specify(AudienceScore ~ Genre) %&gt;%
+  calculate(stat = "F") 
+test_stat
+```
+
+```
+## Response: AudienceScore (numeric)
+## Explanatory: Genre (factor)
+## # A tibble: 1 × 1
+##    stat
+##   &lt;dbl&gt;
+## 1  3.88
+```
+
+--
+
+* Is 3.88 a **large** test statistic?  Is a test statistic of 3.88 **unusual** under `\(H_o\)`?
+
+---
+
+### Generating the Null Distribution
+
+.pull-left[
+
+
+```
+##    AudienceScore     Genre
+## 1             63  Thriller
+## 2             34    Action
+## 3             39    Action
+## 4             49    Comedy
+## 5             38    Horror
+## 6             68     Drama
+## 7             55    Action
+## 8             31    Comedy
+## 9             91     Drama
+## 10            70  Thriller
+## 11            63   Romance
+## 12            53     Drama
+## 13            73 Animation
+## 14            42    Comedy
+## 15            76 Animation
+## 16            63    Comedy
+## 17            54    Comedy
+## 18            55    Comedy
+## 19            59 Animation
+## 20            77    Comedy
+```
+
+] 
+
+--
+
+.pull-right[
+
+**Steps**:
+
+1. Shuffle Genre.
+2. Compute the `\(MSE\)` and `\(MSG\)`.  
+3. Compute the test statistic.
+4. Repeat 1 - 3 many times.
+
+]
+
+---
+
+### Generating the Null Distribution
+
+.pull-left[
+
+
+```r
+# Construct null distribution
+null_dist &lt;- movies %&gt;%
+  specify(AudienceScore ~ Genre) %&gt;%
+  hypothesize(null = "independence") %&gt;%
+  generate(reps = 1000, type = "permute") %&gt;%
+  calculate(stat = "F") 
+
+
+visualize(null_dist)
+```
+
+]
+
+.pull-right[
+
+&lt;img src="stat100_wk12mon_files/figure-html/null-1.png" width="768" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+### The Null Distribution
+
+.pull-left[
+
+
+**Key Observations**:
+
+* Smallest possible value?
+
+&lt;br&gt;
+
+* Shape?
+
+]
+
+.pull-right[
+
+&lt;img src="stat100_wk12mon_files/figure-html/unnamed-chunk-11-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+
+---
+
+### The Null Distribution
+
+
+.pull-left[
+
+
+**Key Observations**:
+
+* Smallest possible value?
+
+&lt;br&gt;
+
+* Shape?
+
+&lt;br&gt;
+
+* Is our observed test statistic unusual?
+
+
+]
+
+.pull-right[
+
+&lt;img src="stat100_wk12mon_files/figure-html/unnamed-chunk-12-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+
+
+
+
+---
+
+### The P-value
+
+
+```r
+# Compute p-value
+null_dist %&gt;%
+  get_pvalue(obs_stat = test_stat, direction = "greater")
+```
+
+```
+## # A tibble: 1 × 1
+##   p_value
+##     &lt;dbl&gt;
+## 1       0
+```
+
+---
+
+### Approximating the Null Distribution
+
+.pull-left[
+
+
+If 
+
+* There are at least 30 observations **in each group** or the response variable is normal
+* The variability is similar for all groups 
+
+then 
+
+$$
+\mbox{test statistic} \sim F(df1 = K - 1, df2 = n - K)
+$$
+]
+
+.pull-right[
+
+&lt;img src="stat100_wk12mon_files/figure-html/unnamed-chunk-14-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+### The ANOVA Test
+
+Check assumptions!
+
+
+```r
+movies %&gt;%
+  group_by(Genre) %&gt;%
+  summarize(n(), sd(AudienceScore))
+```
+
+```
+## # A tibble: 7 × 3
+##   Genre     `n()` `sd(AudienceScore)`
+##   &lt;fct&gt;     &lt;int&gt;               &lt;dbl&gt;
+## 1 Action       32                18.4
+## 2 Animation    12                13.9
+## 3 Comedy       27                15.7
+## 4 Drama        21                14.5
+## 5 Horror       17                15.9
+## 6 Romance      10                12.9
+## 7 Thriller     13                14.9
+```
+
+
+---
+
+### The ANOVA Test
+
+Check assumptions!
+
+
+```r
+ggplot(data = movies, mapping = aes(x = AudienceScore)) + 
+  geom_histogram(bins = 15) + 
+  facet_wrap(~Genre)
+```
+
+&lt;img src="stat100_wk12mon_files/figure-html/unnamed-chunk-16-1.png" width="864" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+### The ANOVA Test
+
+
+```r
+library(broom)
+mod_anova &lt;- aov(AudienceScore ~ Genre, data = movies)
+tidy(mod_anova)
+```
+
+```
+## # A tibble: 2 × 6
+##   term         df  sumsq meansq statistic  p.value
+##   &lt;chr&gt;     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 Genre         6  5855.   976.      3.88  0.00137
+## 2 Residuals   125 31413.   251.     NA    NA
+```
+
+---
+
+### Connection to Linear Regression
+
+
+```r
+library(moderndive)
+mod_reg &lt;- lm(AudienceScore ~ Genre, data = movies)
+get_regression_table(mod_reg, print = TRUE)
+```
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; term &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; estimate &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; std_error &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; statistic &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p_value &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; lower_ci &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; upper_ci &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; intercept &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 58.625 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.802 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 20.920 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 53.079 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 64.171 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Genre: Animation &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.458 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.366 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.017 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.311 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -5.162 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 16.079 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Genre: Comedy &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.486 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.143 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.117 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.907 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -7.713 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8.685 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Genre: Drama &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 13.470 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.452 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.026 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.003 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.659 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22.281 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Genre: Horror &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -9.978 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.758 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -2.097 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.038 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -19.394 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.562 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Genre: Romance &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6.175 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.743 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.075 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.284 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -5.191 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 17.541 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Genre: Thriller &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.683 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.214 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.090 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.278 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -4.636 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 16.002 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+### Connection to Linear Regression
+
+
+```r
+tidy(mod_anova)
+```
+
+```
+## # A tibble: 2 × 6
+##   term         df  sumsq meansq statistic  p.value
+##   &lt;chr&gt;     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 Genre         6  5855.   976.      3.88  0.00137
+## 2 Residuals   125 31413.   251.     NA    NA
+```
+
+```r
+glance(mod_reg)
+```
+
+```
+## # A tibble: 1 × 12
+##   r.squared adj.r.squared sigma statistic p.value    df logLik   AIC   BIC
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     0.157         0.117  15.9      3.88 0.00137     6  -548. 1113. 1136.
+## # … with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;
+```
+
+---
+
+## Many ANOVA Tests Out There!
+
+* We learned the **One-Way** ANOVA test.
+
+--
+
+* **Two-Way**: Have two categorical, explanatory variables.
+
+--
+
+* **Repeated Measures ANOVA**: Have multiple observations on each case.
+    + All the tests we have focused (beyond paired data) assumed independent observations.
+    
+--
+
+* **ANOVA Tests for Regression**: Allow comparisons of various subsets of a multiple linear regression model.
+
+---
+
+background-image: url("img/hyp_testing_diagram.png")
+background-position: contain
+background-size: 80%
+
+### Have Learned Two Routes to Statistical Inference
+
+--
+
+Which is **better**?
+
+---
+
+## Is Simulation-Based Inference or Theory-Based Inference better?
+
+--
+
+Depends on how you define **better**.
+
+.pull-left[
+
+* If **better** = Leads to better understanding:
+
+
+]
+
+--
+
+.pull-right[
+
+&amp;#8594; Research tends to show students have a better understanding of **p-values** and **confidence** from learning simulation-based methods.
+
+]
+
+--
+
+.pull-left[
+
+* If **better** = More flexible/robust to assumptions:
+
+
+]
+
+--
+
+.pull-right[
+
+&amp;#8594; The simulation-based methods tend to be more flexible but that generally requires learning extensions beyond what we've seen in Stat 100.  
+
+]
+
+--
+
+.pull-left[
+
+* If **better** = More commonly used:
+
+
+]
+
+--
+
+.pull-right[
+
+&amp;#8594; Definitely the theory-based methods but the simulation-based methods are becoming more common.
+
+]
+
+
+Good to be comfortable with both!
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"ratio": "16:9",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
