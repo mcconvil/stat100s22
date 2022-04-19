@@ -1,0 +1,17 @@
+base
+knitr
+kableExtra
+tidyverse
+ggplot2
+tibble
+tidyr
+readr
+purrr
+dplyr
+stringr
+forcats
+Sleuth3
+gglm
+moderndive
+readxl
+broom

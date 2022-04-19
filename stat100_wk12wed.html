@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Inference for Regression</title>
+    <meta charset="utf-8" />
+    <script src="libsSlides/header-attrs-2.11/header-attrs.js"></script>
+    <link href="libsSlides/remark-css-0.0.1/hygge.css" rel="stylesheet" />
+    <script src="libsSlides/fabric-4.3.1/fabric.min.js"></script>
+    <link href="libsSlides/xaringanExtra-scribble-0.0.1/scribble.css" rel="stylesheet" />
+    <script src="libsSlides/xaringanExtra-scribble-0.0.1/scribble.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', function() { window.xeScribble = new Scribble({"pen_color":["#FF0000"],"pen_size":3,"eraser_size":30,"palette":[]}) })</script>
+    <link rel="stylesheet" href="more.css" type="text/css" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+
+
+background-image: url("img/DAW.png")
+background-position: left
+background-size: 50%
+class: middle, center, inverse
+
+
+.pull-right[
+
+
+
+## .whitish[Inference]
+
+## .whitish[for]
+
+## .whitish[Linear Regression]
+
+
+&lt;br&gt;
+
+### .whitish[Kelly McConville]
+
+#### .yellow[ Stat 100 | Week 12 | Spring 2022] 
+
+]
+
+
+
+
+---
+
+### Announcements
+
+* Project Assignment 3 is due Friday, April 22nd at 5pm
+* Final Project Assignment
+    + Create 5-10 minute video summary of your analyses
+    + Due Friday, May 6th
+
+****************************
+
+--
+
+### Goals for Today
+
+.pull-left[
+
+* Recap linear regression
+
+* Checking **assumptions** for linear regression
+
+
+
+] 
+
+
+
+.pull-right[
+
+* Hypothesis testing for linear regression
+
+* Estimation and prediction inference for linear regression
+
+]
+
+
+---
+
+class: inverse, middle, center
+
+## Please make sure to fill out the Stat 100 Course Evaluations.
+
+### We appreciate constructive feedback.
+
+### For all of your course evaluations be mindful of [unconscious and unintentional biases](https://benschmidt.org/profGender).
+
+
+
+
+
+---
+
+## Multiple Linear Regression
+
+Linear regression is a flexible class of models that allow for:
+
+* Both quantitative and categorical explanatory variables.
+
+
+* Multiple explanatory variables.
+
+
+* Curved relationships between the response variable and the explanatory variable.
+
+--
+
+* BUT the response variable is quantitative.
+
+
+---
+
+
+### Multiple Linear Regression
+
+**Form of the Model:**
+
+
+$$ 
+`\begin{align}
+y &amp;= \beta_o + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + \epsilon
+\end{align}`
+$$
+
+--
+
+**Fitted Model:** Using the Method of Least Squares,
+
+
+
+$$ 
+`\begin{align}
+\hat{y} &amp;= \hat{\beta}_o + \hat{\beta}_1 x_1 + \hat{\beta}_2 x_2 + \cdots + \hat{\beta}_p x_p 
+\end{align}`
+$$
+
+--
+
+#### Typical Inferential Questions:
+
+(1) Should `\(x_2\)` be in the model that already contains `\(x_1\)` and `\(x_3\)`?
+
+$$ 
+`\begin{align}
+y &amp;= \beta_o + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + \epsilon
+\end{align}`
+$$
+
+In other words, should `\(\beta_2 = 0\)`?
+
+---
+
+
+### Multiple Linear Regression
+
+**Form of the Model:**
+
+
+$$ 
+`\begin{align}
+y &amp;= \beta_o + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + \epsilon
+\end{align}`
+$$
+
+
+
+**Fitted Model:** Using the Method of Least Squares,
+
+
+
+$$ 
+`\begin{align}
+\hat{y} &amp;= \hat{\beta}_o + \hat{\beta}_1 x_1 + \hat{\beta}_2 x_2 + \cdots + \hat{\beta}_p x_p 
+\end{align}`
+$$
+
+
+#### Typical Inferential Questions:
+
+(2) Can we estimate `\(\beta_3\)` with a confidence interval?
+
+$$ 
+`\begin{align}
+y &amp;= \beta_o + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + \epsilon
+\end{align}`
+$$
+
+---
+
+
+### Multiple Linear Regression
+
+**Form of the Model:**
+
+
+$$ 
+`\begin{align}
+y &amp;= \beta_o + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + \epsilon
+\end{align}`
+$$
+
+
+
+**Fitted Model:** Using the Method of Least Squares,
+
+
+
+$$ 
+`\begin{align}
+\hat{y} &amp;= \hat{\beta}_o + \hat{\beta}_1 x_1 + \hat{\beta}_2 x_2 + \cdots + \hat{\beta}_p x_p 
+\end{align}`
+$$
+
+
+
+#### Typical Inferential Questions:
+
+(3) While `\(\hat{y}\)` is a point estimate for `\(y\)`, can we also get an interval estimate for `\(y\)`?
+
+$$ 
+`\begin{align}
+y &amp;= \beta_o + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3 + \epsilon
+\end{align}`
+$$
+
+
+--
+
+To answer these questions, we need to add some **assumptions** to our linear regression model.
+
+---
+
+
+### Multiple Linear Regression
+
+**Form of the Model:**
+
+
+$$ 
+`\begin{align}
+y &amp;= \beta_o + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p + \epsilon
+\end{align}`
+$$
+
+**Additional Assumptions:**
+
+$$
+\epsilon \overset{\mbox{ind}}{\sim} N (\mu = 0, \sigma = \sigma_{\epsilon})
+$$
+
+`\(\sigma_{\epsilon}\)` = typical deviations from the model
+
+--
+
+Let's unpack these assumptions!
+
+
+---
+
+### Assumptions
+
+For ease of visualization, let's assume a simple linear model:
+
+
+`\begin{align*}
+y = \beta_o + \beta_1 x_1 + \epsilon \quad \mbox{   where   } \quad \epsilon \overset{\color{orange}{\mbox{ind}}}{\sim}N\left(0, \sigma_{\epsilon} \right)
+\end{align*}`
+
+--
+
+**Assumption**: The cases are independent of each other.
+
+
+--
+
+**Question**: How do we check this assumption? 
+
+--
+
+Look at how the data were collected.  Generally relies on random sampling or random assignment being utilized.
+
+---
+
+### Assumptions
+
+For ease of visualization, let's assume a simple linear model:
+
+
+`\begin{align*}
+y = \beta_o + \beta_1 x_1 + \epsilon \quad \mbox{   where   } \quad \epsilon \overset{\mbox{ind}}{\sim}\color{orange}{N}\left(0, \sigma_{\epsilon} \right)
+\end{align*}`
+
+--
+
+**Assumption**: The errors are normally distributed.
+
+
+--
+
+.pull-left[
+
+**Question**: How do we check this assumption? 
+
+]
+
+--
+
+.pull-right[
+
+Recall the residual: `\(e = y - \hat{y}\)`
+
+]
+
+--
+
+**QQ-plot:** Plot the residuals against the quantiles of a normal distribution!
+
+.pull-left[
+
+&lt;img src="stat100_wk12wed_files/figure-html/unnamed-chunk-1-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+
+
+]
+
+.pull-right[
+
+&lt;img src="stat100_wk12wed_files/figure-html/unnamed-chunk-2-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+
+
+]
+
+
+---
+
+### Assumptions
+
+For ease of visualization, let's assume a simple linear model:
+
+
+`\begin{align*}
+y = \beta_o + \beta_1 x_1 + \epsilon \quad \mbox{   where   } \quad \epsilon \overset{\mbox{ind}}{\sim}N\left(\color{orange}{0}, \sigma_{\epsilon} \right)
+\end{align*}`
+
+--
+
+**Assumption**: The points will, on average, fall on the line.
+
+
+--
+
+**Question**: How do we check this assumption? 
+
+--
+
+If you use the Method of Least Squares, then you don't have to check.
+
+It will be true by construction:
+
+
+$$
+\sum e = 0
+$$
+
+---
+
+### Assumptions
+
+For ease of visualization, let's assume a simple linear model:
+
+
+`\begin{align*}
+y = \beta_o + \beta_1 x_1 + \epsilon \quad \mbox{   where   } \quad \epsilon \overset{\mbox{ind}}{\sim}N\left(0, \color{orange}{\sigma_{\epsilon}} \right)
+\end{align*}`
+
+--
+
+**Assumption**: The variability in the errors is constant.
+
+
+--
+
+**Question**: How do we check this assumption? 
+
+--
+
+**One option**: Scatterplot
+
+.pull-left[
+
+&lt;img src="stat100_wk12wed_files/figure-html/unnamed-chunk-3-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+
+
+]
+
+.pull-right[
+
+&lt;img src="stat100_wk12wed_files/figure-html/unnamed-chunk-4-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+
+
+]
+
+---
+
+### Assumptions
+
+For ease of visualization, let's assume a simple linear model:
+
+
+`\begin{align*}
+y = \beta_o + \beta_1 x_1 + \epsilon \quad \mbox{   where   } \quad \epsilon \overset{\mbox{ind}}{\sim}N\left(0, \color{orange}{\sigma_{\epsilon}} \right)
+\end{align*}`
+
+
+
+**Assumption**: The variability in the errors is constant.
+
+
+
+
+**Question**: How do we check this assumption? 
+
+
+
+**Better option** (especially when have more than 1 explanatory variable): **Residual Plot** 
+
+.pull-left[
+
+&lt;img src="stat100_wk12wed_files/figure-html/unnamed-chunk-5-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+
+
+]
+
+.pull-right[
+
+&lt;img src="stat100_wk12wed_files/figure-html/unnamed-chunk-6-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+
+
+]
+
+
+---
+
+### Assumptions
+
+For ease of visualization, let's assume a simple linear model:
+
+
+`\begin{align*}
+y = \color{orange}{\beta_o + \beta_1 x_1} + \epsilon \quad \mbox{   where   } \quad \epsilon \overset{\mbox{ind}}{\sim}N\left(0, \sigma_{\epsilon} \right)
+\end{align*}`
+
+--
+
+&amp;rarr; The model form is appropriate.
+
+
+--
+
+**Question**: How do we check this assumption? 
+
+--
+
+**One option**: Scatterplot(s)
+
+.pull-left[
+
+&lt;img src="stat100_wk12wed_files/figure-html/unnamed-chunk-7-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+
+
+]
+
+.pull-right[
+
+&lt;img src="stat100_wk12wed_files/figure-html/unnamed-chunk-8-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+
+
+]
+
+---
+
+### Assumptions
+
+For ease of visualization, let's assume a simple linear model:
+
+`\begin{align*}
+y = \color{orange}{\beta_o + \beta_1 x_1} + \epsilon \quad \mbox{   where   } \quad \epsilon \overset{\mbox{ind}}{\sim}N\left(0, \sigma_{\epsilon} \right)
+\end{align*}`
+
+
+
+**Assumption**: The model form is appropriate.
+
+
+
+
+**Question**: How do we check this assumption? 
+
+
+
+**Better option** (especially when have more than 1 explanatory variable): **Residual Plot**
+
+.pull-left[
+
+&lt;img src="stat100_wk12wed_files/figure-html/unnamed-chunk-9-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+
+
+]
+
+.pull-right[
+
+&lt;img src="stat100_wk12wed_files/figure-html/unnamed-chunk-10-1.png" width="432" style="display: block; margin: auto;" /&gt;
+
+
+
+]
+
+
+
+---
+
+### Assumptions
+
+**Question**: What if the assumptions aren't all satisfied?
+
+--
+
+&amp;rarr; Try transforming the data and building the model again.
+
+--
+
+&amp;rarr; Use a modeling technique beyond linear regression.
+
+--
+
+**Question**: What if the assumptions are all (roughly) satisfied?
+
+--
+
+&amp;rarr; Can now start answering your inference questions!
+
+---
+
+### Example: COVID and Candle Ratings
+
+[Kate Petrova created a dataset](https://twitter.com/kate_ptrv/status/1332398768659050496) that has been making the rounds on Twitter:
+
+
+&lt;img src="img/kate_petrova_candles.jpg" width="600px"/&gt;
+
+
+---
+
+### COVID and Candle Ratings
+
+She posted all her data and code to GitHub and I did some light wrangling so that we could answer the question:
+
+&amp;rarr; Do we have evidence that we should allow the slopes to vary?
+
+--
+
+
+
+.pull-left[
+
+
+```r
+ggplot(data = all,
+       mapping = aes(x = Date,
+                     y = Rating,
+                     color = Type)) +
+  geom_point(alpha = 0.4) +
+  geom_smooth(method = lm) +
+  theme(legend.position = "bottom")
+```
+
+]
+
+.pull-right[
+
+&lt;img src="stat100_wk12wed_files/figure-html/candles-1.png" width="768" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+---
+
+class: inverse, center, middle
+
+
+### But before we try to answer that question formally, let's practice checking linear regression assumptions with the "inferenceModeling.Rmd" handout!
+
+
+
+---
+
+### Hypothesis Testing 
+
+**Question**: What tests is `get_regression_table()` conducting?
+
+
+```r
+mod &lt;- lm(Rating ~ Date + Type, data = all)
+get_regression_table(mod)
+```
+
+```
+## # A tibble: 3 × 7
+##   term            estimate std_error statistic p_value lower_ci upper_ci
+##   &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1 intercept         36.2       6.50       5.58       0   23.5     49.0  
+## 2 Date              -0.002     0         -5.00       0   -0.002   -0.001
+## 3 Type: unscented    0.831     0.063     13.2        0    0.707    0.955
+```
+
+--
+
+**In General**:
+
+$$
+H_o: \beta_j = 0 \quad \mbox{assuming all other predictors are in the model}
+$$
+$$
+H_a: \beta_j \neq 0 \quad \mbox{assuming all other predictors are in the model}
+$$
+
+
+
+
+---
+
+### Hypothesis Testing 
+
+**Question**: What tests is `get_regression_table()` conducting?
+
+
+```r
+mod &lt;- lm(Rating ~ Date + Type, data = all)
+get_regression_table(mod)
+```
+
+```
+## # A tibble: 3 × 7
+##   term            estimate std_error statistic p_value lower_ci upper_ci
+##   &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1 intercept         36.2       6.50       5.58       0   23.5     49.0  
+## 2 Date              -0.002     0         -5.00       0   -0.002   -0.001
+## 3 Type: unscented    0.831     0.063     13.2        0    0.707    0.955
+```
+
+
+**For our Example**:
+
+**Row 2**:
+
+$$
+H_o: \beta_1 = 0 \quad \mbox{given Type is already in the model}
+$$
+$$
+H_a: \beta_1 \neq 0 \quad \mbox{given Type is already in the model}
+$$
+
+
+
+---
+
+### Hypothesis Testing 
+
+**Question**: What tests is `get_regression_table()` conducting?
+
+
+```r
+mod &lt;- lm(Rating ~ Date + Type, data = all)
+get_regression_table(mod)
+```
+
+```
+## # A tibble: 3 × 7
+##   term            estimate std_error statistic p_value lower_ci upper_ci
+##   &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1 intercept         36.2       6.50       5.58       0   23.5     49.0  
+## 2 Date              -0.002     0         -5.00       0   -0.002   -0.001
+## 3 Type: unscented    0.831     0.063     13.2        0    0.707    0.955
+```
+
+
+**For our Example**:
+
+**Row 3**:
+
+$$
+H_o: \beta_2 = 0 \quad \mbox{given Date is already in the model}
+$$
+$$
+H_a: \beta_2 \neq 0 \quad \mbox{given Date is already in the model}
+$$
+
+---
+
+### Hypothesis Testing 
+
+**Question**: What tests is `get_regression_table()` conducting?
+
+
+**In General**:
+
+$$
+H_o: \beta_j = 0 \quad \mbox{assuming all other predictors are in the model}
+$$
+$$
+H_a: \beta_j \neq 0 \quad \mbox{assuming all other predictors are in the model}
+$$
+
+Test Statistic:
+
+--
+
+$$
+t = \frac{\hat{\beta}_j - 0}{SE(\hat{\beta}_j)} \sim t(df = n - \mbox{# of predictors})
+$$
+
+when `\(H_o\)` is true and the model assumptions are met.
+
+
+---
+
+### Hypothesis Testing 
+
+**Question**: What tests is `get_regression_table()` conducting?
+
+--
+
+**For our Example**:
+
+**Row 3**:
+
+$$
+H_o: \beta_2 = 0 \quad \mbox{given Date is already in the model}
+$$
+$$
+H_a: \beta_2 \neq 0 \quad \mbox{given Date is already in the model}
+$$
+
+Test Statistic:
+
+--
+
+$$
+t = \frac{\hat{\beta}_2 - 0}{SE(\hat{\beta}_2)} = \frac{0.831 - 0}{0.063} = 13.2
+$$
+
+with p-value `\(= P(t \leq -13.2) + P(t \geq 13.2) \approx 0.\)`
+
+--
+
+There is evidence that including whether or not the candle is scented adds useful information to the linear regression model for Amazon ratings that already controls for date.
+
+---
+
+### Example
+
+Do we have evidence that we should allow the slopes to vary?
+
+
+&lt;img src="stat100_wk12wed_files/figure-html/unnamed-chunk-16-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+### Example
+
+Do we have evidence that we should allow the slopes to vary?
+
+
+
+```r
+mod &lt;- lm(Rating ~ Date*Type, data = all)
+get_regression_table(mod)
+```
+
+```
+## # A tibble: 4 × 7
+##   term               estimate std_error statistic p_value lower_ci upper_ci
+##   &lt;chr&gt;                 &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1 intercept            52.7       9.09       5.80   0       34.9     70.6  
+## 2 Date                 -0.003     0         -5.40   0       -0.004   -0.002
+## 3 Type: unscented     -32.6      12.9       -2.52   0.012  -58.0     -7.24 
+## 4 Date:Typeunscented    0.002     0.001      2.59   0.01     0        0.003
+```
+
+
+
+---
+
+class: inverse, middle, center
+
+
+## Now let's shift our focus to estimation and prediction!
+
+
+---
+
+### Estimation
+
+#### Typical Inferential Questions:
+
+(2) Can we estimate `\(\beta_j\)` with a confidence interval?
+
+--
+
+Confidence Interval Formula:
+
+--
+
+`\begin{align*}
+\mbox{statistic} &amp; \pm ME \\
+\hat{\beta}_j &amp; \pm t^* SE(\hat{\beta}_j)
+\end{align*}`
+
+--
+
+
+
+```r
+get_regression_table(mod)
+```
+
+```
+## # A tibble: 4 × 7
+##   term               estimate std_error statistic p_value lower_ci upper_ci
+##   &lt;chr&gt;                 &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1 intercept            52.7       9.09       5.80   0       34.9     70.6  
+## 2 Date                 -0.003     0         -5.40   0       -0.004   -0.002
+## 3 Type: unscented     -32.6      12.9       -2.52   0.012  -58.0     -7.24 
+## 4 Date:Typeunscented    0.002     0.001      2.59   0.01     0        0.003
+```
+
+---
+
+### Prediction
+
+#### Typical Inferential Questions:
+
+(3) While `\(\hat{y}\)` is a point estimate for `\(y\)`, can we also get an interval estimate for `\(y\)`?
+
+#### Two Types:
+
+--
+
+.pull-left[
+
+**Confidence Interval for the Mean Response**
+
+&amp;rarr; Defined at given values of the explanatory variables
+
+&amp;rarr; Estimates the &lt;span style="color: orange;"&gt;average&lt;/span&gt; response
+
+&amp;rarr; Centered at `\(\hat{y}\)`
+
+&amp;rarr; &lt;span style="color: orange;"&gt;Smaller&lt;/span&gt; SE
+
+]
+
+
+.pull-right[
+
+**Prediction Interval for an Individual Response**
+
+&amp;rarr; Defined at given values of the explanatory variables
+
+&amp;rarr; Predicts the response of a &lt;span style="color: orange;"&gt;single, &lt;/span&gt; new observation
+
+&amp;rarr; Centered at `\(\hat{y}\)`
+
+&amp;rarr; &lt;span style="color: orange;"&gt;Larger&lt;/span&gt; SE
+
+
+]
+
+---
+
+### CI for mean response at a given level of X:
+
+We want to construct a 95\% CI for the average rating of unscented candles on Oct 31st, 2020.
+
+--
+
+
+```r
+new &lt;- data.frame(Type = "unscented", Date = as.Date("2020-10-31"))
+predict(mod, new, interval = "confidence", level = 0.95)
+```
+
+```
+##        fit      lwr      upr
+## 1 4.442378 4.286152 4.598604
+```
+
+--
+
+**Interpretation**:  We are 95\% confident that the average rating of an unscented candle on Amazon on Halloween 2020 was between 4.27 and 4.60.
+
+
+---
+
+### PI for a new Y at a given level of X:
+
+
+Say we want to construct a 95\% PI for the rating of an **individual** unscented candle on Oct 31st, 2020.
+
+* Predicting for a new observation not the mean!
+
+
+
+```r
+predict(mod, new, interval = "prediction", level = 0.95)
+```
+
+```
+##        fit      lwr      upr
+## 1 4.442378 2.911587 5.973169
+```
+
+**Interpretation**: For unscented candles on Amazon, we expect 95\% of the Halloween 2020 ratings to be between 2.91 and 5.97.
+
+
+---
+
+### Comparing Models
+
+Suppose I built 4 different model. **Which is best?**
+
+--
+
+* Big question!  Take [Stat 139: Linear Models](https://canvas.harvard.edu/courses/89311) to learn systematic model selection techniques.
+
+--
+
+* We will explore one approach.  (But there are many possible approaches!)
+
+
+---
+
+### Comparing Models
+
+Suppose I built 4 different model. **Which is best?**
+
+--
+
+&amp;rarr; Pick the best model based on some measure of quality.
+
+--
+
+**Measure of quality**: `\(R^2\)` (Coefficient of Determination)
+
+`\begin{align*}
+R^2 &amp;= \mbox{% of total variation in y explained by the model}\\
+&amp;= 1- \frac{\sum (y - \hat{y})^2}{\sum (y - \bar{y})^2}
+\end{align*}`
+
+
+--
+
+**Strategy**: Compute the `\(R^2\)` value for each model and pick the one with the highest `\(R^2\)`.
+
+---
+
+### Comparing Models with `\(R^2\)`
+
+**Strategy**: Compute the `\(R^2\)` value for each model and pick the one with the highest `\(R^2\)`.
+
+
+```r
+library(broom)
+mod1 &lt;- lm(Rating ~ Date, data = all)
+mod2 &lt;- lm(Rating ~ Type, data = all)
+mod3 &lt;- lm(Rating ~ Date + Type, data = all)
+mod4 &lt;- lm(Rating ~ Date * Type, data = all)
+```
+
+---
+
+**Strategy**: Compute the `\(R^2\)` value for each model and pick the one with the highest `\(R^2\)`.
+
+
+```r
+glance(mod1)
+```
+
+```
+## # A tibble: 1 × 12
+##   r.squared adj.r.squared sigma statistic    p.value    df logLik   AIC   BIC
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1    0.0326        0.0310 0.883      20.6 0.00000692     1  -791. 1588. 1601.
+## # … with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;
+```
+
+```r
+glance(mod2)
+```
+
+```
+## # A tibble: 1 × 12
+##   r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     0.217         0.216 0.794      169. 2.95e-34     1  -726. 1459. 1472.
+## # … with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;
+```
+
+```r
+glance(mod3)
+```
+
+```
+## # A tibble: 1 × 12
+##   r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     0.248         0.245 0.779      100. 2.28e-38     2  -714. 1436. 1454.
+## # … with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;
+```
+
+---
+
+
+```r
+glance(mod2)
+```
+
+```
+## # A tibble: 1 × 12
+##   r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     0.217         0.216 0.794      169. 2.95e-34     1  -726. 1459. 1472.
+## # … with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;
+```
+
+```r
+glance(mod3)
+```
+
+```
+## # A tibble: 1 × 12
+##   r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     0.248         0.245 0.779      100. 2.28e-38     2  -714. 1436. 1454.
+## # … with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;
+```
+
+```r
+glance(mod4)
+```
+
+```
+## # A tibble: 1 × 12
+##   r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     0.256         0.252 0.775      69.7 9.42e-39     3  -711. 1431. 1454.
+## # … with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;
+```
+
+
+
+**Problem:** As we add predictors, the `\(R^2\)` value will only increase.  
+
+
+---
+
+### Comparing Models with `\(R^2\)`
+
+
+**Problem:** As we add predictors, the `\(R^2\)` value will only increase.  
+
+
+And in [Week 6, we said](https://mcconvil.github.io/stat100s22/stat100_wk06mon.html#55):
+
+**Guiding Principle**: Occam's Razor for Modeling
+
+&gt; "All other things being equal, simpler models are to be preferred over complex ones." -- ModernDive
+
+
+---
+
+### Comparing Models with the Adjusted `\(R^2\)`
+
+
+**New Measure of quality**: Adjusted `\(R^2\)` (Coefficient of Determination)
+
+`\begin{align*}
+\mbox{adj} R^2 &amp;= 1- \frac{\sum (y - \hat{y})^2}{\sum (y - \bar{y})^2} \left(\frac{n - 1}{n - p - 1} \right)
+\end{align*}`
+
+where `\(p\)` is the number of explanatory variables in the model.
+
+--
+
+Now we will penalize larger models.
+
+--
+
+**Strategy**: Compute the adjusted `\(R^2\)` value for each model and pick the one with the highest adjusted `\(R^2\)`.
+
+---
+
+**Strategy**: Compute the adjusted `\(R^2\)` value for each model and pick the one with the highest adjusted `\(R^2\)`.
+
+
+```r
+glance(mod2)
+```
+
+```
+## # A tibble: 1 × 12
+##   r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     0.217         0.216 0.794      169. 2.95e-34     1  -726. 1459. 1472.
+## # … with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;
+```
+
+```r
+glance(mod3)
+```
+
+```
+## # A tibble: 1 × 12
+##   r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     0.248         0.245 0.779      100. 2.28e-38     2  -714. 1436. 1454.
+## # … with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;
+```
+
+```r
+glance(mod4)
+```
+
+```
+## # A tibble: 1 × 12
+##   r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     0.256         0.252 0.775      69.7 9.42e-39     3  -711. 1431. 1454.
+## # … with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;
+```
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"ratio": "16:9",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
