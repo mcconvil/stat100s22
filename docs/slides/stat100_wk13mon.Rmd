@@ -1,0 +1,765 @@
+---
+title: Logistic Regression
+output:
+  xaringan::moon_reader:
+    css: ["more.css", "xaringan-themer.css", "hygge"]
+    lib_dir: libsSlides
+    self_contained: false
+    nature:
+      highlightStyle: github
+      ratio: '16:9'      
+      highlightLines: true
+      countIncrementalSlides: false
+      navigation:
+        scroll: false
+    seal: false
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE,
+                      message = FALSE, 
+                      fig.retina = 3, fig.align = 'center',
+                      fig.asp = 0.75, fig.width = 8,
+                      cache = TRUE)
+library(knitr)
+library(kableExtra)
+library(tidyverse)
+theme_update(text = element_text(size = 20),
+             plot.title = element_text(hjust = 0.5))
+
+library(Sleuth3)
+data(case0901)
+
+# Recode the timing variable
+case0901 <- case0901 %>%
+  mutate(TimeCat = factor(case_when(
+    Time == 1 ~ "Late",
+    Time == 2 ~ "Early"
+  )))
+```
+
+```{r xaringan-scribble, echo=FALSE}
+xaringanExtra::use_scribble()
+```
+
+
+
+background-image: url("img/DAW.png")
+background-position: left
+background-size: 50%
+class: middle, center, inverse
+
+
+.pull-right[
+
+
+
+## .whitish[Expanding our Modeling]
+
+## .whitish[Toolkit:]
+
+## .whitish[Logistic Regression]
+
+
+<br>
+
+### .whitish[Kelly McConville]
+
+#### .yellow[ Stat 100 | Week 13 | Spring 2022] 
+
+]
+
+---
+
+background-image: url("img/ggparty.003.jpeg")
+background-position: contain
+background-size: 90%
+
+---
+
+class: middle, center
+
+# `ggparty` Rain Location: Science Center 316
+
+---
+
+### Announcements
+
+* We are currently finalizing [the OH schedule](https://docs.google.com/spreadsheets/d/18ckvWMtKWJrpq6YS-FuToAMrbHPP722FF79ZvuZ01Ys/edit?usp=sharing) for the next couple of weeks.
+* Will receive the final exam review sheet in Wednesday's lecture.
+    + Along with link to sign-up for oral exam time slot.
+* Final Project Assignment due Friday, May 6th.
+* No sections this week!
+
+****************************
+
+--
+
+### Goals for Today
+
+.pull-left[
+
+* Revisit model selection.
+
+* Motivate Logistic Regression.
+
+
+
+] 
+
+
+
+.pull-right[
+
+* For the Logistic Regression Model, consider
+    + Fitting the model in `R`.
+    + Interpreting the coefficients.
+    + Assessing the quality of the model.
+
+]
+
+
+---
+
+
+### Comparing Models with the Adjusted $R^2$
+
+
+**Strategy**: Compute the adjusted $R^2$ value for each model and pick the one with the highest adjusted $R^2$.
+
+\begin{align*}
+\mbox{adj} R^2 &= 1- \frac{\sum (y - \hat{y})^2}{\sum (y - \bar{y})^2} \left(\frac{n - 1}{n - p - 1} \right)
+\end{align*}
+
+--
+
+Let's look at one more example.
+
+---
+
+### Comparing Models with the Adjusted $R^2$
+
+
+```{r, fig.width=14, echo=FALSE, fig.asp= .5}
+Pollster08 <- 
+  read_csv("~/shared_data/stat100/data/Pollster08.csv")
+
+p1 <- ggplot(Pollster08, aes(x = Days, y = Margin, 
+                       color = factor(Charlie))) +
+  geom_point() +
+  stat_smooth(method = "lm", se = FALSE) + theme(legend.position = "bottom")
+
+p2 <- ggplot(Pollster08, aes(x = Days, y = Margin, 
+                       color = factor(Meltdown))) +
+  geom_point() +
+  stat_smooth(method = "lm", se = FALSE) + theme(legend.position = "bottom")
+p3 <- ggplot(Pollster08, aes(x = Days, y = Margin)) +
+  geom_point() +
+  stat_smooth(method = "lm", se = FALSE, formula = y ~ poly(x, degree = 2)) +
+  stat_smooth(method = "lm", se = FALSE, formula = y ~ poly(x, degree = 20),
+              color = "deeppink")
+
+library(cowplot)
+plot_grid(p1, p2, p3, ncol = 3)
+```
+
+---
+
+### Comparing Models with the Adjusted $R^2$
+
+```{r}
+mod1 <- lm(Margin ~ Days*factor(Charlie), data = Pollster08)
+mod2 <- lm(Margin ~ Days*factor(Meltdown), data = Pollster08)
+mod3 <- lm(Margin ~ poly(Days, degree = 2, 
+                         raw = TRUE), data = Pollster08)
+mod4 <- lm(Margin ~ poly(Days, degree = 20, 
+                         raw = TRUE), data = Pollster08)
+
+```
+
+\begin{align*}
+\mbox{adj} R^2 &= 1- \frac{\sum (y - \hat{y})^2}{\sum (y - \bar{y})^2} \left(\frac{n - 1}{n - p - 1} \right)
+\end{align*}
+
+Which of these 4 models likely has the highest adjusted R2?  Which likely has the lowest?
+
+
+---
+
+
+```{r}
+library(broom)
+glance(mod1)
+glance(mod2)
+
+```
+
+
+
+---
+
+```{r}
+glance(mod3)
+glance(mod4)
+```
+
+
+
+
+---
+
+### Logistic Regression
+
+**Response variable**: A **categorical** variable with **two** categories
+
+--
+
+\begin{align*}
+Y =   \left\{
+\begin{array}{ll}
+      1 & \mbox{success} \\
+      0 & \mbox{failure} \\
+\end{array} 
+\right.  
+\end{align*}
+
+--
+
+$Y \sim$ Bernoulli $(p)$ where $p = P(Y = 1) = P(\mbox{success})$. 
+
+
+--
+
+**Explanatory variables**: Can be a mix of categorical and quantitative
+
+--
+
+**Goal**: Build a model for $P(Y = 1)$.
+
+---
+
+### Why can't we use linear regression?
+
+.pull-left[
+
+
+* Regression line = estimated **probability** of success
+
+* For valid values of $x$, we are predicting the probability is less than 0 or greater than 1.
+
+]
+
+.pull-right[
+
+```{r, echo=FALSE}
+set.seed(40)
+x <- c(runif(20, 0, .6), runif(20, 0.4, 1))
+y <- c(rep(0, 20), rep(1, 20))
+dat <- data.frame(x, y)
+ggplot(dat, aes(x, y)) +
+  geom_point(alpha = 0.5, size = 3) +
+  geom_smooth(method = lm, se = FALSE) + 
+  labs(y = "P(Y = 1)")
+```
+
+]
+
+
+
+---
+
+### Why can't we use linear regression?
+
+
+.pull-left[
+
+
+* Regression line = estimated **probability** of success
+
+* For valid values of $x$, we are predicting the probability is less than 0 or greater than 1.
+
+
+* The estimated probabilities based on the logistic regression model are bounded between 0 and 1.
+
+
+]
+
+
+.pull-right[
+
+```{r, echo=FALSE}
+set.seed(40)
+x <- c(runif(20, 0, .6), runif(20, 0.4, 1))
+y <- c(rep(0, 20), rep(1, 20))
+dat <- data.frame(x, y)
+ggplot(dat, aes(x, y)) +
+  geom_point(alpha = 0.5, size = 3) +
+  geom_smooth(method = lm, se = FALSE) + 
+  labs(y = "P(Y = 1)") +
+  geom_smooth(method = 'glm', method.args = list(family = "binomial"), se = FALSE, color = "deeppink")
+```
+
+]
+
+--
+
+What does the **logistic regression model** look like?
+
+
+---
+
+### Logistic Regression Model
+
+\begin{align*}
+\log\left(\frac{P(Y = 1)}{1  - P(Y = 1)}  \right) &= \beta_o + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p 
+\end{align*}
+
+--
+
+Left hand side has many interpretations:
+
+--
+
+\begin{align*}
+\mbox{LHS} &= \log\left(\frac{P(Y = 1)}{1  - P(Y = 1)}  \right)\\ 
+&= \log \left( \mbox{odds (of success)}  \right)\\
+&= \mbox{logit}(P(Y = 1))
+\end{align*}
+
+
+Note: 
+
+$$ 
+\mbox{odds} = \frac{\mbox{prob of success}}{\mbox{prob of failure}}
+$$
+--
+
+The odds will be important when we go to interpret the coefficients!
+
+---
+
+### Probability of Success
+
+#### Logistic Regression Model:
+
+\begin{align*}
+\log\left(\frac{P(Y = 1)}{1  - P(Y = 1)}  \right) &= \beta_o + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p 
+\end{align*}
+
+But I don't want an equation for the log odds!
+
+--
+
+Want an equation for $P(Y = 1)$!
+
+--
+
+Take
+
+\begin{align*}
+\log\left(\frac{P(Y = 1)}{1  - P(Y = 1)}  \right) &= \beta_o + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p 
+\end{align*}
+
+and solve for only $P(Y = 1)$ on the LHS:
+
+--
+
+\begin{align*}
+P(Y = 1)  = 
+\frac{\exp(\beta_o + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p )}{1  + \exp(\beta_o + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p )}
+\end{align*}
+
+
+---
+
+### Probability of Success
+
+Have: 
+
+\begin{align*}
+P(Y = 1)  = 
+\frac{\exp(\beta_o + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p )}{1  + \exp(\beta_o + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p )}
+\end{align*}
+
+Notes:
+
+--
+
+&rarr; Bounded by 0 and 1.
+
+--
+
+&rarr; Estimate $\beta$'s with a method called "Maximum Likelihood Estimation".
+
+--
+
+**Fitted Model**:
+
+\begin{align*}
+\widehat{P(Y = 1)} = 
+\frac{\exp(\hat{\beta}_o + \hat{\beta}_1 x_1 + \hat{\beta}_2 x_2 + \cdots + \hat{\beta}_p x_p )}{1  + \exp(\hat{\beta}_o + \hat{\beta}_1 x_1 + \hat{\beta}_2 x_2 + \cdots + \hat{\beta}_p x_p )}
+\end{align*}
+
+
+---
+
+### Example: Palmer Penguins
+
+.pull-left[
+
+**Goal**: Build a model that predicts whether a penguin is a **Chinstrap** or a **Adelie**.
+
+
+```{r, echo=FALSE, fig.align='center', out.width='100%'}
+knitr::include_graphics("img/penguins.png")
+```
+
+]
+
+.pull-right[
+
+```{r}
+
+library(palmerpenguins)
+
+penguins2 <- penguins %>%
+  filter(species != "Gentoo") %>%
+  mutate(species_num = 
+           if_else(species == "Chinstrap",
+                   1, 0)) %>%
+  drop_na(species_num, flipper_length_mm)
+
+count(penguins2, species)
+```
+
+]
+
+
+---
+
+### Model: Predict species with flipper length
+
+
+.pull-left[
+
+```{r penguins, fig.show = 'hide'}
+ggplot(data = penguins2, 
+       mapping = aes(x = flipper_length_mm,
+                     y = species_num)) +
+  geom_jitter(size = 3, alpha = 0.4,
+              width = 0, height = 0.05) + 
+  labs(y = "P(Y = 1)") 
+
+```
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("penguins", "png"))
+```
+
+]
+
+
+---
+
+### Model: Predict species with flipper length
+
+
+.pull-left[
+
+```{r penguins2, fig.show = 'hide'}
+ggplot(data = penguins2, 
+       mapping = aes(x = flipper_length_mm,
+                     y = species_num)) +
+  geom_jitter(size = 3, alpha = 0.4,
+              width = 0, height = 0.05) + 
+  labs(y = "P(Y = 1)") +
+  geom_smooth(method = 'glm',
+              method.args = 
+                list(family = "binomial"))
+
+```
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+knitr::include_graphics(knitr::fig_chunk("penguins2", "png"))
+```
+
+]
+
+**Question**: How do we fit the model (the blue curve) in `R`?
+
+
+---
+
+### Model: Predict species with flipper length
+
+```{r}
+mod <- glm(species ~ flipper_length_mm, family = "binomial",
+           data = penguins2)
+library(broom)
+tidy(mod)
+```
+
+--
+
+But what do the coefficient estimates $\hat{\beta}_o = -25.8$ and $\hat{\beta}_1 = 0.129$ represent?
+
+---
+
+### Interpretation of Coefficients
+
+#### Define two concepts:
+
+(1) Odds:
+
+$$ 
+\mbox{odds} = \frac{\mbox{prob of success}}{\mbox{prob of failure}} = \frac{P(Y = 1)}{1  - P(Y = 1)} 
+$$
+--
+
+Recall: 
+
+\begin{align*}
+\log\left(\frac{P(Y = 1)}{1  - P(Y = 1)}  \right) &= \beta_o + \beta_1 x_1 
+\end{align*}
+
+--
+
+So then
+
+$$ 
+\mbox{odds} = \exp \left( \beta_o + \beta_1 x_1 \right)
+$$ 
+
+---
+
+### Interpretation of Coefficients
+
+#### Define two concepts:
+
+(2) Odds ratio: Comparison of odds between two groups
+
+$$ 
+\mbox{odds ratio} = \frac{\mbox{odds of group 1}}{\mbox{odds of group 2}}
+$$
+
+--
+
+**Interpretation of odds ratio:** The odds of success in group 1 are _insert #_ times the odds of success in group 2.
+
+--
+
+**Note:** Also useful property:
+
+$$
+\exp(a + b) = \exp(a) \exp(b)
+$$
+
+---
+
+
+### Interpretation of Coefficients
+
+
+(estimated) odds for $x_1 = t$ mm: 
+
+$$\exp \left( \hat{\beta}_o + \hat{\beta}_1 t \right)$$
+
+--
+
+(estimated) odds for $x_1 = t + 1$ mm: 
+
+$$\exp \left( \hat{\beta}_o + \hat{\beta}_1 (t + 1) \right)$$
+
+--
+
+odds ratio: 
+
+\begin{align*}
+\frac{\exp \left( \hat{\beta}_o + \hat{\beta}_1 (t + 1) \right)}{\exp \left( \hat{\beta}_o + \hat{\beta}_1 t \right)} &= \frac{\exp \left( \hat{\beta}_o\right)\exp \left( \hat{\beta}_1 (t + 1) \right)}{\exp \left( \hat{\beta}_o\right)\exp \left( \hat{\beta}_1 t \right)} \\
+& = \exp \left( \hat{\beta}_1 \right)
+\end{align*}
+
+---
+
+### Interpretation of Coefficients
+
+How do we interpret $\hat{\beta}_1 = 0.129$?
+
+```{r}
+tidy(mod)
+```
+
+--
+
+$$
+\exp \left( \hat{\beta}_1 \right) = \frac{\mbox{odds of being Chinstrap for flipper length t + 1 mm}}{\mbox{odds of being Chinstrap for flipper length t mm}}
+$$
+
+--
+
+```{r}
+exp(0.129)
+```
+
+--
+
+The odds that a penguin in Chinstrap instead of Adelie is 1.138 times the odds of a penguin whose flipper is 1 mm shorter.
+
+
+---
+
+### Prediction
+
+
+
+How can I use this model to now predict, for a given flipper_length, whether a penguin is a Chinstrap or an Adelie?
+
+.pull-left[
+
+```{r, echo = FALSE}
+ggplot(data = penguins2, mapping = aes(x = flipper_length_mm,
+                                        y = species_num)) +
+  geom_jitter(size = 3, alpha = .4, width = 0, height = .05) + 
+  labs(y = "P(Y = 1)") +
+  geom_smooth(method = 'glm',
+              method.args = list(family = "binomial"))
+
+```
+
+]
+
+
+---
+
+### Prediction
+
+
+
+How can I use this model to now predict, for a given flipper_length, whether a penguin is a Chinstrap or an Adelie?
+
+.pull-left[
+
+```{r, echo = FALSE}
+ggplot(data = penguins2, mapping = aes(x = flipper_length_mm,
+                                        y = species_num)) +
+  geom_jitter(size = 3, alpha = .4, width = 0, height = .05) + 
+  labs(y = "P(Y = 1)") +
+  geom_smooth(method = 'glm',
+              method.args = list(family = "binomial")) +
+  geom_hline(yintercept = 0.5, color = "goldenrod",
+             size = 2, linetype = 2)
+
+```
+
+]
+
+.pull-right[
+
+\begin{align*}
+\widehat{P(Y = 1)} \geq 0.5 &\rightarrow \hat{y} = 1 \\
+\widehat{P(Y = 1)} < 0.5 &\rightarrow \hat{y} = 0 \\
+\end{align*}
+
+]
+
+---
+
+### Prediction Accuracy
+
+```{r}
+penguins2 <- penguins2 %>%
+  mutate(pred = mod$fitted.values)
+
+penguins2 %>%
+  select(species, pred)
+```
+
+---
+
+### Prediction Accuracy
+
+```{r}
+penguins2 <- penguins2 %>%
+  mutate(pred_species = case_when(
+    pred >= 0.5 ~ "Chinstrap",
+    pred < 0.5 ~ "Adelie"
+  ))
+
+penguins2 %>%
+  count(species, pred_species)
+(138 + 22)/219
+```
+
+---
+
+### Multiple Logistic Regression
+
+.pull-left[
+
+Another good explanatory variable: `bill_length_mm`
+
+```{r}
+mod2 <- glm(species ~ flipper_length_mm 
+            + bill_length_mm,
+            family = "binomial",
+            data = penguins2)
+tidy(mod2)
+```
+
+]
+
+.pull-right[
+
+```{r, echo = FALSE}
+ggplot(data = penguins2, mapping = aes(x = bill_length_mm,
+                                        y = species_num)) +
+  geom_jitter(size = 3, alpha = .4, width = 0, height = .05) + 
+  labs(y = "P(Y = 1)") +
+  geom_smooth(method = 'glm',
+              method.args = list(family = "binomial"))
+
+```
+
+]
+
+
+---
+
+### Multiple Logistic Regression
+
+
+```{r}
+penguins2 <- penguins2 %>%
+  mutate(pred_mod2 = mod2$fitted.values) %>%
+  mutate(pred_species2 = case_when(
+    pred_mod2 >= 0.5 ~ "Chinstrap",
+    pred_mod2 < 0.5 ~ "Adelie"
+  ))
+```
+
+--
+
+```{r}
+penguins2 %>%
+  count(species, pred_species2)
+```
+
+--
+
+* Like with linear regression, still need to be careful that you are finding the general trend and not just over-fitting the sample data!
+
+
+---
+
+class: inverse, middle, center
+
+## What other modeling techniques are out there beyond regression?!
