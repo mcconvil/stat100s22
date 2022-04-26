@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Wrap-Up</title>
+    <meta charset="utf-8" />
+    <script src="libsSlides/header-attrs-2.11/header-attrs.js"></script>
+    <link href="libsSlides/remark-css-0.0.1/hygge.css" rel="stylesheet" />
+    <script src="libsSlides/fabric-4.3.1/fabric.min.js"></script>
+    <link href="libsSlides/xaringanExtra-scribble-0.0.1/scribble.css" rel="stylesheet" />
+    <script src="libsSlides/xaringanExtra-scribble-0.0.1/scribble.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', function() { window.xeScribble = new Scribble({"pen_color":["#FF0000"],"pen_size":3,"eraser_size":30,"palette":[]}) })</script>
+    <script src="libsSlides/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+    <script src="libsSlides/jquery-1.12.4/jquery.min.js"></script>
+    <link href="libsSlides/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+    <script src="libsSlides/leaflet-1.3.1/leaflet.js"></script>
+    <link href="libsSlides/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+    <script src="libsSlides/proj4-2.6.2/proj4.min.js"></script>
+    <script src="libsSlides/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+    <link href="libsSlides/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+    <script src="libsSlides/leaflet-binding-2.0.4.1/leaflet.js"></script>
+    <link rel="stylesheet" href="more.css" type="text/css" />
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+
+
+
+
+
+
+
+
+background-image: url("img/DAW.png")
+background-position: left
+background-size: 50%
+class: middle, center, inverse
+
+
+.pull-right[
+
+
+
+## .whitish[Where to Go]
+
+## .whitish[From Here]
+
+## .whitish[and Review]
+
+
+&lt;br&gt;
+
+### .whitish[Kelly McConville]
+
+#### .yellow[ Stat 100 | Week 13 | Spring 2022] 
+
+]
+
+---
+
+background-image: url("img/ggparty.003.jpeg")
+background-position: contain
+background-size: 90%
+
+---
+
+class: middle, center
+
+# `ggparty` Rain Location: Science Center 316
+
+---
+
+### Announcements
+
+* [The OH schedule](https://docs.google.com/spreadsheets/d/18ckvWMtKWJrpq6YS-FuToAMrbHPP722FF79ZvuZ01Ys/edit?usp=sharing) for the next couple of weeks.
+* Final Project Assignment due Friday, May 6th.
+* No sections this week!
+
+****************************
+
+--
+
+### Goals for Today
+
+.pull-left[
+
+
+* Potential future statistical endeavors!
+
+
+] 
+
+
+
+.pull-right[
+
+* Review for our current statistical endeavor!
+
+]
+
+
+---
+
+background-image: url("img/DAW.png")
+background-position: left
+background-size: 50%
+class: middle
+
+.pull-right[
+
+## Before talking about all the things we didn't have time to cover...
+
+]
+
+--
+
+.pull-right[
+
+## Let's acknowledge that we actually learned a lot!
+
+]
+
+---
+
+
+background-image: url("img/DAW.png")
+background-position: left
+background-size: 50%
+class: middle
+
+
+.pull-right[
+
+####  (Some of the) Course Learning Objectives
+
+]
+
+
+--
+
+.pull-right[
+
+ * Learn how to **analyze** data in `R`.
+ 
+]
+
+--
+
+.pull-right[
+
+* Master **creating** graphs with `ggplot2`.
+
+]
+
+--
+
+.pull-right[
+
+* Apply data wrangling operations with `dplyr`.
+]
+
+--
+
+.pull-right[
+
+* Translate a research problem into a set of relevant questions that can be answered with data. 
+
+]
+
+
+--
+
+.pull-right[
+
+* Reflect on how **sample design structures** impact potential conclusions.
+
+
+]
+
+--
+
+.pull-right[
+
+
+* Appropriately apply and draw inferences from a statistical model, including **quantifying and interpreting the uncertainty** in model estimates.
+
+]
+
+
+--
+
+.pull-right[
+
+* Develop a **reproducible** workflow using `R` Markdown documents.
+
+
+]
+
+
+---
+
+class: inverse, middle, center
+
+## What else should we learn?
+
+
+---
+
+name: acquisition
+background-image: url("img/data_acquisition.jpeg")
+background-position: left
+background-size: 15%
+
+
+
+.pull-rightish[
+
+### Data Acquisition
+
+* How to handle data that were collected using a **non-simple random sampling design**
+
+
+&lt;img src="stat100_wk13wed_files/figure-html/unnamed-chunk-1-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+
+
+]
+
+---
+
+name: acquisition
+background-image: url("img/data_acquisition.jpeg")
+background-position: left
+background-size: 15%
+
+
+
+.pull-rightish[
+
+### Data Acquisition
+
+* How to handle data that were collected using a **non-simple random sampling design**
+
+
+&lt;img src="stat100_wk13wed_files/figure-html/unnamed-chunk-2-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+* Consider:
+    + Stat 160: Introduction to Survey Sampling and Estimation
+    + Gov 1010: Survey Research Methods
+    + SOCIOL 157: Qualitative Methods in Sociology
+
+
+]
+
+---
+
+name: acquisition
+background-image: url("img/data_acquisition.jpeg")
+background-position: left
+background-size: 15%
+
+
+
+.pull-rightish[
+
+### Data Acquisition
+
+* How to draw **causation** from observational data (i.e. data collect not using **random assignment**)
+
+
+&lt;img src="img/correlation_xkcd.png" width="465" style="display: block; margin: auto;" /&gt;
+
+]
+
+--
+
+.pull-rightish[
+
+* Consider:
+    + Any class that mentions "**causal inference**" in the description.
+    + Stat 186: Introduction to Causal Inference
+    
+]
+
+
+---
+
+background-image: url("img/exploration_visualization.jpeg")
+background-position: left
+background-size: 15%
+
+
+
+
+.pull-rightish[
+
+## Data Visualization
+
+* How to fully customize your `ggplots`
+
+
+
+&lt;img src="stat100_wk13wed_files/figure-html/unnamed-chunk-5-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+
+
+]
+
+
+
+---
+
+background-image: url("img/exploration_visualization.jpeg")
+background-position: left
+background-size: 15%
+
+
+
+
+.pull-rightish[
+
+## Data Visualization
+
+* How to fully customize your `ggplots`
+
+&lt;img src="stat100_wk13wed_files/figure-html/unnamed-chunk-6-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+
+
+]
+
+---
+
+background-image: url("img/exploration_visualization.jpeg")
+background-position: left
+background-size: 15%
+
+
+
+
+.pull-rightish[
+
+## Data Visualization
+
+* How to create graphs we haven't seen in Stat 100
+
+.pull-left[
+
+&lt;img src="stat100_wk13wed_files/figure-html/unnamed-chunk-7-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right[
+
+
+
+&lt;img src="stat100_wk13wed_files/figure-html/unnamed-chunk-8-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+
+]
+
+]
+
+
+
+---
+
+background-image: url("img/exploration_visualization.jpeg")
+background-position: left
+background-size: 15%
+
+
+
+
+.pull-rightish[
+
+## Data Visualization
+
+* How to graph **spatial** data
+
+
+<div id="htmlwidget-5f3e533289255036ed65" style="width:576px;height:432px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-5f3e533289255036ed65">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"setView":[[55,-160],4,[]],"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[[54.134,55.424,52.5,56.88,56.552,53.93,52.894,52.825,55.641,54.65,54.765,52.974,56.011,53.891,53.43,55.417,54.8,54.756,57.18,56.17,53.13,54.518,57.019,52.643],[-165.986,-163.149,-171.252,-158.17,-158.785,-168.03,-170.054,-169.944,-161.214,-164.43,-163.723,-169.72,-159.797,-166.923,-168.13,-161.894,-163.589,-163.97,-170.3,-159.38,-168.693,-164.65,-157.185,-170.629],{"iconUrl":{"data":"https://openclipart.org/image/800px/svg_to_png/168263/volcano-mountain.png","index":0},"iconWidth":10,"iconHeight":20},null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["<b> Akutan <\/b><\/br> Number of eruptions: 47","<b> Amak <\/b><\/br> Number of eruptions: 3","<b> Amukta <\/b><\/br> Number of eruptions: 8","<b> Aniakchak <\/b><\/br> Number of eruptions: 15","<b> Black Peak <\/b><\/br> Number of eruptions: 1","<b> Bogoslof <\/b><\/br> Number of eruptions: 11","<b> Carlisle <\/b><\/br> Number of eruptions: 4","<b> Cleveland <\/b><\/br> Number of eruptions: 29","<b> Dana <\/b><\/br> Number of eruptions: 1","<b> Fisher <\/b><\/br> Number of eruptions: 6","<b> Isanotski <\/b><\/br> Number of eruptions: 5","<b> Kagamil <\/b><\/br> Number of eruptions: 1","<b> Kupreanof <\/b><\/br> Number of eruptions: 1","<b> Makushin <\/b><\/br> Number of eruptions: 28","<b> Okmok <\/b><\/br> Number of eruptions: 19","<b> Pavlof <\/b><\/br> Number of eruptions: 46","<b> Roundtop <\/b><\/br> Number of eruptions: 1","<b> Shishaldin <\/b><\/br> Number of eruptions: 49","<b> St. Paul Island <\/b><\/br> Number of eruptions: 2","<b> Veniaminof <\/b><\/br> Number of eruptions: 24","<b> Vsevidof <\/b><\/br> Number of eruptions: 7","<b> Westdahl <\/b><\/br> Number of eruptions: 8","<b> Yantarni <\/b><\/br> Number of eruptions: 1","<b> Yunaska <\/b><\/br> Number of eruptions: 6"],null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[52.5,57.18],"lng":[-171.252,-157.185]}},"evals":[],"jsHooks":[]}</script>
+
+]
+
+
+
+---
+
+background-image: url("img/exploration_visualization.jpeg")
+background-position: left
+background-size: 15%
+
+
+
+
+.pull-rightish[
+
+## Data Visualization
+
+* How to create [fancy dashboards](https://ncasi-shiny-tools.shinyapps.io/Counties/) with the `R` package `shiny`
+
+* Consider:
+    + Stat 1XX: "Introduction to Statistical Computing in R" or "Introduction to Computing, Wrangling, Scraping, and Visualizing in R" or ...
+    + Data Science 1: Introduction to Data Science
+    + A GIS course
+    + COMPSCI 171: Visualization
+
+
+]
+
+
+---
+name: inference
+background-image: url("img/modeling_inference.jpeg")
+background-position: left
+background-size: 15%
+
+
+
+
+.pull-rightish[
+
+## Modeling and Inference
+
+* How to conduct more sophisticated **model selection**
+
+
+&lt;img src="img/fs.png" width="25%" style="float:left; padding:10px" style="display: block; margin: auto;" /&gt;
+
+**Mission**: "Make and keep current a comprehensive inventory and analysis of the present and prospective conditions of and requirements for the renewable resources of the forest and rangelands of the US."
+
+
+**Goal**: Estimate number of trees per acre for a given plot of land.
+
+
+]
+
+
+
+---
+name: inference
+background-image: url("img/modeling_inference.jpeg")
+background-position: left
+background-size: 15%
+
+
+
+
+.pull-rightish[
+
+## Modeling and Inference
+
+* How to conduct more sophisticated **model selection**
+
+
+
+
+&lt;img src="img/FIA_EDA.jpeg" width="1736" style="display: block; margin: auto;" /&gt;
+
+
+]
+
+
+---
+name: inference
+background-image: url("img/modeling_inference.jpeg")
+background-position: left
+background-size: 15%
+
+
+
+
+.pull-rightish[
+
+## Modeling and Inference
+
+* How to conduct more sophisticated **model selection**
+
+
+* **LASSO Method**:  Find `\(\hat{\beta}\)`'s based on the following criteria:
+
+`\begin{aligned}
+\boldsymbol{\hat{\beta}} &amp;= \underset{\boldsymbol{\beta}}{\arg\min}  \left\{ \sum_{i \in s} (y_i - \boldsymbol{x}_i^T \boldsymbol{\beta})^2 + \lambda \sum_{j=1}^p \left|\beta_j\right|\right\}
+\end{aligned}`
+
+**Selected Predictors**:
+
+* Normalized Difference Vegetation Index
+* Slope
+* Normalized Burn Ratio
+* Elevation
+* Slope : Forest/Non-Forest
+
+]
+
+---
+
+background-image: url("img/modeling_inference.jpeg")
+background-position: left
+background-size: 15%
+
+
+.pull-rightish[
+
+## Modeling and Inference
+
+* How to build models **beyond** regression
+
+
+&lt;img src="img/bls2.png" width="25%" style="float:left; padding:10px" style="display: block; margin: auto;" /&gt;
+
+**Mission**: "Measures labor market activity, working conditions, price changes, and productivity in the U.S. economy to support public and private decision making."
+
+**Goal**: Estimate number of bartenders an establishment has.
+
+]
+
+
+---
+
+background-image: url("img/modeling_inference.jpeg")
+background-position: left
+background-size: 15%
+
+
+.pull-rightish[
+
+## Modeling and Inference
+
+* Why not use regression in this example?
+
+* Predictors come from the Quarterly Census of Employment and Wages:
+    * Size class
+    * Geographic information
+    * Industry type
+    * Whether or not its a multi-establishment firm
+
+]
+
+
+---
+
+background-image: url("img/modeling_inference.jpeg")
+background-position: left
+background-size: 15%
+
+
+.pull-rightish[
+
+## Modeling and Inference
+
+**Regression Trees** recursively split sample into two groups based on a predictor.
+
+&lt;img src="img/trees.001.jpeg" width="50%" style="display: block; margin: auto;" /&gt;
+
+]
+ 
+
+
+---
+
+background-image: url("img/modeling_inference.jpeg")
+background-position: left
+background-size: 15%
+
+
+.pull-rightish[
+
+## Modeling and Inference
+
+Regression Trees **recursively** split sample into two groups based on a predictor.
+
+&lt;img src="img/trees.002.jpeg" width="50%" style="display: block; margin: auto;" /&gt;
+
+]
+
+
+---
+
+background-image: url("img/modeling_inference.jpeg")
+background-position: left
+background-size: 15%
+
+
+.pull-rightish[
+
+## Modeling and Inference
+
+Regression Trees recursively split sample into two groups based on a predictor.
+
+&lt;img src="img/trees.004.jpeg" width="120%" style="display: block; margin: auto;" /&gt;
+
+They **stop** splitting when it is no longer very predictively useful to do so.
+
+]
+
+
+---
+
+background-image: url("img/modeling_inference.jpeg")
+background-position: left
+background-size: 15%
+
+
+.pull-rightish[
+
+## Modeling and Inference
+
+Regression Trees recursively split sample into two groups based on a predictor.
+
+&lt;img src="img/trees.003.jpeg" width="70%" style="display: block; margin: auto;" /&gt;
+
+At each end node, the predicted value is given by the mean of the sample in that node.
+
+]
+
+---
+
+background-image: url("img/modeling_inference.jpeg")
+background-position: left
+background-size: 15%
+
+
+.pull-rightish[
+
+## Modeling and Inference
+
+* For a deep dive into regression, consider Stat 139: Linear Models and Stat 149: Generalized Linear Models
+
+* For exposure to predictive models, try
+    + Data Science 1: Introduction to Data Science
+    + Data Science 2: Advanced Topics in Data Science
+
+* Good keywords to search for:
+    + Statistical learning or machine learning
+    + Supervised learning
+    
+]
+
+---
+
+background-image: url("img/modeling_inference.jpeg")
+background-position: left
+background-size: 15%
+
+
+.pull-rightish[
+
+## Modeling and Inference
+
+* Why do some test statistics follow a standard normal or a t distribution?
+
+* What other random variables are out there?
+
+* Why is the Central Limit Theorem true?
+
+]
+
+
+.pull-rightish[
+
+* For a deep dive into the beautiful theory behind our data analysis, consider:
+    + Stat 110: Introduction to Probability
+    + Stat 111: Introduction to Statistical Inference
+
+]
+
+
+---
+
+class: inverse, middle, center
+
+## Review Time!
+
+### Let's first go through the Review Sheet for the Final Exam.
+
+---
+
+class: middle, center
+
+##  One of the most challenging inferential ideas:
+
+--
+
+###  Understanding the **many roles of the sample statistic**:
+
+--
+
+.pull-left[
+
+As a number
+
+]
+
+--
+
+.pull-right[
+
+As a random variable
+
+]
+
+--
+
+.pull-left[
+
+As a point estimate
+
+]
+
+--
+
+.pull-right[
+
+As a test statistic
+
+]
+
+
+
+---
+
+### Practice Problem
+
+#### Identify the different roles of a statistic in the following example:
+
+Researchers presented young children (aged 5 to 8 years) with a choice between two toy characters who were offering stickers.  One character was described as mean, and the other was described as nice.  The mean character offered two stickers, and the nice character offered one sticker.  Researchers wanted to investigate whether children would tend to select the nice character over the mean character, despite receiving fewer stickers.  
+
+
+They found that 80% of the 20 children in the study selected the nice character.  If the children had no preference, the probability that 80% or more would select the nice character is approximately equal to 0.0036.  My best guess for the true proportion of children who would select the nice character is 0.8 (with a margin of error of 0.19 for a 95% CI).
+
+
+
+.pull-left[
+
+* As a number
+
+]
+
+
+
+.pull-right[
+
+* As a random variable
+
+]
+
+
+.pull-left[
+
+* As a point estimate
+
+]
+
+
+
+.pull-right[
+
+* As a test statistic
+
+]
+
+
+---
+
+### Practice Problem
+
+I generated the following distributions but don't remember if I generated a **sampling**, **bootstrap**, or **null** distribution.
+
+
+What are each of these?  Justify your answer.
+
+.pull-left[
+
+&lt;img src="stat100_wk13wed_files/figure-html/unnamed-chunk-17-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right[
+
+&lt;img src="stat100_wk13wed_files/figure-html/unnamed-chunk-18-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+### Practice Problem
+
+Researchers presented young children (aged 5 to 8 years) with a choice between two toy characters who were offering stickers.  One character was described as mean, and the other was described as nice.  The mean character offered two stickers, and the nice character offered one sticker.  Researchers wanted to investigate whether children would tend to select the nice character over the mean character, despite receiving fewer stickers.  
+
+
+They found that 80% of the 20 children in the study selected the nice character.  If the children had no preference, the probability that 80% or more would select the nice character is approximately equal to 0.0036.  My best guess for the true proportion of children who would select the nice character is 0.8 (with a margin of error of 0.19 for a 95% CI).
+
+
+
+#### For this example, would you recommend using theory-based methods to compute the p-value and construct the confidence interval?  Why or why not?
+
+---
+
+### Practice Problem
+
+Researchers presented young children (aged 5 to 8 years) with a choice between two toy characters who were offering stickers.  One character was described as mean, and the other was described as nice.  The mean character offered two stickers, and the nice character offered one sticker.  Researchers wanted to investigate whether children would tend to select the nice character over the mean character, despite receiving fewer stickers.  
+
+
+They found that 80% of the 20 children in the study selected the nice character.  If the children had no preference, the probability that 80% or more would select the nice character is approximately equal to 0.0036.  My best guess for the true proportion of children who would select the nice character is 0.8 (with a margin of error of 0.19 for a 95% CI).
+
+
+
+#### Suppose we increased the sample size to 40 and still got 80%.  How would the p-value change?  How about the confidence interval?
+
+---
+
+### Practice Problem
+
+Researchers presented young children (aged 5 to 8 years) with a choice between two toy characters who were offering stickers.  One character was described as mean, and the other was described as nice.  The mean character offered two stickers, and the nice character offered one sticker.  Researchers wanted to investigate whether children would tend to select the nice character over the mean character, despite receiving fewer stickers.  
+
+
+They found that 80% of the 20 children in the study selected the nice character.  If the children had no preference, the probability that 80% or more would select the nice character is approximately equal to 0.0036.  My best guess for the true proportion of children who would select the nice character is 0.8 (with a margin of error of 0.19 for a 95% CI).
+
+
+
+#### What is the probability that the confidence interval contains the sample statistic?
+
+--
+
+#### What is the better question to ask?
+
+---
+
+background-image: url("img/ggparty.003.jpeg")
+background-position: contain
+background-size: 90%
+
+---
+
+class: inverse, middle, center
+
+# Thanks for a wonderful semester!  
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"ratio": "16:9",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

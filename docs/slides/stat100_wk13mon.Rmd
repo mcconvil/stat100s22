@@ -43,6 +43,16 @@ case0901 <- case0901 %>%
 xaringanExtra::use_scribble()
 ```
 
+class: middle, center
+
+
+# Go to [bit.ly/stat-100-think](https://bit.ly/stat-100-think)
+
+## Provide a keyword or phrase for statistical thinking.
+
+
+
+---
 
 
 background-image: url("img/DAW.png")
@@ -87,6 +97,7 @@ class: middle, center
 ### Announcements
 
 * We are currently finalizing [the OH schedule](https://docs.google.com/spreadsheets/d/18ckvWMtKWJrpq6YS-FuToAMrbHPP722FF79ZvuZ01Ys/edit?usp=sharing) for the next couple of weeks.
+    + My 2-4pm OHs today will be in 316.01.
 * Will receive the final exam review sheet in Wednesday's lecture.
     + Along with link to sign-up for oral exam time slot.
 * Final Project Assignment due Friday, May 6th.
